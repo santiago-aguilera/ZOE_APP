@@ -1,313 +1,202 @@
-/* =========
-GENERAL
-============*/
-
-/* ===============
-   CONTENEDOR
-==================*/
-
-.container-main {
-    display: flex;
+/* ================= GENERAL ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    font-family:'Segoe UI', sans-serif;
+    background:#f4f7fb;
 }
 
-/* =========================
-   CONTENIDO
-========================= */
+/* ================= CONTENIDO ================= */
 
 .contenido {
-
-    margin-left: 10px;
-    margin-right: 10px;
-
     width: 100%;
-
-    padding: 40px;
-}
-
-/* ========
-     Hero
-============ */
-
-.carousel-section {
-    width: 100%;
-
-    padding: 20px;
-
-    margin-bottom: 30px;
-
+    padding: 40px 20px;
     display: flex;
-
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
-.carousel-inner {
-    border-radius: 25px;
-    overflow: hidden;
-}
+/* ================= CARRUSEL ================= */
 
-/* Imagenes */
-
-.carousel-img {
-    width: 100%;
-    height: 70vh;
-    min-height: 415px;
-    max-height: 250px;
-    object-fit: cover;
-}
-
-/* CONTENEDOR DEL LOGO */
-
-.logo-container{
+.carousel-section{
     width:100%;
+    display:flex;
+    justify-content:center;
+    margin-bottom:60px;
+}
+
+.morph-carousel{
+    width:100%;
+    max-width:1200px;
+}
+
+/* ================= INDICADORES (PUNTOS PRO) ================= */
+
+.carousel-indicators{
+    bottom:-40px;
+}
+
+.carousel-indicators [data-bs-target]{
+    width:10px;
+    height:10px;
+
+    border-radius:50%;
+    background:rgba(0,0,0,0.25);
+
+    border:none;
+    margin:0 6px;
+
+    transition:0.3s ease;
+}
+
+.carousel-indicators .active{
+    background:#24609e;
+    transform:scale(1.4);
+}
+
+/* ================= FLECHAS DESACTIVADAS ================= */
+
+.carousel-control-prev,
+.carousel-control-next{
+    display:none;
+}
+
+/* ================= MORPH EFFECT ================= */
+
+.carousel-inner{
+    position:relative;
+    overflow:hidden;
+    border-radius:25px;
+}
+
+/* TODOS LOS SLIDES */
+
+.carousel-item{
+    position:absolute;
+    inset:0;
+
+    opacity:0;
+    transform:scale(0.92) rotate(-2deg);
+
+    transition:
+        transform 0.6s cubic-bezier(0.25, 1, 0.3, 1),
+        opacity 0.6s ease;
+}
+
+/* ACTIVO */
+
+.carousel-item.active{
+    position:relative;
+
+    opacity:1;
+    transform:scale(1) rotate(0deg);
+}
+
+/* NEXT / PREV (morph intermedio) */
+
+.carousel-item-next,
+.carousel-item-prev{
+    opacity:0.5;
+    transform:scale(1.08) rotate(2deg);
+}
+
+/* ================= IMÁGENES ================= */
+
+.carousel-img{
+    width:100%;
+    height:500px;
+    object-fit:cover;
+}
+
+@media(max-width:768px){
+    .carousel-img{
+        height:300px;
+    }
+}
+
+/* ================= POP SLIDE ================= */
+
+.pop-slide{
+    background:white;
+}
+
+.pop-wrapper{
+    width:100%;
+    height:500px;
 
     display:flex;
-
     justify-content:center;
-
     align-items:center;
-
-    padding:20px;
 }
 
-/* IMAGEN */
-
-.logo-pop{
-    width: clamp(250px, 60vw, 900px);
-
+.pop-wrapper img{
+    width:clamp(250px, 60vw, 850px);
     height:auto;
 
     object-fit:contain;
 
-    display:block;
+    filter:drop-shadow(0 10px 25px rgba(0,0,0,0.15));
+}
 
-    margin:auto;
+/* ================= CAPTION ================= */
 
+.carousel-caption{
+    bottom:20%;
     z-index:2;
-
-    position:relative;
 }
 
-/*Overaly*/
-
-.carousel-item {
-    position: relative;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    min-height:500px;
+.carousel-caption h2{
+    font-size:clamp(1.5rem,4vw,3rem);
+    font-weight:800;
+    color:rgb(226, 215,44);
 }
 
-.carousel-item::before {
-    content: "";
-    position: absolute;
-    top:0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.2);
-    z-index: 1;
+.carousel-caption p{
+    font-size:clamp(0.9rem,2vw,1.2rem);
+    color:rgb(0, 0, 0);
 }
-
-/* Caption */
-
-.carousel-caption {
-    bottom: 20%;
-    padding: 10px;
-    z-index: 2;
-}
-
-.carousel-caption h2 {
-    font-size: clamp(1.5rem, 4vw, 3.5rem);
-    font-weight: 800;
-
-    color: white;
-
-    text-shadow: 0 0 20px rgba(0,0,0,0.8);
-}
-
-.carousel-caption p {
-    font-size: clamp(0.9rem, 2vw, 1.2rem);
-
-    color: #f1f1f1;
-
-    max-width: 410px;
-
-    margin: auto;
-
-    line-height: 1.5;
-}
-
-/* Botones */
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    background-color: rgba(255,255,255,0.2);
-
-    border-radius: 50%;
-
-    padding: 18px;
-}
-
-/* Indicadores */
-
-.carousel-indicators button {
-    width: 12px;
-    height: 12px;
-
-    border-radius: 50%;
-}
-
-.menu a:hover,
-.menu a.active {
-
-    background: rgba(229, 231, 232, 0.12);
-
-    transform: translateX(5px);
-}
-
-.menu i {
-
-    font-size: 1.2rem;
-
-    min-width: 30px;
-}
-
-/* =============
-Tarjetas 
-============= */
+/* ================= CARDS ================= */
 
 .cards {
+    width: 100%;
     display: grid;
-
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-
-    gap: 20px;
-
+    grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
+    justify-content: center;
+    gap: 25px;
     margin-bottom: 40px;
 }
 
-.tarjeta {
-
-    background: white;
-
-    padding: 25px;
-
-    border-radius: 19px;
-
+.card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-
     transition: 0.3s;
 }
 
-.tarjeta:hover {
-
+.card:hover {
     transform: translateY(-5px);
 }
 
-.tarjeta i {
+/* ================= MAPA ================= */
 
-    font-size: 2rem;
-
-    color: #24609e;
-
-    margin-bottom: 15px;
+.seccion {
+    width: 100%;
+    max-width: 1200px;
 }
 
-/* SECCIONES */
-
 .seccion h2 {
-
+    text-align: center;
     margin-bottom: 20px;
-
     color: #042c5a;
 }
 
-/* FOOTER */
-
-footer {
-
-    background: #002147;
-
-    color: white;
-
-    text-align: center;
-
+.tarjeta {
+    background: white;
     padding: 20px;
-
-    margin-top: 40px;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 768px) {
-
-    /* BOTÓN */
-
-    .menu-toggle {
-
-        display: block;
-    }
-
-    /* MENÚ */
-
-    .menu {
-
-        transform: translateX(-100%);
-
-        width: 260px;
-    }
-
-    .menu.show {
-
-        transform: translateX(0);
-    }
-
-    .menu:hover {
-
-        width: 260px;
-    }
-
-    /* CONTENIDO */
-
-    .contenido {
-
-        margin-left: 0;
-
-        padding: 20px;
-    }
-
-    /* TOP BAR */
-
-    .top-bar {
-
-        padding-left: 70px;
-    }
-
-    /* HERO */
-
-    .hero {
-
-        padding: 50px 20px;
-    }
-
-    .hero h1 {
-
-        font-size: 2rem;
-    }
-
-    .hero p {
-
-        font-size: 1rem;
-    }
-
-    /* LOGO */
-
-    .logo {
-
-        height: 45px;
-    }
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }

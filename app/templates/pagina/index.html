@@ -6,136 +6,104 @@
 {% endblock %}
 
 {% block content %}
-<!-- CONTENIDO -->
+
 <main class="contenido">
 
-    <!-- HERO -->
-    <section>
-        <!-- CARRUSEL -->
-        <section class="carousel-section">
+    <!-- ================= CARRUSEL ================= -->
+    <section class="carousel-section">
 
-            <div id="zoeCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div id="zoeCarousel" class="carousel slide" data-bs-ride="carousel">
 
-                <!-- Indicadores -->
-                <div class="carousel-indicators">
+            <!-- INDICADORES -->
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#zoeCarousel" data-bs-slide-to="0" class="active"></button>
+                <button type="button" data-bs-target="#zoeCarousel" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#zoeCarousel" data-bs-slide-to="2"></button>
+            </div>
 
-                    <button type="button" data-bs-target="#zoeCarousel" data-bs-slide-to="0" class="active">
-                    </button>
+            <!-- SLIDES -->
+            <div class="carousel-inner">
 
-                    <button type="button" data-bs-target="#zoeCarousel" data-bs-slide-to="1">
-                    </button>
+                <!-- SLIDE 1 POP -->
+                <div class="carousel-item active pop-slide">
 
-                    <button type="button" data-bs-target="#zoeCarousel" data-bs-slide-to="2">
-                    </button>
-
-                </div>
-
-                <!-- Slides -->
-                <div class="carousel-inner rounded-3xl shadow-2xl">
-
-                    <!-- Slide 1 -->
-                    <div class="carousel-item active">
-
-                        <img src="../../static/img/Escudos/POP.jpg" class="logo-pop"
-                        alt="logo-pop">
-
-                        <div class="carousel-caption">
-
-
-                            <p>
-                                ¿Sabes que es el Programa de Orientación Profesional (POP)?
-                            </p>
-
-                        </div>
-
+                    <div class="pop-wrapper">
+                        <img src="../../static/img/Escudos/POP.jpg" alt="Programa POP">
                     </div>
 
-                    <!-- Slide 2 -->
-                    <div class="carousel-item">
-
-                        <img src="../../static/img/Logotipo carita feliz simple blanco.png"
-                            class="d-block w-100 carousel-img" alt="Slide 2">
-
-                        <div class="carousel-caption">
-
-                            <h2>Gestión Académica</h2>
-
-                            <p>
-                                Organiza entregas, cronogramas y proyectos
-                                desde un solo lugar.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                    <!-- Slide 3 -->
-                    <div class="carousel-item">
-
-                        <img src="../../static/img/Logotipo.png" class="d-block w-100 carousel-img" alt="Slide 3">
-
-                        <div class="carousel-caption">
-
-                            <h2>Conecta con tus Profesores</h2>
-
-                            <p>
-                                Comunicación rápida y seguimiento académico
-                                eficiente.
-                            </p>
-
-                        </div>
-
+                    <div class="carousel-caption">
+                        <p>¿Sabes qué es el Programa de Orientación Profesional (POP)?</p>
                     </div>
 
                 </div>
 
-                <!-- Botones -->
-                <button class="carousel-control-prev" type="button" data-bs-target="#zoeCarousel" data-bs-slide="prev">
+                <!-- SLIDE 2 -->
+                <div class="carousel-item">
 
-                    <span class="carousel-control-prev-icon"></span>
+                    <img src="../../static/img/Logotipo carita feliz simple blanco.png"
+                        class="carousel-img"
+                        alt="Slide 2">
 
-                </button>
+                    <div class="carousel-caption">
+                        <h2>Gestión Académica</h2>
+                        <p>Organiza entregas, cronogramas y proyectos desde un solo lugar.</p>
+                    </div>
 
-                <button class="carousel-control-next" type="button" data-bs-target="#zoeCarousel" data-bs-slide="next">
+                </div>
 
-                    <span class="carousel-control-next-icon"></span>
+                <!-- SLIDE 3 -->
+                <div class="carousel-item">
 
-                </button>
+                    <img src="../../static/img/Logotipo.png"
+                        class="carousel-img"
+                        alt="Slide 3">
+
+                    <div class="carousel-caption">
+                        <h2>Conecta con tus Profesores</h2>
+                        <p>Comunicación rápida y seguimiento académico eficiente.</p>
+                    </div>
+
+                </div>
 
             </div>
 
-        </section>
+            <!-- CONTROLES -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#zoeCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+
+            <button class="carousel-control-next" type="button" data-bs-target="#zoeCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+
+        </div>
 
     </section>
 
-    <!-- TARJETAS -->
+    <!-- ================= CARDS ================= -->
     <section class="cards">
 
-        <div class="card" >
-            <img src="../../static/img/Logotipo carita.png" class="card-img-top" alt="...">
+        <div class="card">
+            <img src="../../static/img/Logotipo carita.png" class="card-img-top" alt="">
             <div class="card-body">
                 <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                    the card's content.</p>
+                <p class="card-text">Some quick example text.</p>
                 <a href="#" class="btn btn-primary">Go somewhere</a>
             </div>
         </div>
 
-        <div class="card" >
-            <img src="../../static/img/Logotipo carita.png" class="card-img-top" alt="...">
+        <div class="card">
+            <img src="../../static/img/Logotipo carita.png" class="card-img-top" alt="">
             <div class="card-body">
                 <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                    the card's content.</p>
+                <p class="card-text">Some quick example text.</p>
                 <a href="#" class="btn btn-primary">Go somewhere</a>
             </div>
         </div>
-
-
 
     </section>
 
-    <!-- MAPA -->
+    <!-- ================= MAPA ================= -->
     <section class="seccion">
 
         <h2>Sede A</h2>
@@ -143,7 +111,7 @@
         <div class="tarjeta">
 
             <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7952.900024461095!2d-74.0758354!3d4.691596250000009!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9ad82da3d2e3%3A0x9e0789437c8b1bd3!2sI.T.D.%20Julio%20Florez-%20Sede%20Santa%20Rosa!5e0!3m2!1ses-419!2sco!4v1749662694493!5m2!1ses-419!2sco"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7952.900024461095!2d-74.0758354!3d4.691596250000009"
                 width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
             </iframe>
 
@@ -152,7 +120,5 @@
     </section>
 
 </main>
-
-</div>
 
 {% endblock %}
