@@ -60,6 +60,13 @@ def _pagina(template, titulo, pagina_activa):
         page_title=titulo,
         active_page=pagina_activa,
     )
+    
+def _aplicacion(template,titulo,pagina_activa):
+    return render_template(
+        template,
+        page_title = titulo,
+        active_page = pagina_activa
+    )
 
 
 # -----------------------------------------------------------------------------
@@ -95,6 +102,10 @@ def orientacion():
     # El archivo en disco se llama Orientacion.html (O mayúscula)
     return _pagina("pagina/Orientacion.html", "Orientación", "orientacion")
 
+
+@app.route("/login")
+def login():
+    return render_template("aplicacion/login.html")
 
 # -----------------------------------------------------------------------------
 # Rutas futuras (descomentar cuando las implementes)

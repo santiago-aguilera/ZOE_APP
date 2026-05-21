@@ -31,11 +31,11 @@
     <!-- TOP BAR -->
     <header class="top-bar">
         <div class="top-logos">
-            <img src="{{ url_for('static', filename='img/logo_zoe.png') }}" alt="Logo ZOE" class="logo">
+            <img src="../static/img/Logos/logo_zoe.png" alt="Logo ZOE" class="logo">
         </div>
 
         <div class="top-login">
-            <a href="/" class="login-btn">
+            <a href="/login" class="login-btn">
                 <i class="fas fa-user"></i>
                 Iniciar Sesión
             </a>
@@ -49,7 +49,7 @@
         <nav class="menu" id="menu" aria-label="Navegación principal">
             <ul>
                 <li>
-                    <a href="{{ url_for('inicio') }}" class="{% if active_page == 'index' %}active{% endif %}">
+                    <a href="/" class="{% if active_page == 'index' %}active{% endif %}">
                         <i class="fas fa-home"></i>
                         <span>Inicio</span>
                     </a>
