@@ -16,7 +16,7 @@ from config import Config
 # Rutas del proyecto (para importar modelo/ y controlador/ más adelante)
 # -----------------------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent       # ZOE_APP/app/
-PROJECT_ROOT = BASE_DIR.parent                 # ZOE_APP/
+PROJECT_ROOT = BASE_DIR.parent                  # ZOE_APP/
 
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -39,15 +39,9 @@ app.config.from_object(Config)
 # -----------------------------------------------------------------------------
 @app.context_processor
 def variables_globales():
-    """
-    Datos disponibles en cualquier HTML sin repetirlos en cada ruta.
-
-    Uso futuro en plantillas: {{ app_name }}, {{ usuario_id }}
-    """
     return {
         "app_name": "ZOE IB",
         # "usuario_id": session.get("user_id"),       # login futuro
-        # "ia_disponible": bool(app.config["AI_API_KEY"]),
     }
 
 
@@ -61,71 +55,108 @@ def _pagina(template, titulo, pagina_activa):
         active_page=pagina_activa,
     )
     
-def _aplicacion(template,titulo,pagina_activa):
+def _aplicacion(template, titulo, pagina_activa):
     return render_template(
         template,
-        page_title = titulo,
-        active_page = pagina_activa
+        page_title=titulo,
+        active_page=pagina_activa,
     )
 
 
 # -----------------------------------------------------------------------------
-# Rutas de páginas (templates/pagina/)
+# Rutas de páginas públicas (templates/pagina/)
 # -----------------------------------------------------------------------------
 @app.route("/")
 def inicio():
     return _pagina("pagina/index.html", "Inicio", "index")
 
-
 @app.route("/coordinacion")
 def coordinacion():
     return _pagina("pagina/coordinacion.html", "Coordinación", "coordinacion")
-
 
 @app.route("/institucion")
 def institucion():
     return _pagina("pagina/institucion.html", "Institución", "institucion")
 
-
 @app.route("/material")
 def material():
     return _pagina("pagina/material.html", "Material", "material")
-
 
 @app.route("/materias")
 def materias():
     return _pagina("pagina/materias.html", "Materias", "materias")
 
-
 @app.route("/orientacion")
 def orientacion():
-    # El archivo en disco se llama Orientacion.html (O mayúscula)
     return _pagina("pagina/Orientacion.html", "Orientación", "orientacion")
 
 
+# -----------------------------------------------------------------------------
+# Rutas de aplicación interna (templates/aplicacion/)
+# -----------------------------------------------------------------------------
 @app.route("/login")
 def login():
-    return render_template("aplicacion/login.html")
+    return _aplicacion("aplicacion/auth/login.html", "Login", "login")
+
+@app.route("/registro")
+def registro():
+    return _aplicacion("aplicacion/auth/registro.html", "Registro", "registro")
+
+@app.route("/dashboard")
+def dashboard():
+    return _aplicacion("aplicacion/usuarios/dashboard.html", "Dashboard", "dashboard")
+
+@app.route("/tareas")
+def tareas():
+    return _aplicacion("aplicacion/usuarios/tareas.html", "Tareas", "tareas")
+
+@app.route("/mensajeria")
+def mensajeria():
+    return _aplicacion("aplicacion/usuarios/mensajeria.html", "Mensajería", "mensajeria")
+
+@app.route("/cronograma")
+def cronograma():
+    return _aplicacion("aplicacion/usuarios/cronograma.html", "Cronograma", "cronograma")
+
+@app.route("/recursos")
+def recursos():
+    return _aplicacion("aplicacion/recursos/recursos.html", "Recursos Académicos", "recursos")
+
+@app.route("/informacion")
+def informacion():
+    return _aplicacion("aplicacion/informacion/informacion.html", "Información", "informacion")
+
+@app.route("/reportes")
+def reportes():
+    return _aplicacion("aplicacion/reportes/reportes.html", "Reportes", "reportes")
+
+@app.route("/grupos")
+def grupos():
+    return _aplicacion("aplicacion/grupos/grupos.html", "Grupos", "grupos")
+
+@app.route("/configuracion")
+def configuracion():
+    return _aplicacion("aplicacion/config/configuracion.html", "Configuración", "configuracion")
+
 
 # -----------------------------------------------------------------------------
-# Rutas futuras (descomentar cuando las implementes)
+# Rutas de gestión de usuarios (CRUD)
 # -----------------------------------------------------------------------------
-# from flask import request, redirect, url_for, session
-#
-# @app.route("/login", methods=["GET", "POST"])
-# def login():
-#     if request.method == "POST":
-#         # Validar usuario con modelo/ + lógica en controlador/
-#         # session["user_id"] = usuario.get_id()
-#         # return redirect(url_for("inicio"))
-#         pass
-#     return render_template("aplicacion/login.html")
-#
-#
-# @app.route("/logout")
-# def logout():
-#     session.clear()
-#     return redirect(url_for("inicio"))
+@app.route("/usuarios")
+def usuarios_list():
+    return _aplicacion("aplicacion/usuarios/usuarios.html", "Usuarios", "usuarios")
+
+@app.route("/usuarios/crear")
+def usuarios_create():
+    return _aplicacion("aplicacion/usuarios/usuarios_create.html", "Crear Usuario", "usuarios")
+
+@app.route("/usuarios/editar/<int:id>")
+def usuarios_edit(id):
+    return _aplicacion("aplicacion/usuarios/usuarios_edit.html", "Editar Usuario", "usuarios")
+
+@app.route("/usuarios/eliminar/<int:id>")
+def usuarios_delete(id):
+    return _aplicacion("aplicacion/usuarios/usuarios_delete.html", "Eliminar Usuario", "usuarios")
 
 
 # -----------------------------------------------------------------------------
@@ -140,6 +171,4 @@ def health():
 # Arranque en desarrollo
 # -----------------------------------------------------------------------------
 if __name__ == "__main__":
-    # Ejecutar desde ZOE_APP/app/:
-    #   python main.py
     app.run(host="127.0.0.1", port=5000, debug=Config.DEBUG)
