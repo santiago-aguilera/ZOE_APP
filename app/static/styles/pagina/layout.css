@@ -1,183 +1,96 @@
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
+:root {
+  --primary-color: #6C63FF;
+  --secondary-color: #E6E6FA;
+  --text-color: #1A1A1A;
+  --bg-color: #F9FAFB;
+  --card-bg: #FFFFFF;
+  --border-color: #E0E0E0;
+  --radius: 10px;
+  --font-family: 'Inter', sans-serif;
 }
 
 body {
-
-    font-family: 'Segoe UI', sans-serif;
-
-    background: #f4f7fb;
-
-    overflow-x: hidden;
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
 }
 
-/* =========================
-TOP BAR
-========================= */
-
-/*General*/
-.top-bar {
-
-    position: sticky;
-
-    top: 0;
-
-    z-index: 1000;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    background: linear-gradient(
-        90deg,
-        #24609e
-    );
-
-    padding: 12px 25px;
-
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
 }
-
-/*Hamburguesa*/
-.menu-toggle {
-
-    display: none;
-
-    position: fixed;
-
-    top: 15px;
-    left: 15px;
-
-    z-index: 2000;
-
-    border: none;
-
-    background: #24609e;
-    
-    color: #eaebed;
-
-    padding: 10px 14px;
-
-    border-radius: 10px;
-
-    font-size: 1.2rem;
-
-    cursor: pointer;
-}
-
-/* Logo */
 
 .logo {
-
-    height: 50px;
-
-    object-fit: contain;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-/* Login */
+.menu-icon {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}
+
+.nav-links a {
+  margin: 0 1rem;
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  color: var(--primary-color);
+}
 
 .login-btn {
-
-    background: linear-gradient(
-        90deg,
-        #eee1bb
-    );
-
-    color: #24609e;
-
-    text-decoration: none;
-
-    padding: 10px 18px;
-
-    border-radius: 12px;
-
-    font-weight: bold;
-
-    transition: 0.3s;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
 }
 
-.login-btn:hover {
-
-    color: rgb(255, 28, 28);
-
-    transform: translateY(-2px);
+/* Footer */
+.footer {
+  background-color: var(--card-bg);
+  border-top: 1px solid var(--border-color);
+  padding: 2rem;
+  margin-top: 3rem;
 }
 
-/* ========
-   MENÚ
-=========== */
-
-.menu {
-
-    position: fixed;
-
-    top: 0;
-    left: 0;
-
-    width: 75px;
-
-    min-height: 100vh;
-
-    background: linear-gradient(
-        180deg,
-        #82b1e1
-    );
-
-    overflow-x: hidden;
-
-    transition: 0.4s ease;
-
-    z-index: 999;
-
-    box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
-/* Expandir */
-
-.menu:hover {
-
-    width: 280px;
+.footer-left h3 {
+  color: var(--primary-color);
+  margin-bottom: 0.3rem;
 }
 
-/* Lista */
-
-.menu ul {
-
-    list-style: none;
-
-    padding-top: 100px;
+.footer-links a {
+  margin: 0 0.8rem;
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
 }
 
-/* LINKS */
+.footer-links a:hover {
+  color: var(--primary-color);
+}
 
-.menu a {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 18px;
-
-    color: #24609e;
-
-    text-decoration: none;
-
-    padding: 20px 24px;
-
-    margin: 1px;
-
-    border-radius: 14px;
-
-    transition: 0.3s;
-
-    white-space: nowrap;
+.footer-right {
+  font-size: 0.9rem;
+  color: #666;
+  text-align: right;
 }

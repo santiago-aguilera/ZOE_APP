@@ -8,7 +8,7 @@ Configuración en config.py.
 import sys
 from pathlib import Path
 
-from flask import Flask, render_template
+from flask import Flask, redirect, render_template, request, session, url_for
 
 from config import Config
 
@@ -70,40 +70,38 @@ def _aplicacion(template, titulo, pagina_activa):
 def inicio():
     return _pagina("pagina/index.html", "Inicio", "index")
 
-@app.route("/coordinacion")
-def coordinacion():
-    return _pagina("pagina/coordinacion.html", "Coordinación", "coordinacion")
+@app.route("/programa-pop")
+def programa_pop():
+    return _pagina("pagina/ProgramaPOP.html", "Programa POP", "programa-pop")
 
-@app.route("/institucion")
-def institucion():
-    return _pagina("pagina/institucion.html", "Institución", "institucion")
+@app.route("/Estructura")
+def estructura():
+    return _pagina("pagina/estructura.html", "Estructura", "estructura")
 
-@app.route("/material")
-def material():
-    return _pagina("pagina/material.html", "Material", "material")
+@app.route("/ques")
+def ques():
+    return _pagina("pagina/QUES.html", "¿Qué es ZOE?", "ques")
 
-@app.route("/materias")
-def materias():
-    return _pagina("pagina/materias.html", "Materias", "materias")
 
-@app.route("/orientacion")
-def orientacion():
-    return _pagina("pagina/Orientacion.html", "Orientación", "orientacion")
 
 
 # -----------------------------------------------------------------------------
 # Rutas de aplicación interna (templates/aplicacion/)
 # -----------------------------------------------------------------------------
-@app.route("/login")
-def login():
-    return _aplicacion("aplicacion/auth/login.html", "Login", "login")
 
-@app.route("/registro")
-def registro():
-    return _aplicacion("aplicacion/auth/registro.html", "Registro", "registro")
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        # Simulación: siempre entra como estudiante
+        session["usuario"] = request.form["email"]
+        session["rol"] = "estudiante"
+        return redirect(url_for("dashboard"))
+    # Renderiza la plantilla de login
+    return _aplicacion("aplicacion/auth/login.html", "Login", "login")
 
 @app.route("/dashboard")
 def dashboard():
+    # Renderiza la plantilla del dashboard de estudiante
     return _aplicacion("aplicacion/usuarios/dashboard.html", "Dashboard", "dashboard")
 
 @app.route("/tareas")

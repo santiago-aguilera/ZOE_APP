@@ -1,0 +1,65 @@
+/* Contenedor principal */
+.estructura-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Títulos */
+.estructura-title {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.estructura-subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+/* Grid principal */
+.estructura-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+/* Tarjetas */
+.estructura-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease;
+}
+
+.estructura-card:hover {
+  transform: translateY(-5px);
+}
+
+.estructura-card h2 {
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+/* Listas */
+.estructura-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.estructura-card li {
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+/* Colores diferenciados */
+.ib {
+  border-top: 6px solid #4a90e2;
+}
+
+.tecnica {
+  border-top: 6px solid #7ed321;
+}

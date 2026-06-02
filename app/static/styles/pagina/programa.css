@@ -1,0 +1,60 @@
+.program-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.program-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.program-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.program-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease;
+}
+
+.program-card:hover {
+  transform: translateY(-5px);
+}
+
+.program-card .icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Colores personalizados por bloque */
+.hpp {
+  border-top: 6px solid #4a90e2;
+}
+.reflexion {
+  border-top: 6px solid #f5a623;
+}
+.servicio {
+  border-top: 6px solid #7ed321;
+}
+.lenguas {
+  border-top: 6px solid #bd10e0;
+}
+
+.program-card h2 {
+  margin-bottom: 0.5rem;
+  color: #222;
+}
+
+.program-card p {
+  color: #666;
+  font-size: 0.95rem;
+}
+

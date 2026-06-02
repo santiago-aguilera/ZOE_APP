@@ -1,110 +1,52 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{{ page_title | default(app_name) }}{% endblock %} — {{ app_name }}</title>
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Fuente Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-
-    <link href="../static/styles/pagina/layout.css" rel="stylesheet">
-    {% block extra_css %}{% endblock %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZOE — Organización Académica IB</title>
+  <link rel="stylesheet" href="static/styles/pagina/layout.css">
+  {% block extra_css %}
+  {% endblock %}
 </head>
-
 <body>
-
-    <!-- BOTÓN HAMBURGUESA -->
-    <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Abrir menú">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <!-- TOP BAR -->
-    <header class="top-bar">
-        <div class="top-logos">
-            <img src="../static/img/Logos/logo_zoe.png" alt="Logo ZOE" class="logo">
-        </div>
-
-        <div class="top-login">
-            <a href="/login" class="login-btn">
-                <i class="fas fa-user"></i>
-                Iniciar Sesión
-            </a>
-        </div>
-    </header>
-
-    <!-- CONTENEDOR -->
-    <div class="container-main">
-
-        <!-- MENÚ LATERAL -->
-        <nav class="menu" id="menu" aria-label="Navegación principal">
-            <ul>
-                <li>
-                    <a href="/" class="{% if active_page == 'index' %}active{% endif %}">
-                        <i class="fas fa-home"></i>
-                        <span>Inicio</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ url_for('institucion') }}" class="{% if active_page == 'institucion' %}active{% endif %}">
-                        <i class="fas fa-school"></i>
-                        <span>Nuestra Institución</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ url_for('coordinacion') }}" class="{% if active_page == 'coordinacion' %}active{% endif %}">
-                        <i class="fas fa-users-cog"></i>
-                        <span>Coordinación</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ url_for('orientacion') }}" class="{% if active_page == 'orientacion' %}active{% endif %}">
-                        <i class="fas fa-user-friends"></i>
-                        <span>Orientación</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ url_for('materias') }}" class="{% if active_page == 'materias' %}active{% endif %}">
-                        <i class="fas fa-globe"></i>
-                        <span>Nuestras Materias</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ url_for('material') }}" class="{% if active_page == 'material' %}active{% endif %}">
-                        <i class="fas fa-book"></i>
-                        <span>Material</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-        <!-- CONTENIDO DE CADA PÁGINA -->
-        <main class="contenido">
-            {% block content %}{% endblock %}
-        </main>
-
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">
+      <span class="menu-icon">☰</span>
+      <h2>ZOE</h2>
     </div>
+    <nav class="nav-links">
+      <a href="/">¿Qué es ZOE?</a>
+      <a href="/programa-pop">Programa POP</a>
+      <a href="/Estructura">Estructura</a>
+    </nav>
+    <button class="login-btn" ><a href="/login">Login</a></button>
+  </header>
 
-    <!-- FOOTER -->
-    <footer>
-        <p>© 2025 {{ app_name }} — Proyecto educativo</p>
-    </footer>
+  <!-- Contenido dinámico -->
+  <main class="content">
+    {% block content %}
+    <!-- Contenido específico de cada página -->
+    {% endblock %}
+  </main>
 
-    <!-- JS global -->
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    {% block extra_js %}{% endblock %}
-
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <h3>ZOE</h3>
+        <p>Organización Académica del Bachillerato Internacional</p>
+      </div>
+      <div class="footer-links">
+        <a href="/">Inicio</a>
+        <a href="/programa-pop">Programa POP</a>
+        <a href="/estructura">Estructura</a>
+        <a href="/contacto">Contacto</a>
+      </div>
+      <div class="footer-right">
+        <p>© 2026 ZOE — Todos los derechos reservados</p>
+      </div>
+    </div>
+  </footer>
 </body>
-
 </html>

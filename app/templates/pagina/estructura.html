@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block extra_css %}
+<link href="../../static/styles/pagina/estructura.css" rel="stylesheet">
+<link href="../../static/styles/pagina/layout.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="estructura-container">
+  <h1 class="estructura-title">Estructura Académica</h1>
+  <p class="estructura-subtitle">Materias del Bachillerato Internacional</p>
+
+  <div class="estructura-grid">
+    <!-- Materias IB -->
+    <div class="estructura-card ib">
+      <h2>Materias IB</h2>
+      <ul>
+        <li>Lengua y Literatura (HL)</li>
+        <li>Matemáticas (HL/SL)</li>
+        <li>Inglés A (SL)</li>
+      </ul>
+    </div>
+
+    <!-- Formación Técnica -->
+    <div class="estructura-card tecnica">
+      <h2>Formación Técnica</h2>
+      <ul>
+        <li>Programación y Desarrollo Web</li>
+        <li>Diseño Gráfico Digital</li>
+        <li>Administración Empresarial</li>
+        <li>Ciencias Ambientales</li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

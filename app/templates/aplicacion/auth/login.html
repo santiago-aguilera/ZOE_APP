@@ -1,24 +1,49 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - ZOE</title>
-    <link rel="stylesheet" href="../../static/styles/aplicacion/login.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZOE - Iniciar Sesión</title>
+  <link rel="stylesheet" href="../../static/styles/aplicacion/login.css">
 </head>
-<body class="login-body">
-    <div class="login-container">
-        <h2 class="login-title">Bienvenido a ZOE</h2>
-        <form method="POST" action="/login">
-            <label for="username">Usuario</label>
-            <input type="text" id="username" name="username" placeholder="Ingresa tu usuario" required>
-
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
-
-            <button type="submit" class="login-btn">Entrar</button>
-        </form>
-        <p class="login-footer">¿No tienes cuenta? <a href="/register">Regístrate aquí</a></p>
+<body>
+  <div class="login-container">
+    <!-- Columna izquierda -->
+    <div class="login-info">
+      <h1>ZOE Sistema de Gestión Académica IB</h1>
+      <p>
+        Plataforma integral para el Programa de Orientación Profesional del Bachillerato Internacional.
+      </p>
+      <ul>
+        <li>📂 Portafolios académicos centralizados</li>
+        <li>📅 Seguimiento de tareas y entregas</li>
+        <li>💬 Comunicación directa entre roles</li>
+        <li>📊 Reportes analíticos en tiempo real</li>
+      </ul>
     </div>
+
+    <!-- Columna derecha -->
+    <div class="login-form">
+      <h2>Iniciar sesión</h2>
+      <form method="POST" action="/login">
+        <label for="email">Correo Institucional</label>
+        <input type="email" id="email" name="email" placeholder="usuario@colegio.mx" required>
+
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" name="password" placeholder="********" required>
+
+
+        <div class="form-options">
+          <label>
+            <input type="checkbox"> Recordar mi sesión
+          </label>
+          <a href="#">Restablecer contraseña</a>
+        </div>
+
+        <button type="submit" class="btn-login">Iniciar Sesión</button>
+      </form>
+      <a href="/" class="back-link">← Volver al inicio</a>
+    </div>
+  </div>
 </body>
 </html>

@@ -1,124 +1,64 @@
 {% extends 'layout.html' %}
 
 {% block extra_css %}
-<link href="../../static/styles/pagina/index.css" rel="stylesheet">
-<link href="../../static/styles/pagina/layout.css" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/pagina/index.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/pagina/layout.css') }}">
 {% endblock %}
 
 {% block content %}
 
-<main class="contenido">
+<main class="hero">
+  <div class="hero-content">
+    <span class="badge">Sistema Académico IB</span>
+    <h1><span class="highlight">ZOE</span> — Organización Académica del Bachillerato Internacional</h1>
+    <p>
+      ZOE es una plataforma educativa diseñada para centralizar portafolios, tareas, comunicación y recursos del Programa de Orientación Profesional en una sola aplicación.
+    </p>
+    <div class="hero-buttons">
+      <button class="primary-btn"><a href="{{ url_for('login') }}">Comenzar ahora</a></button>
+      <button class="secondary-btn"><a href="{{ url_for('ques') }}">Conocer más</a></button>
+    </div>
+  </div>
 
-    <!-- ================= CARRUSEL ================= -->
-    <section class="carousel-section">
+  <!-- Sección informativa -->
+  <section class="info-grid">
+    <div class="info-card">
+      <h3>¿Qué es ZOE?</h3>
+      <p>
+        Es un sistema integral que unifica todos los componentes del Programa de Orientación Profesional del IB en un solo ecosistema digital.
+      </p>
+      <p>
+        Fue creado para resolver la dispersión de materiales y comunicaciones en múltiples plataformas, facilitando la gestión académica efectiva.
+      </p>
+    </div>
 
-        <div id="zoeCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="info-card">
+      <h3>Beneficios Clave</h3>
+      <ul>
+        <li>✅ Acceso centralizado a materias y tareas</li>
+        <li>✅ Calendario personalizado con entregas</li>
+        <li>✅ Comunicación directa entre roles</li>
+        <li>✅ Seguimiento de progreso en tiempo real</li>
+      </ul>
+    </div>
+  </section>
 
-            <!-- INDICADORES -->
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#zoeCarousel" data-bs-slide-to="0" class="active"></button>
-                <button type="button" data-bs-target="#zoeCarousel" data-bs-slide-to="1"></button>
-                <button type="button" data-bs-target="#zoeCarousel" data-bs-slide-to="2"></button>
-            </div>
-
-            <!-- SLIDES -->
-            <div class="carousel-inner">
-
-                <!-- SLIDE 1 POP -->
-                <div class="carousel-item active pop-slide">
-
-                    <div class="pop-wrapper">
-                        <img src="../../static/img/Escudos/POP.jpg" alt="Programa POP">
-                    </div>
-
-                    <div class="carousel-caption">
-                        <p>¿Sabes qué es el Programa de Orientación Profesional (POP)?</p>
-                    </div>
-
-                </div>
-
-                <!-- SLIDE 2 -->
-                <div class="carousel-item">
-
-                    <img src="../../static/img/Logotipo carita feliz simple blanco.png"
-                        class="carousel-img"
-                        alt="Slide 2">
-
-                    <div class="carousel-caption">
-                        <h2>Gestión Académica</h2>
-                        <p>Organiza entregas, cronogramas y proyectos desde un solo lugar.</p>
-                    </div>
-
-                </div>
-
-                <!-- SLIDE 3 -->
-                <div class="carousel-item">
-
-                    <img src="../../static/img/Logotipo.png"
-                        class="carousel-img"
-                        alt="Slide 3">
-
-                    <div class="carousel-caption">
-                        <h2>Conecta con tus Profesores</h2>
-                        <p>Comunicación rápida y seguimiento académico eficiente.</p>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- CONTROLES -->
-            <button class="carousel-control-prev" type="button" data-bs-target="#zoeCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-
-            <button class="carousel-control-next" type="button" data-bs-target="#zoeCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
-
-        </div>
-
-    </section>
-
-    <!-- ================= CARDS ================= -->
-    <section class="cards">
-
-        <div class="card">
-            <img src="../../static/img/Logotipo carita.png" class="card-img-top" alt="">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-        </div>
-
-        <div class="card">
-            <img src="../../static/img/Logotipo carita.png" class="card-img-top" alt="">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-        </div>
-
-    </section>
-
-    <!-- ================= MAPA ================= -->
-    <section class="seccion">
-
-        <h2>Sede A</h2>
-
-        <div class="tarjeta">
-
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7952.900024461095!2d-74.0758354!3d4.691596250000009"
-                width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
-            </iframe>
-
-        </div>
-
-    </section>
-
+  <!-- Sección de roles -->
+  <section class="roles-grid">
+    <div class="role-card estudiante">
+      👩‍🎓 Estudiantes<br>
+      <span>Gestión completa de portafolios y entregas</span>
+    </div>
+    <div class="role-card profesor">
+      👨‍🏫 Profesores<br>
+      <span>Seguimiento y publicación de recursos</span>
+    </div>
+    <div class="role-card coordinador">
+      🧑‍💼 Coordinadores<br>
+      <span>Visión integral y gestión administrativa</span>
+    </div>
+  </section>
 </main>
+
 
 {% endblock %}
