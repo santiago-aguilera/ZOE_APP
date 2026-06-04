@@ -18,14 +18,14 @@
         </div>
         <nav>
             <a href="{{ url_for('dashboard') }}">🏠 Home</a>
-            <a href="#">📅 Calendario</a>
-            <a href="#">📚 Materias</a>
-            <a href="#">📝 Tareas</a>
-            <a href="#">💬 Chat</a>
-            <a href="#">📊 Informes</a>
-            <a href="#">📂 Recursos</a>
-            <a href="#">📢 Comunicados</a>
-            <a href="#">⚙️ Administración</a>
+            <a href="{{ url_for('calendario') }}">📅 Calendario</a>
+            <a href="{{ url_for('materias') }}">📚 Materias</a>
+            <a href="{{ url_for('tareas') }}">📝 Tareas</a>
+            <a href="{{ url_for('chat') }}">💬 Chat</a>
+            <a href="{{ url_for('informes') }}">📊 Informes</a>
+            <a href="{{ url_for('recursos') }}">📂 Recursos</a>
+            <a href="{{ url_for('comunicados') }}">📢 Comunicados</a>
+            <a href="{{ url_for('administracion') }}">⚙️ Administración</a>
         </nav>
         <button class="logout">Cerrar sesión</button>
     </aside>

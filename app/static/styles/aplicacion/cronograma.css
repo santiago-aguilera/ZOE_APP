@@ -1,0 +1,82 @@
+/* Tarjetas de resumen */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.card {
+  background: #fff;
+  padding: 1.2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.card h3 {
+  margin: 0.5rem 0 0;
+  font-size: 1.1rem;
+  color: #4a90e2;
+}
+
+/* Calendario */
+.calendar-wrapper {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.calendar {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.calendar header h2 {
+  margin: 0;
+  color: #6c5ce7;
+}
+
+.calendar table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.calendar th, .calendar td {
+  text-align: center;
+  padding: 0.8rem;
+  border-radius: 6px;
+}
+
+.calendar td.has-event {
+  background: #eaf3ff;
+  font-weight: bold;
+  color: #4a90e2;
+}
+
+/* Panel lateral */
+.events {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.events h3 {
+  margin-top: 0;
+  color: #6c5ce7;
+}
+
+.events ul {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.events li {
+  margin: 0.5rem 0;
+  color: #555;
+}

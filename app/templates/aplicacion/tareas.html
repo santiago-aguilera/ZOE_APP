@@ -1,0 +1,53 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/tareas.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="tareas-wrapper">
+  <header>
+    <h1>Módulo de Tareas</h1>
+    <p>Listado de tareas por materias</p>
+    <div class="filters">
+      <button onclick="filterTasks('all')" class="active">Todas</button>
+      <button onclick="filterTasks('pendiente')">Pendientes</button>
+      <button onclick="filterTasks('completada')">Completadas</button>
+      <button onclick="filterTasks('revision')">En revisión</button>
+      <a href="#" class="btn-create">+ Crear Tarea</a>
+    </div>
+  </header>
+
+  <div class="tasks-list">
+    {% for tarea in tareas %}
+    <div class="task-card {{ tarea.estado }}">
+      <h3>{{ tarea.materia }}</h3>
+      <p><strong>{{ tarea.titulo }}</strong></p>
+      <p>Responsable: {{ tarea.responsable }}</p>
+      <p>Estado: {{ tarea.estado|capitalize }}</p>
+      <p>Fecha entrega: {{ tarea.fecha }}</p>
+      <div class="actions">
+        <a href="#" class="btn">Revisar</a>
+        {% if tarea.estado == "pendiente" %}
+          <a href="#" class="btn secondary">Marcar completada</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+function filterTasks(status) {
+  document.querySelectorAll('.filters button').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.task-card').forEach(card => {
+    if (status === 'all') {
+      card.style.display = 'block';
+    } else {
+      card.style.display = card.classList.contains(status) ? 'block' : 'none';
+    }
+  });
+}
+</script>
+{% endblock %}

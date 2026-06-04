@@ -1,0 +1,49 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/recursos.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="recursos-wrapper">
+  <header>
+    <h1>Recursos & Comunicados</h1>
+    <p>Materiales académicos y avisos institucionales</p>
+  </header>
+
+  <!-- Lista de recursos -->
+  <section class="resources-list">
+    {% for recurso in recursos %}
+    <div class="resource-card">
+      <h3>{{ recurso.titulo }}</h3>
+      <p>Materia: {{ recurso.materia }}</p>
+      <p>Tipo: {{ recurso.tipo }} · Tamaño: {{ recurso.tamano }}</p>
+      <p>Fecha: {{ recurso.fecha }}</p>
+      <div class="actions">
+        <a href="#" class="btn">Ver</a>
+        <a href="#" class="btn secondary">Descargar</a>
+      </div>
+    </div>
+    {% endfor %}
+  </section>
+
+  <!-- Formulario solo para coordinador/profesor -->
+  {% if rol in ["coordinador", "profesor"] %}
+  <section class="upload-form">
+    <h2>Subir nuevo recurso</h2>
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('recursos') }}">
+      <label for="titulo">Título:</label>
+      <input type="text" id="titulo" name="titulo" required>
+
+      <label for="materia">Materia:</label>
+      <input type="text" id="materia" name="materia" required>
+
+      <label for="archivo">Archivo:</label>
+      <input type="file" id="archivo" name="archivo" required>
+
+      <button type="submit" class="btn">Subir recurso</button>
+    </form>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

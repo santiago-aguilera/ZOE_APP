@@ -1,0 +1,78 @@
+.tareas-wrapper header {
+  margin-bottom: 1.5rem;
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.filters button, .btn-create {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  background: #f1f1f1;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+  color: #333;
+}
+
+.filters button.active {
+  background: #4a90e2;
+  color: #fff;
+}
+
+.btn-create {
+  background: #6c5ce7;
+  color: #fff;
+  margin-left: auto;
+}
+
+.tasks-list {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.task-card {
+  background: #fff;
+  padding: 1.2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.task-card h3 {
+  margin-top: 0;
+  color: #6c5ce7;
+}
+
+.task-card p {
+  margin: 0.3rem 0;
+  color: #555;
+}
+
+.actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  background: #4a90e2;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.btn.secondary {
+  background: #6c5ce7;
+}
+
+/* Estados */
+.task-card.pendiente { border-left: 6px solid #f39c12; }
+.task-card.completada { border-left: 6px solid #2ecc71; }
+.task-card.revision { border-left: 6px solid #e74c3c; }

@@ -1,0 +1,47 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/comunicaod.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="comunicados-wrapper">
+  <header>
+    <h1>Recursos & Comunicados</h1>
+    <p>Materiales académicos y avisos institucionales</p>
+  </header>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <a href="{{ url_for('recursos') }}" class="tab">Recursos</a>
+    <a href="{{ url_for('comunicados') }}" class="tab active">Comunicados</a>
+  </div>
+
+  <!-- Lista de comunicados -->
+  <section class="comunicados-list">
+    {% for comunicado in comunicados %}
+    <div class="comunicado-card">
+      <h3>{{ comunicado.titulo }}</h3>
+      <p><strong>{{ comunicado.autor }}</strong> — {{ comunicado.fecha }}</p>
+      <p>{{ comunicado.texto }}</p>
+    </div>
+    {% endfor %}
+  </section>
+
+  <!-- Formulario solo para coordinador/profesor -->
+  {% if rol in ["coordinador", "profesor"] %}
+  <section class="upload-form">
+    <h2>Publicar nuevo comunicado</h2>
+    <form method="POST" action="{{ url_for('comunicados') }}">
+      <label for="titulo">Título:</label>
+      <input type="text" id="titulo" name="titulo" required>
+
+      <label for="texto">Contenido:</label>
+      <textarea id="texto" name="texto" rows="4" required></textarea>
+
+      <button type="submit" class="btn">Publicar comunicado</button>
+    </form>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

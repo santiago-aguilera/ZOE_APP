@@ -1,0 +1,43 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/mensajeris.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="chat-wrapper">
+  <header>
+    <h1>Mensajería</h1>
+    <p>Comunicación interna académica</p>
+  </header>
+
+  <!-- Lista de conversaciones -->
+  <section class="chat-list">
+    {% for mensaje in mensajes %}
+    <div class="chat-card">
+      <h3>{{ mensaje.titulo }}</h3>
+      <p><strong>{{ mensaje.remitente }}</strong> → {{ mensaje.destinatario }}</p>
+      <p>{{ mensaje.texto }}</p>
+      <p class="fecha">{{ mensaje.fecha }}</p>
+    </div>
+    {% endfor %}
+  </section>
+
+  <!-- Formulario para enviar mensaje -->
+  <section class="chat-form">
+    <h2>Enviar nuevo mensaje</h2>
+    <form method="POST" action="{{ url_for('chat') }}">
+      <label for="destinatario">Destinatario:</label>
+      <input type="text" id="destinatario" name="destinatario" required>
+
+      <label for="titulo">Título:</label>
+      <input type="text" id="titulo" name="titulo" required>
+
+      <label for="texto">Mensaje:</label>
+      <textarea id="texto" name="texto" rows="4" required></textarea>
+
+      <button type="submit" class="btn">Enviar</button>
+    </form>
+  </section>
+</div>
+{% endblock %}
