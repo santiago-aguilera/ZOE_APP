@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZOE - {{ titulo }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/layout.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>ZOE</h2>
+            <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+        </div>
+        <nav>
+            <a href="{{ url_for('dashboard') }}">🏠 Home</a>
+            <a href="#">📅 Calendario</a>
+            <a href="#">📚 Materias</a>
+            <a href="#">📝 Tareas</a>
+            <a href="#">💬 Chat</a>
+            <a href="#">📊 Informes</a>
+            <a href="#">📂 Recursos</a>
+            <a href="#">📢 Comunicados</a>
+            <a href="#">⚙️ Administración</a>
+        </nav>
+        <button class="logout">Cerrar sesión</button>
+    </aside>
+
+    <!-- Contenedor principal -->
+    <div class="main-wrapper">
+        <!-- Navbar superior -->
+        <header class="topbar">
+            <div class="logo">ZOE</div>
+            <div class="top-actions">
+                <span class="notif">🔔</span>
+                <span class="user">{{ usuario }}</span>
+            </div>
+        </header>
+
+        <!-- Contenido -->
+        <main class="main-content">
+            <section class="welcome">
+                <h1>Bienvenido, {{ usuario }} 👋</h1>
+                <p>{{ fecha }} · {{ rol }}</p>
+            </section>
+
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>ZOE © 2026 — Sistema de Gestión Académica IB | Programa de Orientación Profesional</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("collapsed");
+        }
+    </script>
+</body>
+
+</html>

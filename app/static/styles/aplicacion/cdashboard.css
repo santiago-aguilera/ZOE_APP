@@ -1,0 +1,72 @@
+/* Reset */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f9fafc;
+    color: #333;
+}
+
+/* Grid de estadísticas */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card h3 {
+    margin: 0.5rem 0 0;
+    font-size: 1.2rem;
+    color: #4a90e2;
+}
+
+/* Paneles */
+.panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.panel {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.panel h2 {
+    margin-top: 0;
+    font-size: 1.3rem;
+    color: #6c5ce7;
+}
+
+.panel ul {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.panel li {
+    margin: 0.5rem 0;
+    color: #555;
+}
+
+.panel a {
+    text-decoration: none;
+    color: #4a90e2;
+    font-weight: bold;
+}

@@ -1,10 +1,61 @@
-
+{% extends 'aplicacion/layout_1.html' %}
 
 {% block extra_css %}
-<link href="../../static/styles/aplicacion/dashboard.css" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/cdashboard.css') }}">
 {% endblock %}
 
 {% block content %}
-<h1>Módulo Dashboard</h1>
-<p>Contenido en construcción...</p>
+<div class="stats-grid">    
+    {% if rol == "estudiante" %}
+    <div class="card">📚 <h3>6 Materias activas</h3>
+    </div>
+    <div class="card">📝 <h3>12 Tareas pendientes</h3>
+    </div>
+    <div class="card">✅ <h3>34 Entregas completadas</h3>
+    </div>
+    <div class="card">💬 <h3>3 Mensajes nuevos</h3>
+    </div>
+    {% elif rol == "profesor" %}
+    <div class="card">👥 <h3>4 Mis grupos</h3>
+    </div>
+    <div class="card">📝 <h3>18 Tareas publicadas</h3>
+    </div>
+    <div class="card">📂 <h3>27 Entregas pendientes</h3>
+    </div>
+    <div class="card">💬 <h3>5 Mensajes nuevos</h3>
+    </div>
+    {% elif rol == "coordinador" %}
+    <div class="card">🎓 <h3>312 Estudiantes activos (+8)</h3>
+    </div>
+    <div class="card">👨‍🏫 <h3>28 Profesores (+2)</h3>
+    </div>
+    <div class="card">📝 <h3>156 Tareas publicadas (+14)</h3>
+    </div>
+    <div class="card">📂 <h3>43 Pendientes de revisión (-3)</h3>
+    </div>
+    {% endif %}
+</div>
+
+<div class="panels">
+    <section class="panel">
+        <h2>Próximas entregas</h2>
+        <ul>
+            <li>Proyecto de Reflexión — Borrador 2 (HPP) · 3d</li>
+            <li>Análisis literario — Páramo (Lengua y Literatura) · 5d</li>
+            <li>Laboratorio de Química — Reporte (Química SL) · 7d</li>
+            <li>Portafolio CAS — Actualización (CAS) · 10d</li>
+        </ul>
+        <a href="#">Ver todas →</a>
+    </section>
+
+    <section class="panel">
+        <h2>Actividad reciente</h2>
+        <ul>
+            <li>Nueva tarea publicada (Matemáticas HL - Lic. Medina) · hace 1h</li>
+            <li>Mensaje recibido (Coordinación académica) · hace 2h</li>
+            <li>Entrega calificada (Proyecto CAS: 18/20) · ayer</li>
+            <li>Comunicado nuevo (Semana de evaluaciones IB) · ayer</li>
+        </ul>
+    </section>
+</div>
 {% endblock %}

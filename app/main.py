@@ -55,12 +55,14 @@ def _pagina(template, titulo, pagina_activa):
         active_page=pagina_activa,
     )
     
-def _aplicacion(template, titulo, pagina_activa):
+def _aplicacion(template, titulo, pagina_activa, **kwargs):
     return render_template(
         template,
         page_title=titulo,
         active_page=pagina_activa,
+        **kwargs
     )
+
 
 
 # -----------------------------------------------------------------------------
@@ -95,14 +97,17 @@ def login():
         # Simulación: siempre entra como estudiante
         session["usuario"] = request.form["email"]
         session["rol"] = "estudiante"
-        return redirect(url_for("dashboard"))
+        return ("/dashboard")
     # Renderiza la plantilla de login
     return _aplicacion("aplicacion/auth/login.html", "Login", "login")
 
 @app.route("/dashboard")
 def dashboard():
-    # Renderiza la plantilla del dashboard de estudiante
-    return _aplicacion("aplicacion/usuarios/dashboard.html", "Dashboard", "dashboard")
+    rol = session.get("rol", "estudiante")   # valor por defecto
+    usuario = session.get("usuario", "Usuario Demo")
+    fecha = "martes, 2 de junio de 2026"
+
+    return _aplicacion("aplicacion/dashboard.html", "Dashboard", "dashboard",usuario=usuario, rol=rol, fecha=fecha)
 
 @app.route("/tareas")
 def tareas():
