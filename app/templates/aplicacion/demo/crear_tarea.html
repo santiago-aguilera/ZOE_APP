@@ -1,0 +1,47 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Demo: Crear Tarea</h1>
+    <p class="page-subtitle">Formulario que usa la clase Tarea</p>
+</div>
+
+<div class="card" style="max-width:600px;">
+    <div class="card-header">
+        <h3>Nueva tarea</h3>
+    </div>
+    <div class="card-body">
+        {% if errores %}
+        <div class="alert alert-danger" style="background:#f38ba8;color:#1e1e2e;padding:0.75rem;border-radius:6px;margin-bottom:1rem;">
+            <ul style="margin:0;">
+                {% for err in errores %}
+                <li>{{ err }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('demo_crear_tarea') }}">
+            <div style="margin-bottom:1rem;">
+                <label for="titulo" style="display:block;margin-bottom:0.25rem;font-weight:600;">Título *</label>
+                <input type="text" id="titulo" name="titulo" required
+                    style="width:100%;padding:0.5rem;border:1px solid var(--color-border);border-radius:6px;background:var(--color-surface);color:var(--color-text);">
+            </div>
+
+            <div style="margin-bottom:1rem;">
+                <label for="instrucciones" style="display:block;margin-bottom:0.25rem;font-weight:600;">Instrucciones</label>
+                <textarea id="instrucciones" name="instrucciones" rows="4"
+                    style="width:100%;padding:0.5rem;border:1px solid var(--color-border);border-radius:6px;background:var(--color-surface);color:var(--color-text);"></textarea>
+            </div>
+
+            <div style="margin-bottom:1rem;">
+                <label for="fecha_limite" style="display:block;margin-bottom:0.25rem;font-weight:600;">Fecha límite *</label>
+                <input type="date" id="fecha_limite" name="fecha_limite" required
+                    style="width:100%;padding:0.5rem;border:1px solid var(--color-border);border-radius:6px;background:var(--color-surface);color:var(--color-text);">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Crear tarea</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

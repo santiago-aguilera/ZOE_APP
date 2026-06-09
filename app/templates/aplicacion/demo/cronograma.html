@@ -1,0 +1,23 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Demo: Cronograma</h1>
+    <p class="page-subtitle">Objetos Cronograma (Eventos)</p>
+</div>
+
+{% for ev in eventos %}
+<div class="card" style="margin-bottom:1rem;">
+    <div class="card-header">
+        <h3>{{ ev.titulo }}</h3>
+        <span class="badge badge-info">{{ ev.fechaEvento }}</span>
+    </div>
+    <div class="card-body">
+        <p><strong>Materia:</strong> {{ ev.materia.nombre }}</p>
+        <p>{{ ev.descripcion }}</p>
+    </div>
+</div>
+{% else %}
+<p class="text-muted">No hay eventos</p>
+{% endfor %}
+{% endblock %}

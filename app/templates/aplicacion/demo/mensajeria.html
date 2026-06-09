@@ -1,0 +1,28 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Demo: Mensajería</h1>
+    <p class="page-subtitle">Objetos Mensaje</p>
+</div>
+
+{% for msg in mensajes %}
+<div class="card" style="margin-bottom:1rem;">
+    <div class="card-header">
+        <h3>{{ msg.asunto }}</h3>
+        <span class="badge badge-{{ 'success' if msg.leido else 'warning' }}">{{ "Leído" if msg.leido else "No leído" }}</span>
+    </div>
+    <div class="card-body">
+        <p><strong>De:</strong> {{ msg.remitente.nombre }} ({{ msg.remitente.correo }})</p>
+        <p><strong>Para:</strong> {{ msg.destinatario.nombre }} ({{ msg.destinatario.correo }})</p>
+        <hr>
+        <p>{{ msg.cuerpo }}</p>
+    </div>
+    <div class="card-footer">
+        <a href="{{ url_for('demo_enviar_mensaje') }}" class="btn btn-sm btn-primary">Enviar mensaje demo</a>
+    </div>
+</div>
+{% else %}
+<p class="text-muted">No hay mensajes</p>
+{% endfor %}
+{% endblock %}

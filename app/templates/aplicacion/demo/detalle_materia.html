@@ -1,0 +1,65 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">{{ materia.nombre }}</h1>
+    <p class="page-subtitle">{{ materia.descripcion }}</p>
+</div>
+
+<div class="card-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+    <div class="card">
+        <div class="card-header"><h3>📚 Información</h3></div>
+        <div class="card-body">
+            <p><strong>ID:</strong> {{ materia.id }}</p>
+            <p><strong>Periodo:</strong> {{ materia.periodo.nombre }}</p>
+            <p><strong>Profesores:</strong> {{ materia.profesores|length }}</p>
+            <p><strong>Grupos:</strong> {{ materia.grupos|length }}</p>
+            <p><strong>Tareas:</strong> {{ materia.tareas|length }}</p>
+            <p><strong>Recursos:</strong> {{ materia.recursos|length }}</p>
+            <p><strong>Eventos:</strong> {{ materia.cronograma|length }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><h3>👨‍🏫 Profesores</h3></div>
+        <div class="card-body">
+            {% for p in materia.profesores %}
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem;">
+                <div class="avatar" style="width:36px;height:36px;border-radius:50%;background:var(--color-primary);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;">{{ p.nombre[:1]|upper }}</div>
+                <div><strong>{{ p.nombre }}</strong><br><small>{{ p.correo }}</small></div>
+            </div>
+            {% else %}
+            <p class="text-muted">Sin profesores asignados</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><h3>📋 Tareas</h3></div>
+        <div class="card-body">
+            {% for t in materia.tareas %}
+            <div style="padding:0.5rem 0;border-bottom:1px solid var(--color-border);">
+                <strong>{{ t.titulo }}</strong><br>
+                <small>Límite: {{ t.fecha_limite }}</small>
+            </div>
+            {% else %}
+            <p class="text-muted">Sin tareas</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><h3>📁 Recursos</h3></div>
+        <div class="card-body">
+            {% for r in materia.recursos %}
+            <div style="padding:0.5rem 0;border-bottom:1px solid var(--color-border);">
+                <strong>{{ r.titulo }}</strong> <span class="badge badge-info">{{ r.tipo }}</span><br>
+                <small>{{ r.descripcion }}</small>
+            </div>
+            {% else %}
+            <p class="text-muted">Sin recursos</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

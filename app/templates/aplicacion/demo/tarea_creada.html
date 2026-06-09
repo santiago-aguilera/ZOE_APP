@@ -1,0 +1,32 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">✅ Tarea Creada</h1>
+    <p class="page-subtitle">La tarea se creó usando la clase Tarea</p>
+</div>
+
+{% if exito %}
+<div class="alert alert-success" style="background:#a6e3a1;color:#1e1e2e;padding:1rem;border-radius:6px;margin-bottom:1.5rem;">
+    ¡Tarea creada exitosamente!
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>{{ tarea.titulo }}</h3>
+        <span class="badge badge-warning">Límite: {{ tarea.fecha_limite }}</span>
+    </div>
+    <div class="card-body">
+        <p><strong>ID:</strong> {{ tarea.id }}</p>
+        <p><strong>Instrucciones:</strong> {{ tarea.instrucciones }}</p>
+        <p><strong>Materia:</strong> {{ tarea.materia.nombre }}</p>
+        <p><strong>Creado por:</strong> {{ tarea.creadoPor.nombre }}</p>
+    </div>
+</div>
+{% endif %}
+
+<div style="margin-top:1.5rem;">
+    <a href="{{ url_for('demo_crear_tarea') }}" class="btn btn-primary">Crear otra tarea</a>
+    <a href="{{ url_for('demo_tareas') }}" class="btn btn-outline-primary">Ver todas las tareas</a>
+</div>
+{% endblock %}

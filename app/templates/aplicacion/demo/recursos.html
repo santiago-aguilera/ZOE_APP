@@ -1,0 +1,25 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Demo: Recursos</h1>
+    <p class="page-subtitle">Objetos Recurso</p>
+</div>
+
+{% for r in recursos %}
+<div class="card" style="margin-bottom:1rem;">
+    <div class="card-header">
+        <h3>{{ r.titulo }}</h3>
+        <span class="badge badge-info">{{ r.tipo }}</span>
+    </div>
+    <div class="card-body">
+        <p><strong>Materia:</strong> {{ r.materia.nombre }}</p>
+        <p><strong>Autor:</strong> {{ r.creadoPor.nombre }}</p>
+        <p>{{ r.descripcion }}</p>
+        <a href="{{ r.urlArchivo }}" class="btn btn-sm btn-primary" target="_blank">📄 Ver recurso</a>
+    </div>
+</div>
+{% else %}
+<p class="text-muted">No hay recursos</p>
+{% endfor %}
+{% endblock %}

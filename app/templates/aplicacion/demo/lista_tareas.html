@@ -1,0 +1,54 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Demo: Tareas</h1>
+    <p class="page-subtitle">Objetos Tarea y Entrega</p>
+</div>
+
+{% for tarea in tareas %}
+<div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-header">
+        <h3>{{ tarea.titulo }}</h3>
+        <span class="badge badge-warning">Límite: {{ tarea.fecha_limite }}</span>
+    </div>
+    <div class="card-body">
+        <p><strong>Instrucciones:</strong> {{ tarea.instrucciones }}</p>
+        <p><strong>Materia:</strong> {{ tarea.materia.nombre }}</p>
+        <p><strong>Creado por:</strong> {{ tarea.creadoPor.nombre }}</p>
+        {% if tarea.entregas %}
+        <h4 style="margin-top:1rem;">Entregas ({{ tarea.entregas|length }})</h4>
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="text-align:left;border-bottom:2px solid var(--color-border);">
+                    <th style="padding:0.5rem;">Estudiante</th>
+                    <th style="padding:0.5rem;">Fecha</th>
+                    <th style="padding:0.5rem;">Estado</th>
+                    <th style="padding:0.5rem;">Calificación</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in tarea.entregas %}
+                <tr style="border-bottom:1px solid var(--color-border);">
+                    <td style="padding:0.5rem;">{{ e.estudiante.nombre }}</td>
+                    <td style="padding:0.5rem;">{{ e.fecha_entrega }}</td>
+                    <td style="padding:0.5rem;"><span class="badge badge-{{ 'success' if e.estado == 'Entregado' else 'info' }}">{{ e.estado }}</span></td>
+                    <td style="padding:0.5rem;">{{ e.calificacion if e.calificacion else "—" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted">Sin entregas aún</p>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+
+<div class="card">
+    <div class="card-header"><h3>➕ Crear nueva tarea</h3></div>
+    <div class="card-body">
+        <a href="{{ url_for('demo_crear_tarea') }}" class="btn btn-primary">Ir al formulario demo</a>
+    </div>
+</div>
+{% endblock %}

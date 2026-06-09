@@ -30,9 +30,12 @@ class Config:
     SESSION_COOKIE_SAMESITE = "Lax"
     PERMANENT_SESSION_LIFETIME = 3600  # segundos (1 hora)
 
-    # Base de datos Oracle (activar cuando conectes BD/)
-    # Ejemplo: oracle+oracledb://user:pass@localhost:1521/?service_name=XE
-    DATABASE_URL = os.environ.get("DATABASE_URL", "")
+    # Base de datos MySQL
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL",
+        "mysql+pymysql://root:@localhost/zoe"
+    )
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Integración futura con IA
     AI_API_KEY = os.environ.get("AI_API_KEY", "")

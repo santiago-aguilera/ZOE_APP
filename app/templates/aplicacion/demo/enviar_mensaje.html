@@ -1,0 +1,41 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Demo: Enviar Mensaje</h1>
+    <p class="page-subtitle">Formulario que usa la clase Mensaje</p>
+</div>
+
+<div class="card" style="max-width:600px;">
+    <div class="card-header">
+        <h3>Nuevo mensaje</h3>
+    </div>
+    <div class="card-body">
+        {% if error %}
+        <div class="alert alert-danger" style="background:#f38ba8;color:#1e1e2e;padding:0.75rem;border-radius:6px;margin-bottom:1rem;">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('demo_enviar_mensaje') }}">
+            <div style="margin-bottom:1rem;">
+                <label for="asunto" style="display:block;margin-bottom:0.25rem;font-weight:600;">Asunto *</label>
+                <input type="text" id="asunto" name="asunto" required
+                    style="width:100%;padding:0.5rem;border:1px solid var(--color-border);border-radius:6px;background:var(--color-surface);color:var(--color-text);">
+            </div>
+
+            <div style="margin-bottom:1rem;">
+                <label for="cuerpo" style="display:block;margin-bottom:0.25rem;font-weight:600;">Mensaje *</label>
+                <textarea id="cuerpo" name="cuerpo" rows="5" required
+                    style="width:100%;padding:0.5rem;border:1px solid var(--color-border);border-radius:6px;background:var(--color-surface);color:var(--color-text);"></textarea>
+            </div>
+
+            <p class="text-muted" style="font-size:0.85rem;">
+                El mensaje se enviará de <strong>{{ session.get('usuario', 'Usuario Demo') }}</strong> al estudiante demo.
+            </p>
+
+            <button type="submit" class="btn btn-primary">Enviar mensaje</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

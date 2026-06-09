@@ -1,0 +1,25 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Demo: Comunicados</h1>
+    <p class="page-subtitle">Objetos Comunicado</p>
+</div>
+
+{% for c in comunicados %}
+<div class="card" style="margin-bottom:1rem;">
+    <div class="card-header">
+        <h3>{{ c.titulo }}</h3>
+        <span class="badge badge-{{ 'success' if c.activo else 'secondary' }}">{{ "Activo" if c.activo else "Inactivo" }}</span>
+    </div>
+    <div class="card-body">
+        <p><strong>Publicado por:</strong> {{ c.creadoPor.nombre }}</p>
+        <p><strong>Fecha:</strong> {{ c.publicadoEn.strftime('%Y-%m-%d') if c.publicadoEn.strftime is defined else c.publicadoEn }}</p>
+        <hr>
+        <p>{{ c.contenido }}</p>
+    </div>
+</div>
+{% else %}
+<p class="text-muted">No hay comunicados</p>
+{% endfor %}
+{% endblock %}

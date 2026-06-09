@@ -1,0 +1,55 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Demo: Usuarios (POO)</h1>
+    <p class="page-subtitle">Objetos Usuario, Profesor, Coordinador y Estudiante</p>
+</div>
+
+<div class="card-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+    {% for u in usuarios %}
+    <div class="card">
+        <div class="card-header">
+            <div class="avatar" style="width:48px;height:48px;border-radius:50%;background:var(--color-primary);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:1.2rem;">
+                {{ u.nombre[:1]|upper }}
+            </div>
+            <div>
+                <h3>{{ u.nombre }}</h3>
+                <span class="badge badge-{{ 'warning' if u.rol == 'Coordinador' else 'primary' if u.rol == 'Profesor' else 'info' }}">
+                    {{ u.rol }}
+                </span>
+            </div>
+        </div>
+        <div class="card-body">
+            <p><strong>ID:</strong> {{ u.id }}</p>
+            <p><strong>Correo:</strong> {{ u.correo }}</p>
+            {% if u.materias is defined %}
+            <p><strong>Materias:</strong> {{ u.materias|length }}</p>
+            {% endif %}
+            {% if u.grupos is defined %}
+            <p><strong>Grupos:</strong> {{ u.grupos|length }}</p>
+            {% endif %}
+        </div>
+        <div class="card-footer">
+            <small class="text-muted">Sesión activa: {{ "Sí" if u.sesion_activa else "No" }}</small>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="card" style="margin-top:2rem;">
+    <div class="card-header">
+        <h3>📘 Código usado en esta ruta</h3>
+    </div>
+    <div class="card-body">
+        <pre style="background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:8px;overflow-x:auto;font-size:0.85rem;">
+<span style="color:#89b4fa;"># Las propiedades @property permiten acceder así:</span>
+<span style="color:#f9e2af;">{{ "{{" }} u.nombre {{ "}}" }}</span>  →  {{ usuarios[0].nombre }}
+<span style="color:#f9e2af;">{{ "{{" }} u.rol {{ "}}" }}</span>  →  {{ usuarios[0].rol }}
+<span style="color:#f9e2af;">{{ "{{" }} u.correo {{ "}}" }}</span>  →  {{ usuarios[0].correo }}
+
+<span style="color:#89b4fa;">{# Sin @property, Jinja2 NO podría acceder a __nombre #}</span>
+        </pre>
+    </div>
+</div>
+{% endblock %}

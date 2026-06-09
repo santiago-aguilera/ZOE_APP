@@ -1,0 +1,32 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">✅ Mensaje Enviado</h1>
+    <p class="page-subtitle">El mensaje se creó usando la clase Mensaje</p>
+</div>
+
+{% if exito %}
+<div class="alert alert-success" style="background:#a6e3a1;color:#1e1e2e;padding:1rem;border-radius:6px;margin-bottom:1.5rem;">
+    ¡Mensaje enviado exitosamente!
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>{{ mensaje.asunto }}</h3>
+        <span class="badge badge-{{ 'success' if mensaje.leido else 'warning' }}">{{ "Leído" if mensaje.leido else "No leído" }}</span>
+    </div>
+    <div class="card-body">
+        <p><strong>De:</strong> {{ mensaje.remitente.nombre }}</p>
+        <p><strong>Para:</strong> {{ mensaje.destinatario.nombre }}</p>
+        <hr>
+        <p>{{ mensaje.cuerpo }}</p>
+    </div>
+</div>
+{% endif %}
+
+<div style="margin-top:1.5rem;">
+    <a href="{{ url_for('demo_enviar_mensaje') }}" class="btn btn-primary">Enviar otro mensaje</a>
+    <a href="{{ url_for('demo_mensajeria') }}" class="btn btn-outline-primary">Ver mensajería</a>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Demo: Periodo Académico</h1>
+    <p class="page-subtitle">Objeto PeriodoAcademico con sus Materias</p>
+</div>
+
+<div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-header">
+        <h3>{{ periodo.nombre }}</h3>
+        <span class="badge badge-{{ 'success' if periodo.activo else 'secondary' }}">
+            {{ "Activo" if periodo.activo else "Cerrado" }}
+        </span>
+    </div>
+    <div class="card-body">
+        <p><strong>Inicio:</strong> {{ periodo.fecha_inicio }}</p>
+        <p><strong>Fin:</strong> {{ periodo.fecha_fin }}</p>
+        <p><strong>Materias inscritas:</strong> {{ periodo.materias|length }}</p>
+    </div>
+</div>
+
+{% if periodo.materias %}
+<h3>Materias del período</h3>
+<div class="card-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-top:1rem;">
+    {% for m in periodo.materias %}
+    <div class="card">
+        <div class="card-header">
+            <h4>{{ m.nombre }}</h4>
+        </div>
+        <div class="card-body">
+            <p>{{ m.descripcion[:100] ~ '...' if m.descripcion|length > 100 else m.descripcion }}</p>
+            <p><small>Profesores: {{ m.profesores|length }} | Tareas: {{ m.tareas|length }} | Recursos: {{ m.recursos|length }}</small></p>
+        </div>
+        <div class="card-footer">
+            <a href="{{ url_for('demo_materia', id=m.id) }}" class="btn btn-sm btn-outline-primary">Ver detalle</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
