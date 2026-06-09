@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'aplicacion/layout_1.html' %}
 
 {% block extra_css %}
@@ -186,3 +187,124 @@
 })();
 </script>
 {% endblock %}
+=======
+{% extends "layout.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/configuracion.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-wrapper">
+  <header>
+    <h1>Administración</h1>
+    <p>Gestión de datos del sistema — Solo Coordinadores</p>
+  </header>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('usuarios')">Usuarios</button>
+    <button class="tab" onclick="showTab('materias')">Materias</button>
+    <button class="tab" onclick="showTab('grupos')">Grupos</button>
+    <button class="tab" onclick="showTab('periodos')">Períodos Académicos</button>
+  </div>
+
+  <!-- Usuarios -->
+  <section id="usuarios" class="tab-content active">
+    <h2>Usuarios</h2>
+    <table>
+      <thead>
+        <tr><th>Nombre</th><th>Correo Institucional</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+        {% for u in usuarios %}
+        <tr>
+          <td>{{ u.nombre }}</td>
+          <td>{{ u.correo }}</td>
+          <td>{{ u.rol }}</td>
+          <td>{{ u.estado }}</td>
+          <td><button>Editar</button><button>Desactivar</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button class="btn-create">+ Crear Usuario</button>
+  </section>
+
+  <!-- Materias -->
+  <section id="materias" class="tab-content">
+    <h2>Materias</h2>
+    <table>
+      <thead>
+        <tr><th>Materia</th><th>Sector</th><th>Nivel</th><th>Estado</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+        {% for m in materias %}
+        <tr>
+          <td>{{ m.nombre }}</td>
+          <td>{{ m.sector }}</td>
+          <td>{{ m.nivel }}</td>
+          <td>{{ m.estado }}</td>
+          <td><button>Editar</button><button>Eliminar</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button class="btn-create">+ Crear Materia</button>
+  </section>
+
+  <!-- Grupos -->
+  <section id="grupos" class="tab-content">
+    <h2>Grupos</h2>
+    <table>
+      <thead>
+        <tr><th>Grupo</th><th>Periodo</th><th>Materia</th><th>Estudiantes</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+        {% for g in grupos %}
+        <tr>
+          <td>{{ g.nombre }}</td>
+          <td>{{ g.periodo }}</td>
+          <td>{{ g.materia }}</td>
+          <td>{{ g.estudiantes }}</td>
+          <td><button>Editar</button><button>Eliminar</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button class="btn-create">+ Crear Grupo</button>
+  </section>
+
+  <!-- Periodos -->
+  <section id="periodos" class="tab-content">
+    <h2>Períodos Académicos</h2>
+    <table>
+      <thead>
+        <tr><th>Periodo</th><th>Inicio</th><th>Fin</th><th>Estado</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+        {% for p in periodos %}
+        <tr>
+          <td>{{ p.nombre }}</td>
+          <td>{{ p.inicio }}</td>
+          <td>{{ p.fin }}</td>
+          <td>{{ p.estado }}</td>
+          <td><button>Editar</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button class="btn-create">+ Crear Periodo</button>
+  </section>
+</div>
+
+<script>
+function showTab(tabId) {
+  document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(sec => sec.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+{% endblock %}
+>>>>>>> e4ccd826c7cda5b1e01ff5ce6d7d12c07996dbc3

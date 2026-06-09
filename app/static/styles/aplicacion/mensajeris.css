@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* =============================================================================
  * ZOE — Mensajería
  * ============================================================================= */
@@ -128,3 +129,67 @@
   .chat-shell { grid-template-columns: 1fr; }
   .chat-list { display: none; }
 }
+=======
+.chat-wrapper header {
+  margin-bottom: 1.5rem;
+}
+
+.chat-list {
+  display: grid;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.chat-card {
+  background: #fff;
+  padding: 1.2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.chat-card h3 {
+  margin-top: 0;
+  color: #6c5ce7;
+}
+
+.chat-card p {
+  margin: 0.3rem 0;
+  color: #555;
+}
+
+.chat-card .fecha {
+  font-size: 0.9rem;
+  color: #999;
+}
+
+/* Formulario */
+.chat-form {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.chat-form h2 {
+  margin-top: 0;
+  color: #4a90e2;
+}
+
+.chat-form label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+.chat-form input, .chat-form textarea {
+  width: 100%;
+  padding: 0.6rem;
+  margin-top: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.chat-form button {
+  margin-top: 1rem;
+}
+>>>>>>> e4ccd826c7cda5b1e01ff5ce6d7d12c07996dbc3

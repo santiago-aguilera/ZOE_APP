@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'aplicacion/layout_1.html' %}
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/reportes.css') }}">
@@ -87,3 +88,77 @@
 })();
 </script>
 {% endblock %}
+=======
+{% extends "aplicacion/layout_1.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/reportes.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="informes-wrapper">
+  <header>
+    <h1>Módulo de Informes</h1>
+    <p>Dashboard académico — {{ rol|capitalize }}</p>
+  </header>
+
+  <!-- Tarjetas resumen -->
+  <div class="stats-grid">
+    {% if resumen %}
+      {% for card in resumen %}
+      <div class="card">
+        <h3>{{ card.titulo }}</h3>
+        <p>{{ card.valor }}</p>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="card">
+        <h3>Sin datos</h3>
+        <p>No hay información de resumen disponible.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Gráficos -->
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>Entregas por Materia</h3>
+      <canvas id="barChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Distribución Global</h3>
+      <canvas id="donutChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+    const barCtx = document.getElementById('barChart');
+    new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ materias|default([])|tojson }},
+            datasets: [
+                { label: 'A tiempo', data: {{ entregas_tiempo|default([])|tojson }}, backgroundColor: '#2ecc71' },
+                { label: 'Retrasadas', data: {{ entregas_retraso|default([])|tojson }}, backgroundColor: '#e74c3c' },
+                { label: 'Pendientes', data: {{ entregas_pendientes|default([])|tojson }}, backgroundColor: '#f39c12' }
+            ]
+        }
+    });
+
+    const donutCtx = document.getElementById('donutChart');
+    new Chart(donutCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['A tiempo', 'Retrasadas', 'Pendientes'],
+            datasets: [{
+                data: [{{ global_tiempo|default(0) }}, {{ global_retraso|default(0) }}, {{ global_pendientes|default(0) }}],
+                backgroundColor: ['#2ecc71', '#e74c3c', '#f39c12']
+            }]
+        }
+    });
+</script>
+
+{% endblock %}
+>>>>>>> e4ccd826c7cda5b1e01ff5ce6d7d12c07996dbc3

@@ -1,0 +1,64 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/cronograma.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+  {% if rol == "estudiante" %}
+    <div class="card">📝 <h3>{{ tareas_pendientes }} Tareas pendientes</h3></div>
+    <div class="card">📅 <h3>{{ eventos_proximos }} Eventos próximos</h3></div>
+    <div class="card">✅ <h3>{{ tareas_completadas }} Tareas completadas</h3></div>
+    <div class="card">💬 <h3>{{ mensajes_nuevos }} Mensajes nuevos</h3></div>
+  {% elif rol == "profesor" %}
+    <div class="card">👥 <h3>{{ grupos }} Mis grupos</h3></div>
+    <div class="card">📅 <h3>{{ eventos_proximos }} Eventos próximos</h3></div>
+    <div class="card">📂 <h3>{{ entregas_pendientes }} Entregas pendientes</h3></div>
+    <div class="card">💬 <h3>{{ mensajes_nuevos }} Mensajes nuevos</h3></div>
+  {% elif rol == "coordinador" %}
+    <div class="card">🎓 <h3>{{ estudiantes_activos }} Estudiantes activos</h3></div>
+    <div class="card">👨‍🏫 <h3>{{ profesores }} Profesores</h3></div>
+    <div class="card">📅 <h3>{{ eventos_proximos }} Eventos próximos</h3></div>
+    <div class="card">💬 <h3>{{ mensajes_nuevos }} Mensajes nuevos</h3></div>
+  {% endif %}
+</div>
+
+<div class="calendar-wrapper">
+  <!-- Calendario -->
+  <section class="calendar">
+    <header>
+      <h2>Calendario Académico</h2>
+      <p>Eventos, tareas y actividades del programa IB</p>
+    </header>
+    <table>
+      <thead>
+        <tr>
+          <th>Dom</th><th>Lun</th><th>Mar</th><th>Mié</th><th>Jue</th><th>Vie</th><th>Sáb</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for semana in calendario %}
+        <tr>
+          {% for dia in semana %}
+          <td class="{% if dia.evento %}has-event{% endif %}">
+            {{ dia.numero }}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Panel lateral -->
+  <aside class="events">
+    <h3>Próximos eventos</h3>
+    <ul>
+      {% for ev in proximos_eventos %}
+        <li>{{ ev }}</li>
+      {% endfor %}
+    </ul>
+  </aside>
+</div>
+{% endblock %}
