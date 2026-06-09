@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /* =============================================================================
  * ZOE — Materias
  * ----------------------------------------------------------------------
@@ -109,70 +108,3 @@
     grid-template-columns: 1fr;
   }
 }
-=======
-.materias-wrapper header {
-  margin-bottom: 1.5rem;
-}
-
-.tabs {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.tab {
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 6px;
-  background: #f1f1f1;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.tab.active {
-  background: #4a90e2;
-  color: #fff;
-}
-
-.tab-content {
-  display: none;
-}
-
-.tab-content.active {
-  display: block;
-}
-
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-}
-
-.card {
-  background: #fff;
-  padding: 1.2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-.card h3 {
-  margin-top: 0;
-  color: #6c5ce7;
-}
-
-.card p {
-  margin: 0.3rem 0;
-  color: #555;
-}
-
-.btn {
-  display: inline-block;
-  margin-top: 0.8rem;
-  padding: 0.6rem 1rem;
-  background: #4a90e2;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 6px;
-  font-weight: bold;
-}
->>>>>>> e4ccd826c7cda5b1e01ff5ce6d7d12c07996dbc3
