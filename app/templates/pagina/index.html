@@ -1,4 +1,7 @@
 {% extends 'layout.html' %}
+<head>
+  {% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='styles/pagina/index.css') }}">{% endblock %}
+</head>
 
 {% block content %}
 
@@ -52,47 +55,28 @@
 <!-- =====================================================================
      Materias — mini grid animado
 ====================================================================== -->
-<section class="section section-dark">
+<section class="section ">
   <div class="container">
-    <h2 class="section-title animate-on-scroll">Nuestras materias</h2>
+    <h2 class="section-title animate-on-scroll">Materias Que Se Manejan</h2>
     <p class="section-subtitle animate-on-scroll delay-1">
-      3 regulares y 4 troncales — todo para el grado 11°
+       El programa de POP se divide en:
     </p>
     <div class="materias-preview-grid">
       <div class="materia-preview-card" style="--accent: var(--brand-500);">
         <span class="materia-preview-icon">∑</span>
-        <h4>Matemáticas</h4>
-        <span class="badge badge-primary">Regular</span>
+        <h4> Troncales IB</h4>
+        <span class="badge badge-primary"></span>
       </div>
       <div class="materia-preview-card" style="--accent: var(--info-500);">
         <span class="materia-preview-icon">EN</span>
-        <h4>Inglés</h4>
-        <span class="badge badge-primary">Regular</span>
+        <h4>Materias IB</h4>
+        <span class="badge badge-primary"></span>
       </div>
       <div class="materia-preview-card" style="--accent: var(--warning-500);">
         <span class="materia-preview-icon">LL</span>
-        <h4>Lengua y Lit.</h4>
-        <span class="badge badge-primary">Regular</span>
+        <h4>Estudios de formacion</h4>
+        <span class="badge badge-primary"></span>
       </div>
-      <div class="materia-preview-card" style="--accent: #7C3AED;">
-        <span class="materia-preview-icon">DL</span>
-        <h4>Des. de Lenguas</h4>
-        <span class="badge badge-warning">Troncal</span>
-      </div>
-      <div class="materia-preview-card" style="--accent: var(--success-500);">
-        <span class="materia-preview-icon">HP</span>
-        <h4>HPP</h4>
-        <span class="badge badge-warning">Troncal</span>
-      </div>
-      <div class="materia-preview-card" style="--accent: var(--danger-500);">
-        <span class="materia-preview-icon">AS</span>
-        <h4>AyS</h4>
-        <span class="badge badge-warning">Troncal</span>
-      </div>
-      <div class="materia-preview-card" style="--accent: var(--warning-600);">
-        <span class="materia-preview-icon">PR</span>
-        <h4>Proy. Reflexión</h4>
-        <span class="badge badge-warning">Troncal</span>
       </div>
     </div>
   </div>
@@ -171,7 +155,7 @@
 <!-- =====================================================================
      Roles — con hover y animaciones
 ====================================================================== -->
-<section class="section section-dark">
+<section class=" section-dark">
   <div class="container">
     <h2 class="section-title animate-on-scroll">Diseñado para cada rol</h2>
     <p class="section-subtitle animate-on-scroll delay-1">
@@ -182,11 +166,11 @@
         <div class="role-card-icon">👨‍🎓</div>
         <h3>Estudiantes</h3>
         <ul>
-          <li>✅ Gestión de tareas y entregas</li>
-          <li>✅ Acceso a recursos académicos</li>
-          <li>✅ Cronograma personalizado</li>
-          <li>✅ Mensajería con profesores</li>
-          <li>✅ Reportes personales</li>
+          <li> Gestión de tareas y entregas</li>
+          <li> Acceso a recursos académicos</li>
+          <li> Cronograma personalizado</li>
+          <li> Mensajería con profesores</li>
+          <li> Reportes personales</li>
         </ul>
       </article>
 
@@ -194,11 +178,11 @@
         <div class="role-card-icon">👨‍🏫</div>
         <h3>Profesores</h3>
         <ul>
-          <li>✅ Crear y calificar tareas</li>
-          <li>✅ Subir recursos educativos</li>
-          <li>✅ Ver grupos y materias</li>
-          <li>✅ Reportes de sus materias</li>
-          <li>✅ Comunicación directa</li>
+          <li> Crear y calificar tareas</li>
+          <li> Subir recursos educativos</li>
+          <li> Ver grupos y materias</li>
+          <li> Reportes de sus materias</li>
+          <li> Comunicación directa</li>
         </ul>
       </article>
 
@@ -206,11 +190,11 @@
         <div class="role-card-icon">👨‍💼</div>
         <h3>Coordinadores</h3>
         <ul>
-          <li>✅ Gestión de usuarios y roles</li>
-          <li>✅ Configuración del sistema</li>
-          <li>✅ Reportes globales</li>
-          <li>✅ CRUD completo de materias</li>
-          <li>✅ Visión integral del programa</li>
+          <li> Gestión de usuarios y roles</li>
+          <li> Configuración del sistema</li>
+          <li> Reportes globales</li>
+          <li> CRUD completo de materias</li>
+          <li> Visión integral del programa</li>
         </ul>
       </article>
     </div>
@@ -227,7 +211,6 @@
       <p>Únete a ZOE y centraliza tu experiencia académica IB en un solo lugar.</p>
       <div class="hero-buttons">
         <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg btn-glow">Acceder ahora</a>
-        <a href="{{ url_for('programa_pop') }}" class="btn btn-lg">Conoce el POP</a>
       </div>
     </div>
   </div>

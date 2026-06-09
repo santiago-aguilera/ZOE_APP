@@ -25,8 +25,7 @@
         <aside class="sidebar" id="sidebar" aria-label="Navegación principal">
             <div class="sidebar-header">
                 <a href="{{ url_for('dashboard') }}" class="sidebar-brand">
-                    <span class="brand-mark">Z</span>
-                    <span class="brand-name">ZOE</span>
+                    <img src="{{ url_for('static', filename='../static/img/Logos/logo_zoe.png') }}" alt="Logo de ZOE" class="brand-logo">
                 </a>
                 <button class="sidebar-toggle" type="button" data-sidebar-toggle aria-label="Colapsar menú">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -260,7 +259,17 @@
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/ui.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ui.js') }}">document.addEventListener("DOMContentLoaded", function() {
+    const toggleBtn = document.querySelector('[data-sidebar-toggle]');
+    const appShell = document.getElementById('appShell');
+
+    if (toggleBtn && appShell) {
+        toggleBtn.addEventListener('click', function() {
+            // Esto alterna la clase en el contenedor principal del grid
+            appShell.classList.toggle('is-collapsed');
+        });
+    }
+});</script>
     {% block extra_js %}{% endblock %}
 </body>
 

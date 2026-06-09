@@ -2,75 +2,146 @@
 <html lang="es">
 
 <head>
+  <!-- Configuración básica del documento -->
   <meta charset="UTF-8">
+
+  <!-- Permite una correcta visualización en dispositivos móviles -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Título dinámico de la página.
+       Si page_title existe, se muestra.
+       De lo contrario, se utiliza el texto por defecto. -->
   <title>ZOE — {{ page_title or "Organización Académica IB" }}</title>
 
+  <!-- Hoja de estilos global de variables (tokens de diseño) -->
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/tokens.css') }}">
+
+  <!-- Hoja de estilos principal para la estructura de la página -->
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/pagina/layout.css') }}">
 
+  <!-- Librería de iconos Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Bloque opcional para que las páginas hijas agreguen CSS adicional -->
   {% block extra_css %}{% endblock %}
 </head>
 
 <body>
-  <!-- =====================================================================
-       Navbar
-  ====================================================================== -->
+
+  <!-- ==========================================================
+       BARRA DE NAVEGACIÓN (HEADER)
+       ========================================================== -->
   <header class="navbar">
+
+    <!-- Logo principal que redirecciona al inicio -->
     <a href="/" class="navbar-brand">
-      <span class="brand-mark">Z</span>
-      <span>ZOE</span>
+
+      <!-- Logo institucional -->
+      <img src="{{ url_for('static', filename='img/Logos/logo_zoe.png') }}" alt="Logo de ZOE" class="brand-logo">
     </a>
 
+    <!-- Menú principal de navegación -->
     <nav class="nav-links" aria-label="Navegación principal">
-      <a href="{{ url_for('ques') }}" class="{% if active_page == 'ques' %}is-active{% endif %}">¿Qué es ZOE?</a>
-      <a href="{{ url_for('programa_pop') }}" class="{% if active_page == 'programa-pop' %}is-active{% endif %}">Programa POP</a>
-      <a href="{{ url_for('estructura') }}" class="{% if active_page == 'estructura' %}is-active{% endif %}">Estructura</a>
+
+      <!-- Enlace a la sección ¿Qué es ZOE? -->
+      <!-- Se aplica la clase is-active cuando la página actual coincide -->
+      <a href="{{ url_for('ques') }}" class="{% if active_page == 'ques' %}is-active{% endif %}">
+        ¿Qué es ZOE?
+      </a>
+
+      <!-- Enlace al Programa POP -->
+      <a href="{{ url_for('programa_pop') }}" class="{% if active_page == 'programa-pop' %}is-active{% endif %}">
+        Programa POP
+      </a>
+
+      <!-- Enlace a la estructura organizacional -->
+      <a href="{{ url_for('estructura') }}" class="{% if active_page == 'estructura' %}is-active{% endif %}">
+        Estructura
+      </a>
+
     </nav>
 
+    <!-- Acciones rápidas de la barra superior -->
     <div class="navbar-actions">
-      <a href="{{ url_for('login') }}" class="btn-login">Iniciar sesión</a>
+
+      <!-- Botón de acceso al sistema -->
+      <a href="{{ url_for('login') }}" class="btn-login" aria-label="Iniciar sesión">
+        <i class="fa-solid fa-user"></i>
+      </a>
     </div>
+
   </header>
 
-  <!-- =====================================================================
-       Contenido dinámico
-  ====================================================================== -->
+  <!-- ==========================================================
+       CONTENIDO DINÁMICO
+       ==========================================================
+       Este bloque será reemplazado por las páginas hijas que
+       extiendan esta plantilla mediante Jinja2.
+       ========================================================== -->
   <main>
-    {% block content %}{% endblock %}
+
+    {% block content %}
+    {% endblock %}
+
   </main>
 
-  <!-- =====================================================================
-       Footer
-  ====================================================================== -->
+  <!-- ==========================================================
+       PIE DE PÁGINA (FOOTER)
+       ========================================================== -->
   <footer class="footer">
+
     <div class="footer-content">
+
+      <!-- Información institucional -->
       <div class="footer-brand">
+
         <h3>ZOE</h3>
-        <p>Organización Académica del Bachillerato Internacional — Programa de Orientación Profesional.</p>
+
+        <p>
+          Organización Académica del Bachillerato Internacional —
+          Programa de Orientación Profesional.
+        </p>
+
       </div>
 
+      <!-- Enlaces internos de navegación -->
       <div class="footer-links">
+
         <h4>Plataforma</h4>
+
         <a href="/">Inicio</a>
         <a href="{{ url_for('programa_pop') }}">Programa POP</a>
         <a href="{{ url_for('estructura') }}">Estructura</a>
         <a href="{{ url_for('ques') }}">¿Qué es ZOE?</a>
+
       </div>
 
+      <!-- Información institucional adicional -->
       <div class="footer-links">
+
         <h4>Institución</h4>
+
         <a href="#">Colegio Técnico Digital Julio Flórez</a>
         <a href="#">Contacto</a>
         <a href="#">Soporte</a>
+
       </div>
+
     </div>
 
+    <!-- Barra inferior del footer -->
     <div class="footer-bottom">
+
+      <!-- Derechos de autor -->
       <span>© 2026 ZOE — Todos los derechos reservados</span>
-      <span>Hecho para instituciones educativas internacionales</span>
+
+      <!-- Mensaje institucional -->
+      <span>Hecho para instituciones educativas con programa de bachillerato internacional</span>
+
     </div>
+
   </footer>
+
 </body>
 
 </html>

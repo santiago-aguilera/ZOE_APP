@@ -99,6 +99,26 @@
   gap: var(--space-1);
 }
 
+ .brand-logo{
+  width: 150px; height: 150px;
+  object-fit: contain;
+  clip-path: inset(40% 0% 38% 0%); 
+}
+
+/* ==========================================================================
+   Comportamiento cuando el menú está colapsado (.is-collapsed)
+   ========================================================================== */
+
+/* 1. Escondemos por completo el logo */
+.app-shell.is-collapsed .sidebar-brand {
+    display: none !important;
+}
+
+/* 2. Centramos el botón de la hamburguesa en el espacio reducido */
+.app-shell.is-collapsed .sidebar-header {
+    justify-content: center;
+    padding: 0; /* Remueve los paddings laterales para centrar perfecto */
+}
 .nav-section {
   margin-top: var(--space-4);
 }

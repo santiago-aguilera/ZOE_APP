@@ -1,9 +1,534 @@
-/* =============================================================================
- * ZOE — index / landing
- * ----------------------------------------------------------------------
- * Página de inicio pública.
- * ============================================================================= */
+/* =====================================================================
+   1. VARIABLES GLOBALES Y RESET
+   =====================================================================
+   Aquí se definen los Design Tokens del sistema ZOE:
+   - Colores de marca
+   - Colores de estado
+   - Fondos
+   - Tipografías
+   - Sombras
+   - Transiciones
 
-/* El layout (navbar, hero, footer, secciones) ya está en
- * styles/pagina/layout.css. Este archivo aporta afinamientos específicos
- * de la landing. */
+   Esto permite mantener consistencia visual y facilitar cambios
+   futuros desde un único lugar.
+====================================================================== */
+
+:root {
+
+  /* ==========================
+     COLORES DE MARCA
+  ========================== */
+
+  /* Paleta principal ZOE */
+  --brand-50: #eef2ff;
+  --brand-500: #6366f1;
+  --brand-600: #4f46e5;
+
+  /* Colores informativos */
+  --info-50: #f0fdfa;
+  --info-500: #14b8a6;
+  --info-600: #0d9488;
+
+  /* Colores de advertencia */
+  --warning-50: #fffbeb;
+  --warning-500: #f59e0b;
+  --warning-600: #d97706;
+
+  /* Colores de éxito */
+  --success-50: #f0fdf4;
+  --success-600: #16a34a;
+
+  /* Colores de error */
+  --danger-50: #fef2f2;
+  --danger-600: #dc2626;
+
+  /* ==========================
+     FONDOS Y TIPOGRAFÍA
+  ========================== */
+
+  /* Fondo principal */
+  --bg-light: #ffffff;
+
+  /* Fondo alternativo para secciones */
+  --bg-light-alt: #f8fafc;
+
+  /* Color principal de títulos */
+  --text-main: #0f172a;
+
+  /* Color de textos secundarios */
+  --text-light: #475569;
+
+  /* ==========================
+     UTILIDADES
+  ========================== */
+
+  /* Transición estándar del sistema */
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Sombra suave utilizada en tarjetas */
+  --shadow-soft:
+    0 4px 6px -1px rgba(0, 0, 0, 0.02),
+    0 2px 4px -1px rgba(0, 0, 0, 0.01);
+}
+
+
+/* =====================================================================
+   RESET GENERAL
+   =====================================================================
+   Elimina márgenes y paddings por defecto de los navegadores.
+====================================================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+/* =====================================================================
+   CONFIGURACIÓN GLOBAL DEL BODY
+====================================================================== */
+
+body {
+
+  /* Tipografía principal */
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  /* Color por defecto de los textos */
+  color: var(--text-light);
+
+  /* Fondo general */
+  background-color: var(--bg-light);
+
+  /* Altura de línea para mejorar legibilidad */
+  line-height: 1.6;
+}
+
+
+/* =====================================================================
+   2. ESTRUCTURA DE SECCIONES
+====================================================================== */
+
+/* Contenedor base para todas las secciones */
+.section {
+  padding: 90px 24px;
+  background-color: var(--bg-light);
+  position: relative;
+}
+
+
+/* Mantiene fondo blanco uniforme */
+.section-dark,
+.section:nth-of-type(even) {
+  background-color: var(--bg-light);
+}
+
+
+/* Contenedor centralizado */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+
+/* =====================================================================
+   TÍTULOS DE SECCIÓN
+====================================================================== */
+
+.section-title,
+.section-dark .section-title {
+
+  font-size: 2.4rem;
+  font-weight: 700;
+
+  text-align: center;
+
+  color: var(--text-main) !important;
+
+  margin-bottom: 12px;
+
+  letter-spacing: -0.02em;
+}
+
+
+/* Subtítulos descriptivos */
+.section-subtitle,
+.section-dark .section-subtitle {
+
+  font-size: 1.1rem;
+
+  text-align: center;
+
+  color: var(--text-light) !important;
+
+  max-width: 600px;
+
+  margin: 0 auto 50px auto;
+
+  font-weight: 400;
+}
+
+
+/* =====================================================================
+   3. SECCIÓN DE MATERIAS
+   Diseño minimalista tipo dashboard moderno.
+====================================================================== */
+
+/* Grid adaptable para tarjetas */
+.materias-preview-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(180px, 1fr));
+
+  gap: 16px;
+
+  max-width: 950px;
+
+  margin: 0 auto;
+}
+
+
+/* Tarjeta individual */
+.materia-preview-card {
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 12px;
+
+  padding: 20px 10px;
+
+  text-align: center;
+
+  transition: var(--transition);
+
+  box-shadow: var(--shadow-soft);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* Efecto hover */
+.materia-preview-card:hover {
+
+  transform: translateY(-4px);
+
+  border-color: var(--accent, var(--brand-500));
+
+  box-shadow:
+    0 12px 20px -8px rgba(99, 102, 241, 0.12);
+}
+
+
+/* Icono circular */
+.materia-preview-icon {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 46px;
+  height: 46px;
+
+  border-radius: 50%;
+
+  font-size: 1.05rem;
+  font-weight: 600;
+
+  color: #ffffff;
+
+  background-color:
+    var(--accent, var(--brand-500));
+
+  margin-bottom: 14px;
+
+  box-shadow:
+    0 2px 6px rgba(235, 5, 5, 0.03);
+}
+
+
+/* Nombre de la materia */
+.materia-preview-card h4 {
+
+  font-size: 1rem;
+
+  color: var(--text-main);
+
+  /* CORRECCIÓN:
+     font-weight acepta números sin px */
+  font-weight: 600;
+
+  margin-bottom: 4px;
+}
+
+
+/* Etiquetas auxiliares */
+.badge {
+
+  display: inline-block;
+
+  font-size: 0.8rem;
+
+  font-weight: 500;
+
+  color: #94a3b8;
+
+  background: transparent;
+
+  padding: 0;
+
+  margin-top: 0;
+
+  text-transform: capitalize;
+}
+
+
+/* =====================================================================
+   4. SECCIÓN DE ROLES
+   Inspirada en Stripe, Notion y Linear.
+====================================================================== */
+
+/* Grid principal */
+.roles-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(320px, 1fr));
+
+  gap: 24px;
+
+  max-width: 1100px;
+
+  margin: 0 auto;
+}
+
+
+/* Tarjeta base */
+.role-card {
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 16px;
+
+  padding: 36px 32px;
+
+  text-align: left;
+
+  transition: var(--transition);
+
+  box-shadow: var(--shadow-soft);
+
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  overflow: hidden;
+}
+
+
+/* Línea superior decorativa */
+.role-card::after {
+
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 4px;
+}
+
+
+/* Color según el rol */
+.role-card.estudiante::after {
+  background-color: var(--brand-500);
+}
+
+.role-card.profesor::after {
+  background-color: var(--info-500);
+}
+
+.role-card.coordinador::after {
+  background-color: var(--warning-500);
+}
+
+
+/* Hover de tarjetas */
+.role-card:hover {
+
+  transform: translateY(-6px);
+
+  box-shadow:
+    0 20px 25px -5px rgba(15, 23, 42, 0.04);
+}
+
+
+/* Cambio de borde por categoría */
+.role-card.estudiante:hover {
+  border-color: var(--brand-500);
+}
+
+.role-card.profesor:hover {
+  border-color: var(--info-500);
+}
+
+.role-card.coordinador:hover {
+  border-color: var(--warning-500);
+}
+
+
+/* Caja del icono */
+.role-card-icon {
+
+  font-size: 1.6rem;
+
+  margin-bottom: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 52px;
+  height: 52px;
+
+  border-radius: 12px;
+}
+
+
+/* Fondos suaves por categoría */
+.role-card.estudiante .role-card-icon {
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.role-card.profesor .role-card-icon {
+  background: rgba(20, 184, 166, 0.08);
+}
+
+.role-card.coordinador .role-card-icon {
+  background: rgba(245, 158, 11, 0.08);
+}
+
+
+/* Título del rol */
+.role-card h3 {
+
+  font-size: 1.35rem;
+
+  color: var(--text-main);
+
+  font-weight: 700;
+
+  margin-bottom: 20px;
+
+  letter-spacing: -0.01em;
+}
+
+
+/* Lista de responsabilidades */
+.role-card ul {
+
+  list-style: none;
+
+  width: 100%;
+}
+
+
+/* Elementos individuales */
+.role-card ul li {
+
+  font-size: 0.95rem;
+
+  color: var(--text-light);
+
+  margin-bottom: 12px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+
+/* =====================================================================
+   5. ANIMACIONES DE ENTRADA
+====================================================================== */
+
+/* Estado inicial */
+.animate-on-scroll {
+
+  opacity: 0;
+
+  transform: translateY(16px);
+
+  animation:
+    fadeInUp 0.7s
+    cubic-bezier(0.16, 1, 0.3, 1)
+    forwards;
+}
+
+
+/* Retrasos progresivos */
+.delay-1 {
+  animation-delay: 0.08s;
+}
+
+.delay-2 {
+  animation-delay: 0.16s;
+}
+
+.delay-3 {
+  animation-delay: 0.24s;
+}
+
+
+/* Animación principal */
+@keyframes fadeInUp {
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =====================================================================
+   6. RESPONSIVE DESIGN
+====================================================================== */
+
+@media (max-width: 768px) {
+
+  /* Reduce el espacio vertical */
+  .section {
+    padding: 60px 16px;
+  }
+
+  /* Ajuste de títulos */
+  .section-title {
+    font-size: 2rem;
+  }
+
+  /* Una columna en móvil */
+  .materias-preview-grid,
+  .roles-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Menos padding en tarjetas */
+  .role-card {
+    padding: 28px 20px;
+  }
+}

@@ -1,9 +1,3 @@
-"""
-Aplicación web ZOE — punto de entrada.
-
-Todas las rutas se definen aquí con @app.route.
-Configuración en config.py.
-"""
 
 import sys
 from pathlib import Path
