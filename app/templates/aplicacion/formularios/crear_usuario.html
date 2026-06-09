@@ -1,0 +1,95 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/formularios.css') }}">
+{% endblock %}
+{% block content %}
+<div class="form-breadcrumb">
+    <a href="{{ url_for('configuracion') }}">Administración</a>
+    <span class="sep">/</span>
+    <span>Crear Usuario</span>
+</div>
+<div class="form-page">
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2>Crear Usuario</h2>
+        </div>
+        <form id="formCrearUsuario"
+            onsubmit="event.preventDefault(); showToast('Usuario creado exitosamente'); setTimeout(function(){ window.location.href='{{ url_for('usuarios_list') }}'; }, 1200);">
+            <div class="form-card-body">
+                <div class="form-section">
+                    <div class="form-section-title">Información personal</div>
+                    <div class="form-group">
+                        <label class="form-label">Nombre completo <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ej: Juan Pérez García" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Correo institucional <span class="required">*</span></label>
+                        <input type="email" class="form-control" placeholder="usuario@colegio.mx" required>
+                        <p class="form-help">Se usará para iniciar sesión en la plataforma</p>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="form-section-title">Credenciales</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Contraseña <span class="required">*</span></label>
+                            <input type="password" class="form-control" placeholder="Mínimo 8 caracteres" required
+                                minlength="8">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirmar contraseña <span class="required">*</span></label>
+                            <input type="password" class="form-control" placeholder="Repetir contraseña" required
+                                minlength="8">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="form-section-title">Asignación</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Rol <span class="required">*</span></label>
+                            <select class="form-control" required id="rolSelect" onchange="toggleGrupo()">
+                                <option value="">Seleccionar...</option>
+                                <option value="coordinador">Coordinador</option>
+                                <option value="profesor">Profesor</option>
+                                <option value="estudiante">Estudiante</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="grupoField">
+                            <label class="form-label">Grupo</label>
+                            <select class="form-control" id="grupoSelect">
+                                <option value="">Sin grupo</option>
+                                <option value="11A">11° A</option>
+                                <option value="11B">11° B</option>
+                                <option value="12A">12° A</option>
+                                <option value="12B">12° B</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-card-footer">
+                <a href="{{ url_for('usuarios_list') }}" class="btn">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Crear usuario</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+    function toggleGrupo() {
+        var rol = document.getElementById('rolSelect').value;
+        var grupoField = document.getElementById('grupoField');
+        grupoField.style.display = (rol === 'estudiante') ? 'block' : 'none';
+    }
+    function showToast(msg) {
+        var t = document.createElement('div');
+        t.className = 'toast-success';
+        t.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> ' + msg;
+        document.body.appendChild(t);
+        setTimeout(function () { t.remove(); }, 2000);
+    }
+    toggleGrupo();
+</script>
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/grupos.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Grupos de Estudio</h1>
+    <p class="page-subtitle">Grupos del grado 11° — organizados por materia</p>
+  </div>
+</header>
+
+<!-- Filtros -->
+<div class="grupos-toolbar">
+  <div class="filter-chips" data-filter="tipo">
+    <button class="chip is-active" data-filter-value="todos">Todos</button>
+    <button class="chip" data-filter-value="regular">Regulares</button>
+    <button class="chip" data-filter-value="troncal">Troncales</button>
+  </div>
+  <div class="input-group" style="width: 280px;">
+    <span class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></span>
+    <input type="search" placeholder="Buscar grupos..." id="searchGrupos">
+  </div>
+</div>
+
+<!-- Grid de grupos -->
+<section class="grupos-grid" id="gridGrupos">
+  <!-- MATS -->
+  <article class="grupo-card card card-hover" data-tipo="regular" data-materia="matematicas">
+    <div class="card-body">
+      <div class="d-flex items-center justify-between mb-3">
+        <div class="d-flex items-center gap-3">
+          <div class="grupo-icon" style="background: var(--brand-50); color: var(--brand-600);">∑</div>
+          <div><h3 class="grupo-name">Matemáticas</h3><p class="text-xs text-muted">11° — Lic. Medina</p></div>
+        </div>
+        <span class="badge badge-primary">Regular</span>
+      </div>
+      <div class="grupo-stats">
+        <div class="grupo-stat"><span class="grupo-stat-value">32</span><span class="grupo-stat-label">Estudiantes</span></div>
+        <div class="grupo-stat"><span class="grupo-stat-value">18.0</span><span class="grupo-stat-label">Promedio</span></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- INGLÉS -->
+  <article class="grupo-card card card-hover" data-tipo="regular" data-materia="ingles">
+    <div class="card-body">
+      <div class="d-flex items-center justify-between mb-3">
+        <div class="d-flex items-center gap-3">
+          <div class="grupo-icon" style="background: var(--info-50); color: var(--info-600);">EN</div>
+          <div><h3 class="grupo-name">Inglés</h3><p class="text-xs text-muted">11° — Lic. Torres</p></div>
+        </div>
+        <span class="badge badge-primary">Regular</span>
+      </div>
+      <div class="grupo-stats">
+        <div class="grupo-stat"><span class="grupo-stat-value">32</span><span class="grupo-stat-label">Estudiantes</span></div>
+        <div class="grupo-stat"><span class="grupo-stat-value">16.0</span><span class="grupo-stat-label">Promedio</span></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- LENGUA -->
+  <article class="grupo-card card card-hover" data-tipo="regular" data-materia="lengua">
+    <div class="card-body">
+      <div class="d-flex items-center justify-between mb-3">
+        <div class="d-flex items-center gap-3">
+          <div class="grupo-icon" style="background: var(--warning-50); color: var(--warning-600);">LL</div>
+          <div><h3 class="grupo-name">Lengua y Literatura</h3><p class="text-xs text-muted">11° — Lic. Reyes</p></div>
+        </div>
+        <span class="badge badge-primary">Regular</span>
+      </div>
+      <div class="grupo-stats">
+        <div class="grupo-stat"><span class="grupo-stat-value">32</span><span class="grupo-stat-label">Estudiantes</span></div>
+        <div class="grupo-stat"><span class="grupo-stat-value">17.0</span><span class="grupo-stat-label">Promedio</span></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- DESARROLLO DE LENGUAS -->
+  <article class="grupo-card card card-hover" data-tipo="troncal" data-materia="dlenaguas">
+    <div class="card-body">
+      <div class="d-flex items-center justify-between mb-3">
+        <div class="d-flex items-center gap-3">
+          <div class="grupo-icon" style="background: rgba(139,92,246,0.1); color: #7C3AED;">DL</div>
+          <div><h3 class="grupo-name">Desarrollo de Lenguas</h3><p class="text-xs text-muted">11° — Lic. Gómez</p></div>
+        </div>
+        <span class="badge badge-warning">Troncal</span>
+      </div>
+      <div class="grupo-stats">
+        <div class="grupo-stat"><span class="grupo-stat-value">32</span><span class="grupo-stat-label">Estudiantes</span></div>
+        <div class="grupo-stat"><span class="grupo-stat-value">16.4</span><span class="grupo-stat-label">Promedio</span></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- HPP -->
+  <article class="grupo-card card card-hover" data-tipo="troncal" data-materia="hpp">
+    <div class="card-body">
+      <div class="d-flex items-center justify-between mb-3">
+        <div class="d-flex items-center gap-3">
+          <div class="grupo-icon" style="background: var(--success-50); color: var(--success-600);">HP</div>
+          <div><h3 class="grupo-name">HPP</h3><p class="text-xs text-muted">11° — Coord. Pérez</p></div>
+        </div>
+        <span class="badge badge-warning">Troncal</span>
+      </div>
+      <div class="grupo-stats">
+        <div class="grupo-stat"><span class="grupo-stat-value">32</span><span class="grupo-stat-label">Estudiantes</span></div>
+        <div class="grupo-stat"><span class="grupo-stat-value">16.4</span><span class="grupo-stat-label">Promedio</span></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- APRENDIZAJE Y SERVICIO -->
+  <article class="grupo-card card card-hover" data-tipo="troncal" data-materia="ays">
+    <div class="card-body">
+      <div class="d-flex items-center justify-between mb-3">
+        <div class="d-flex items-center gap-3">
+          <div class="grupo-icon" style="background: var(--danger-50); color: var(--danger-600);">AS</div>
+          <div><h3 class="grupo-name">Aprendizaje y Servicio</h3><p class="text-xs text-muted">11° — Coord. Pérez</p></div>
+        </div>
+        <span class="badge badge-warning">Troncal</span>
+      </div>
+      <div class="grupo-stats">
+        <div class="grupo-stat"><span class="grupo-stat-value">32</span><span class="grupo-stat-label">Estudiantes</span></div>
+        <div class="grupo-stat"><span class="grupo-stat-value">15.6</span><span class="grupo-stat-label">Promedio</span></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- PROYECTO DE REFLEXIÓN -->
+  <article class="grupo-card card card-hover" data-tipo="troncal" data-materia="pr">
+    <div class="card-body">
+      <div class="d-flex items-center justify-between mb-3">
+        <div class="d-flex items-center gap-3">
+          <div class="grupo-icon" style="background: var(--warning-50); color: var(--warning-600);">PR</div>
+          <div><h3 class="grupo-name">Proyecto de Reflexión</h3><p class="text-xs text-muted">11° — Lic. Medina</p></div>
+        </div>
+        <span class="badge badge-warning">Troncal</span>
+      </div>
+      <div class="grupo-stats">
+        <div class="grupo-stat"><span class="grupo-stat-value">32</span><span class="grupo-stat-label">Estudiantes</span></div>
+        <div class="grupo-stat"><span class="grupo-stat-value">16.2</span><span class="grupo-stat-label">Promedio</span></div>
+      </div>
+    </div>
+  </article>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  var chips = document.querySelectorAll('[data-filter="tipo"] .chip');
+  var cards = document.querySelectorAll('#gridGrupos .grupo-card');
+  var busqueda = document.getElementById('searchGrupos');
+
+  function aplicarFiltros() {
+    var chipActivo = document.querySelector('[data-filter="tipo"] .chip.is-active');
+    var filtro = chipActivo ? chipActivo.dataset.filterValue : 'todos';
+    var texto = busqueda.value.toLowerCase().trim();
+    cards.forEach(function(card) {
+      var matchTipo = (filtro === 'todos') || (card.dataset.tipo === filtro);
+      var matchBusqueda = !texto || card.textContent.toLowerCase().indexOf(texto) !== -1;
+      card.style.display = (matchTipo && matchBusqueda) ? '' : 'none';
+    });
+  }
+
+  chips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      chips.forEach(function(c) { c.classList.remove('is-active'); });
+      chip.classList.add('is-active');
+      aplicarFiltros();
+    });
+  });
+  busqueda.addEventListener('input', aplicarFiltros);
+})();
+</script>
+{% endblock %}

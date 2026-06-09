@@ -1,0 +1,325 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/materias.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Materias</h1>
+    <p class="page-subtitle">Asignaturas del grado 11° — Regulares y Troncales</p>
+  </div>
+</header>
+
+<!-- Filtros -->
+<div class="materias-toolbar">
+  <div class="filter-chips" data-filter="tipo">
+    <button class="chip is-active" data-filter-value="todas">Todas</button>
+    <button class="chip" data-filter-value="regular">Regulares</button>
+    <button class="chip" data-filter-value="troncal">Troncales</button>
+  </div>
+  <div class="input-group" style="width: 280px;">
+    <span class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></span>
+    <input type="search" placeholder="Buscar materia..." id="searchMaterias">
+  </div>
+</div>
+
+<!-- Grid de materias -->
+<section class="materias-grid" id="gridMaterias">
+  <!-- MATEMÁTICAS -->
+  <article class="materia-card card card-hover" data-tipo="regular" data-materia="mates">
+    <div class="materia-card-accent" style="background: var(--brand-500);"></div>
+    <div class="card-body">
+      <div class="d-flex items-center justify-between mb-3">
+        <span class="badge badge-primary">Regular</span>
+        <span class="text-xs text-muted">Lic. Medina</span>
+      </div>
+      <h3 class="materia-card-title">Matemáticas</h3>
+      <p class="text-sm text-muted mt-1">Álgebra, geometría y estadística</p>
+      <div class="materia-card-meta mt-4">
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>32 estudiantes</span>
+        </div>
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          <span>12 tareas</span>
+        </div>
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>18.0 prom.</span>
+        </div>
+      </div>
+      <div class="materia-card-footer mt-4">
+        <div class="materia-progress">
+          <div class="materia-progress-label">
+            <span class="text-xs text-muted">Avance</span>
+            <span class="text-xs font-semibold">90%</span>
+          </div>
+          <div class="materia-progress-bar">
+            <div class="materia-progress-fill" style="width: 90%; background: var(--brand-500);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- INGLÉS -->
+  <article class="materia-card card card-hover" data-tipo="regular" data-materia="ingles">
+    <div class="materia-card-accent" style="background: var(--info-500);"></div>
+    <div class="card-body">
+      <div class="d-flex items-center justify-between mb-3">
+        <span class="badge badge-primary">Regular</span>
+        <span class="text-xs text-muted">Lic. Torres</span>
+      </div>
+      <h3 class="materia-card-title">Inglés</h3>
+      <p class="text-sm text-muted mt-1">Comprensión lectora y expresión escrita</p>
+      <div class="materia-card-meta mt-4">
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>32 estudiantes</span>
+        </div>
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          <span>10 tareas</span>
+        </div>
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>16.0 prom.</span>
+        </div>
+      </div>
+      <div class="materia-card-footer mt-4">
+        <div class="materia-progress">
+          <div class="materia-progress-label">
+            <span class="text-xs text-muted">Avance</span>
+            <span class="text-xs font-semibold">80%</span>
+          </div>
+          <div class="materia-progress-bar">
+            <div class="materia-progress-fill" style="width: 80%; background: var(--info-500);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- LENGUA Y LITERATURA -->
+  <article class="materia-card card card-hover" data-tipo="regular" data-materia="lengua">
+    <div class="materia-card-accent" style="background: var(--warning-500);"></div>
+    <div class="card-body">
+      <div class="d-flex items-center justify-between mb-3">
+        <span class="badge badge-primary">Regular</span>
+        <span class="text-xs text-muted">Lic. Reyes</span>
+      </div>
+      <h3 class="materia-card-title">Lengua y Literatura</h3>
+      <p class="text-sm text-muted mt-1">Análisis literario y producción textual</p>
+      <div class="materia-card-meta mt-4">
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>32 estudiantes</span>
+        </div>
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          <span>11 tareas</span>
+        </div>
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>17.0 prom.</span>
+        </div>
+      </div>
+      <div class="materia-card-footer mt-4">
+        <div class="materia-progress">
+          <div class="materia-progress-label">
+            <span class="text-xs text-muted">Avance</span>
+            <span class="text-xs font-semibold">85%</span>
+          </div>
+          <div class="materia-progress-bar">
+            <div class="materia-progress-fill" style="width: 85%; background: var(--warning-500);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- DESARROLLO DE LENGUAS -->
+  <article class="materia-card card card-hover" data-tipo="troncal" data-materia="dl">
+    <div class="materia-card-accent" style="background: #7C3AED;"></div>
+    <div class="card-body">
+      <div class="d-flex items-center justify-between mb-3">
+        <span class="badge badge-warning">Troncal</span>
+        <span class="text-xs text-muted">Lic. Gómez</span>
+      </div>
+      <h3 class="materia-card-title">Desarrollo de Lenguas</h3>
+      <p class="text-sm text-muted mt-1">Portafolio de lectura y expresión oral</p>
+      <div class="materia-card-meta mt-4">
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>32 estudiantes</span>
+        </div>
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          <span>9 actividades</span>
+        </div>
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>16.4 prom.</span>
+        </div>
+      </div>
+      <div class="materia-card-footer mt-4">
+        <div class="materia-progress">
+          <div class="materia-progress-label">
+            <span class="text-xs text-muted">Avance</span>
+            <span class="text-xs font-semibold">82%</span>
+          </div>
+          <div class="materia-progress-bar">
+            <div class="materia-progress-fill" style="width: 82%; background: #7C3AED;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- HPP -->
+  <article class="materia-card card card-hover" data-tipo="troncal" data-materia="hpp">
+    <div class="materia-card-accent" style="background: var(--success-500);"></div>
+    <div class="card-body">
+      <div class="d-flex items-center justify-between mb-3">
+        <span class="badge badge-warning">Troncal</span>
+        <span class="text-xs text-muted">Coord. Pérez</span>
+      </div>
+      <h3 class="materia-card-title">HPP</h3>
+      <p class="text-sm text-muted mt-1">Herramientas del Pensamiento Profesional</p>
+      <div class="materia-card-meta mt-4">
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>32 estudiantes</span>
+        </div>
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          <span>9 tareas</span>
+        </div>
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>16.4 prom.</span>
+        </div>
+      </div>
+      <div class="materia-card-footer mt-4">
+        <div class="materia-progress">
+          <div class="materia-progress-label">
+            <span class="text-xs text-muted">Avance</span>
+            <span class="text-xs font-semibold">82%</span>
+          </div>
+          <div class="materia-progress-bar">
+            <div class="materia-progress-fill" style="width: 82%; background: var(--success-500);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- APRENDIZAJE Y SERVICIO -->
+  <article class="materia-card card card-hover" data-tipo="troncal" data-materia="ays">
+    <div class="materia-card-accent" style="background: var(--danger-500);"></div>
+    <div class="card-body">
+      <div class="d-flex items-center justify-between mb-3">
+        <span class="badge badge-warning">Troncal</span>
+        <span class="text-xs text-muted">Coord. Pérez</span>
+      </div>
+      <h3 class="materia-card-title">Aprendizaje y Servicio</h3>
+      <p class="text-sm text-muted mt-1">Proyectos de impacto social y servicio</p>
+      <div class="materia-card-meta mt-4">
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>32 estudiantes</span>
+        </div>
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          <span>8 actividades</span>
+        </div>
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>15.6 prom.</span>
+        </div>
+      </div>
+      <div class="materia-card-footer mt-4">
+        <div class="materia-progress">
+          <div class="materia-progress-label">
+            <span class="text-xs text-muted">Avance</span>
+            <span class="text-xs font-semibold">78%</span>
+          </div>
+          <div class="materia-progress-bar">
+            <div class="materia-progress-fill" style="width: 78%; background: var(--danger-500);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- PROYECTO DE REFLEXIÓN -->
+  <article class="materia-card card card-hover" data-tipo="troncal" data-materia="pr">
+    <div class="materia-card-accent" style="background: var(--warning-600);"></div>
+    <div class="card-body">
+      <div class="d-flex items-center justify-between mb-3">
+        <span class="badge badge-warning">Troncal</span>
+        <span class="text-xs text-muted">Lic. Medina</span>
+      </div>
+      <h3 class="materia-card-title">Proyecto de Reflexión</h3>
+      <p class="text-sm text-muted mt-1">Investigación, análisis y reflexión crítica</p>
+      <div class="materia-card-meta mt-4">
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>32 estudiantes</span>
+        </div>
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          <span>8 entregas</span>
+        </div>
+        <div class="materia-meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>16.2 prom.</span>
+        </div>
+      </div>
+      <div class="materia-card-footer mt-4">
+        <div class="materia-progress">
+          <div class="materia-progress-label">
+            <span class="text-xs text-muted">Avance</span>
+            <span class="text-xs font-semibold">81%</span>
+          </div>
+          <div class="materia-progress-bar">
+            <div class="materia-progress-fill" style="width: 81%; background: var(--warning-600);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  var chips = document.querySelectorAll('[data-filter="tipo"] .chip');
+  var cards = document.querySelectorAll('#gridMaterias .materia-card');
+  var busqueda = document.getElementById('searchMaterias');
+
+  function aplicarFiltros() {
+    var chipActivo = document.querySelector('[data-filter="tipo"] .chip.is-active');
+    var filtro = chipActivo ? chipActivo.dataset.filterValue : 'todas';
+    var texto = busqueda.value.toLowerCase().trim();
+    cards.forEach(function(card) {
+      var matchTipo = (filtro === 'todas') || (card.dataset.tipo === filtro);
+      var matchBusqueda = !texto || card.textContent.toLowerCase().indexOf(texto) !== -1;
+      card.style.display = (matchTipo && matchBusqueda) ? '' : 'none';
+    });
+  }
+
+  chips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      chips.forEach(function(c) { c.classList.remove('is-active'); });
+      chip.classList.add('is-active');
+      aplicarFiltros();
+    });
+  });
+  busqueda.addEventListener('input', aplicarFiltros);
+})();
+</script>
+{% endblock %}

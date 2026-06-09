@@ -1,0 +1,188 @@
+{% extends 'aplicacion/layout_1.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/configuracion.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Administración</h1>
+    <p class="page-subtitle">Gestión del sistema — Solo Coordinadores</p>
+  </div>
+  <div class="page-actions">
+    <a href="{{ url_for('form_crear_usuario') }}" class="btn btn-primary" id="adminCreateBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      <span id="createBtnLabel">Crear Usuario</span>
+    </a>
+  </div>
+</header>
+
+<!-- Tabs de administración -->
+<div class="admin-tabs" data-tabs="admin">
+  <button class="tab is-active" data-tab="usuarios" data-create-url="/formularios/crear-usuario">Usuarios</button>
+  <button class="tab" data-tab="materias" data-create-url="/formularios/crear-materia">Materias</button>
+  <button class="tab" data-tab="grupos" data-create-url="/formularios/crear-grupo">Grupos</button>
+  <button class="tab" data-tab="periodos" data-create-url="/formularios/crear-periodo">Períodos Académicos</button>
+</div>
+
+<!-- Panel: Usuarios -->
+<div class="admin-panel" data-tab-panel="usuarios" data-tab-group="admin">
+  <div class="admin-toolbar">
+    <div class="input-group" style="width: 320px;">
+      <span class="input-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/>
+        </svg>
+      </span>
+      <input type="search" placeholder="Buscar usuarios..." class="admin-search" data-table="tablaUsuarios">
+    </div>
+    <div class="filter-chips" data-filter="rol">
+      <button class="chip is-active" data-filter-value="todos">Todos</button>
+      <button class="chip" data-filter-value="coordinador">Coordinadores</button>
+      <button class="chip" data-filter-value="profesor">Profesores</button>
+      <button class="chip" data-filter-value="estudiante">Estudiantes</button>
+    </div>
+  </div>
+  <div class="table-wrapper">
+    <table class="table" id="tablaUsuarios">
+      <thead>
+        <tr><th>Nombre</th><th>Correo Institucional</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+        <tr data-rol="coordinador"><td><div class="d-flex items-center gap-3"><div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--brand-500), var(--brand-700));">CG</div><span class="font-semibold">Carlos Gil</span></div></td><td class="text-muted">coordinador@colegio.mx</td><td><span class="badge badge-info">Coordinador</span></td><td><span class="badge badge-success badge-dot">Activo</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Desactivar</button></td></tr>
+        <tr data-rol="profesor"><td><div class="d-flex items-center gap-3"><div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--success-500), var(--success-700));">BS</div><span class="font-semibold">Bibiana Sanchez</span></div></td><td class="text-muted">bsanchez@colegio.mx</td><td><span class="badge badge-warning">Profesor</span></td><td><span class="badge badge-success badge-dot">Activo</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Desactivar</button></td></tr>
+        <tr data-rol="profesor"><td><div class="d-flex items-center gap-3"><div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--info-500), #1D4ED8);">PS</div><span class="font-semibold">Paula Sandoval</span></div></td><td class="text-muted">psandoval@colegio.mx</td><td><span class="badge badge-warning">Profesor</span></td><td><span class="badge badge-success badge-dot">Activo</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Desactivar</button></td></tr>
+        <tr data-rol="profesor"><td><div class="d-flex items-center gap-3"><div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--warning-500), var(--warning-600));">SR</div><span class="font-semibold">Stella Rincon</span></div></td><td class="text-muted">srincon@colegio.mx</td><td><span class="badge badge-warning">Profesor</span></td><td><span class="badge badge-success badge-dot">Activo</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Desactivar</button></td></tr>
+        <tr data-rol="profesor"><td><div class="d-flex items-center gap-3"><div class="avatar avatar-sm" style="background: linear-gradient(135deg, #8B5CF6, #6D28D9);">LR</div><span class="font-semibold">Luz Dary Rosas</span></div></td><td class="text-muted">lrosas@colegio.mx</td><td><span class="badge badge-warning">Profesor</span></td><td><span class="badge badge-success badge-dot">Activo</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Desactivar</button></td></tr>
+        <tr data-rol="profesor"><td><div class="d-flex items-center gap-3"><div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--danger-500), var(--danger-600));">JB</div><span class="font-semibold">Jhaneth Becerra</span></div></td><td class="text-muted">jbecerra@colegio.mx</td><td><span class="badge badge-warning">Profesor</span></td><td><span class="badge badge-success badge-dot">Activo</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Desactivar</button></td></tr>
+        <tr data-rol="profesor"><td><div class="d-flex items-center gap-3"><div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--brand-400), var(--brand-600));">FT</div><span class="font-semibold">Fabian Tovar</span></div></td><td class="text-muted">ftovar@colegio.mx</td><td><span class="badge badge-warning">Profesor</span></td><td><span class="badge badge-success badge-dot">Activo</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Desactivar</button></td></tr>
+        <tr data-rol="profesor"><td><div class="d-flex items-center gap-3"><div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--success-500), #047857);">YF</div><span class="font-semibold">Yolanda Forero</span></div></td><td class="text-muted">yforero@colegio.mx</td><td><span class="badge badge-warning">Profesor</span></td><td><span class="badge badge-success badge-dot">Activo</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Desactivar</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Panel: Materias -->
+<div class="admin-panel is-hidden" data-tab-panel="materias" data-tab-group="admin" id="panelMaterias">
+  <div class="admin-toolbar">
+    <div class="input-group" style="width: 320px;">
+      <span class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></span>
+      <input type="search" placeholder="Buscar materias..." class="admin-search" data-table="tablaMaterias">
+    </div>
+  </div>
+  <div class="table-wrapper">
+    <table class="table" id="tablaMaterias">
+      <thead><tr><th>Materia</th><th>Nivel</th><th>Profesor</th><th>Grupo</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody>
+        <tr><td class="font-semibold">Matemáticas</td><td><span class="badge badge-primary">Regular</span></td><td>Lic. Medina</td><td>11°</td><td><span class="badge badge-success badge-dot">Activa</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Eliminar</button></td></tr>
+        <tr><td class="font-semibold">Inglés</td><td><span class="badge badge-primary">Regular</span></td><td>Lic. Torres</td><td>11°</td><td><span class="badge badge-success badge-dot">Activa</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Eliminar</button></td></tr>
+        <tr><td class="font-semibold">Lengua y Literatura</td><td><span class="badge badge-primary">Regular</span></td><td>Lic. Reyes</td><td>11°</td><td><span class="badge badge-success badge-dot">Activa</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Eliminar</button></td></tr>
+        <tr><td class="font-semibold">Desarrollo de Lenguas</td><td><span class="badge badge-warning">Troncal</span></td><td>Lic. Gómez</td><td>11°</td><td><span class="badge badge-success badge-dot">Activa</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Eliminar</button></td></tr>
+        <tr><td class="font-semibold">HPP</td><td><span class="badge badge-warning">Troncal</span></td><td>Coord. Pérez</td><td>11°</td><td><span class="badge badge-success badge-dot">Activa</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Eliminar</button></td></tr>
+        <tr><td class="font-semibold">Aprendizaje y Servicio</td><td><span class="badge badge-warning">Troncal</span></td><td>Coord. Pérez</td><td>11°</td><td><span class="badge badge-success badge-dot">Activa</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Eliminar</button></td></tr>
+        <tr><td class="font-semibold">Proyecto de Reflexión</td><td><span class="badge badge-warning">Troncal</span></td><td>Lic. Medina</td><td>11°</td><td><span class="badge badge-success badge-dot">Activa</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Eliminar</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Panel: Grupos de Estudio -->
+<div class="admin-panel is-hidden" data-tab-panel="grupos" data-tab-group="admin">
+  <div class="admin-toolbar">
+    <div class="input-group" style="width: 320px;">
+      <span class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></span>
+      <input type="search" placeholder="Buscar grupos..." class="admin-search" data-table="tablaGrupos">
+    </div>
+  </div>
+  <div class="table-wrapper">
+    <table class="table" id="tablaGrupos">
+      <thead><tr><th>Materia</th><th>Tipo</th><th>Grado</th><th>Estudiantes</th><th>Promedio</th><th>Estado</th></tr></thead>
+      <tbody>
+        <tr><td class="font-semibold">Matemáticas</td><td><span class="badge badge-primary">Regular</span></td><td>11°</td><td>32</td><td>18.0</td><td><span class="badge badge-success badge-dot">Activa</span></td></tr>
+        <tr><td class="font-semibold">Inglés</td><td><span class="badge badge-primary">Regular</span></td><td>11°</td><td>32</td><td>16.0</td><td><span class="badge badge-success badge-dot">Activa</span></td></tr>
+        <tr><td class="font-semibold">Lengua y Literatura</td><td><span class="badge badge-primary">Regular</span></td><td>11°</td><td>32</td><td>17.0</td><td><span class="badge badge-success badge-dot">Activa</span></td></tr>
+        <tr><td class="font-semibold">Desarrollo de Lenguas</td><td><span class="badge badge-warning">Troncal</span></td><td>11°</td><td>32</td><td>16.4</td><td><span class="badge badge-success badge-dot">Activa</span></td></tr>
+        <tr><td class="font-semibold">HPP</td><td><span class="badge badge-warning">Troncal</span></td><td>11°</td><td>32</td><td>16.4</td><td><span class="badge badge-success badge-dot">Activa</span></td></tr>
+        <tr><td class="font-semibold">Aprendizaje y Servicio</td><td><span class="badge badge-warning">Troncal</span></td><td>11°</td><td>32</td><td>15.6</td><td><span class="badge badge-success badge-dot">Activa</span></td></tr>
+        <tr><td class="font-semibold">Proyecto de Reflexión</td><td><span class="badge badge-warning">Troncal</span></td><td>11°</td><td>32</td><td>16.2</td><td><span class="badge badge-success badge-dot">Activa</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Panel: Períodos -->
+<div class="admin-panel is-hidden" data-tab-panel="periodos" data-tab-group="admin">
+  <div class="admin-toolbar">
+    <div class="input-group" style="width: 320px;">
+      <span class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></span>
+      <input type="search" placeholder="Buscar períodos..." class="admin-search" data-table="tablaPeriodos">
+    </div>
+  </div>
+  <div class="table-wrapper">
+    <table class="table" id="tablaPeriodos">
+      <thead><tr><th>Período</th><th>Fecha inicio</th><th>Fecha fin</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody>
+        <tr><td class="font-semibold">Primer Período 2026</td><td>26 ene 2026</td><td>10 abr 2026</td><td><span class="badge badge-success badge-dot">Activo</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Cerrar</button></td></tr>
+        <tr><td class="font-semibold">Segundo Período 2026</td><td>11 abr 2026</td><td>20 jun 2026</td><td><span class="badge badge-warning badge-dot">Próximo</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Cancelar</button></td></tr>
+        <tr><td class="font-semibold">Tercer Período 2026</td><td>21 jun 2026</td><td>25 sep 2026</td><td><span class="badge badge-info badge-dot">Programado</span></td><td class="table-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Cancelar</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  // ====== Tabs ======
+  var tabs = document.querySelectorAll('[data-tabs="admin"] [data-tab]');
+  var panels = document.querySelectorAll('[data-tab-panel][data-tab-group="admin"]');
+  var btn = document.getElementById('adminCreateBtn');
+  var labels = { usuarios:'Crear Usuario', materias:'Crear Materia', grupos:'Crear Grupo', periodos:'Crear Período' };
+  var currentTab = 'usuarios';
+
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      tabs.forEach(function(t) { t.classList.remove('is-active'); });
+      tab.classList.add('is-active');
+      var target = tab.dataset.tab;
+      panels.forEach(function(p) { p.classList.toggle('is-hidden', p.dataset.tabPanel !== target); });
+      document.getElementById('createBtnLabel').textContent = labels[target] || 'Crear';
+      btn.href = tab.dataset.createUrl || '#';
+      currentTab = target;
+    });
+  });
+
+  // ====== Búsqueda por tabla ======
+  document.querySelectorAll('.admin-search').forEach(function(input) {
+    input.addEventListener('input', function() {
+      var tableId = input.dataset.table;
+      var rows = document.querySelectorAll('#' + tableId + ' tbody tr');
+      var texto = input.value.toLowerCase().trim();
+      rows.forEach(function(row) {
+        var match = !texto || row.textContent.toLowerCase().indexOf(texto) !== -1;
+        row.style.display = match ? '' : 'none';
+      });
+    });
+  });
+
+  // ====== Filtro por rol (solo panel usuarios) ======
+  var rolChips = document.querySelectorAll('[data-filter="rol"] .chip');
+  rolChips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      rolChips.forEach(function(c) { c.classList.remove('is-active'); });
+      chip.classList.add('is-active');
+      var filtro = chip.dataset.filterValue;
+      var rows = document.querySelectorAll('#tablaUsuarios tbody tr');
+      rows.forEach(function(row) {
+        var match = (filtro === 'todos') || (row.dataset.rol === filtro);
+        row.style.display = match ? '' : 'none';
+      });
+    });
+  });
+})();
+</script>
+{% endblock %}

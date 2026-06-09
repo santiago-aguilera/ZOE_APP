@@ -1,0 +1,153 @@
+{% extends 'aplicacion/layout_1.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/tareas.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Tareas</h1>
+    <p class="page-subtitle">Gestiona tus entregas, plazos y prioridades</p>
+  </div>
+  <div class="page-actions">
+    {% if rol in ['profesor', 'coordinador'] %}
+    <a href="{{ url_for('form_crear_tarea') }}" class="btn btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Nueva tarea
+    </a>
+    {% endif %}
+  </div>
+</header>
+
+<!-- Filtros y búsqueda -->
+<div class="tareas-toolbar">
+  <div class="filter-chips" data-filter="estado">
+    <button class="chip is-active" data-filter-value="todas">Todas</button>
+    <button class="chip" data-filter-value="pendiente">Pendientes</button>
+    <button class="chip" data-filter-value="revisión">En revisión</button>
+    <button class="chip" data-filter-value="completada">Completadas</button>
+  </div>
+  <div class="input-group" style="width: 280px;">
+    <span class="input-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/>
+      </svg>
+    </span>
+    <input type="search" placeholder="Buscar tareas..." id="searchTareas">
+  </div>
+</div>
+
+<div class="table-wrapper">
+  <table class="table" id="tablaTareas">
+    <thead>
+      <tr>
+        <th>Tarea</th>
+        <th>Materia</th>
+        <th>Prioridad</th>
+        <th>Fecha de entrega</th>
+        <th>Estado</th>
+        <th style="width: 1%;"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-estado="pendiente" data-materia="pr" data-prioridad="alta">
+        <td>
+          <div class="tarea-title">Proyecto de Reflexión — Borrador 2</div>
+          <div class="tarea-meta">Proyecto de Reflexión · Lic. Medina</div>
+        </td>
+          <td>Proy. Reflexión</td>
+        <td><span class="priority-dot alta"></span>Alta</td>
+        <td>11 jun 2026</td>
+        <td><span class="badge badge-warning">Pendiente</span></td>
+        <td class="table-actions"><button class="btn btn-ghost btn-icon btn-sm">→</button></td>
+      </tr>
+      <tr data-estado="pendiente" data-materia="lengua" data-prioridad="media">
+        <td>
+          <div class="tarea-title">Análisis literario — Páramo</div>
+          <div class="tarea-meta">Lengua y Literatura · Lic. Reyes</div>
+        </td>
+        <td>Lengua y Literatura</td>
+        <td><span class="priority-dot media"></span>Media</td>
+        <td>13 jun 2026</td>
+        <td><span class="badge badge-warning">Pendiente</span></td>
+        <td class="table-actions"><button class="btn btn-ghost btn-icon btn-sm">→</button></td>
+      </tr>
+      <tr data-estado="revisión" data-materia="ingles" data-prioridad="media">
+        <td>
+          <div class="tarea-title">Ensayo argumentativo — Environment</div>
+          <div class="tarea-meta">Inglés · Lic. Torres</div>
+        </td>
+        <td>Inglés</td>
+        <td><span class="priority-dot media"></span>Media</td>
+        <td>15 jun 2026</td>
+        <td><span class="badge badge-info">En revisión</span></td>
+        <td class="table-actions"><button class="btn btn-ghost btn-icon btn-sm">→</button></td>
+      </tr>
+      <tr data-estado="revisión" data-materia="ays" data-prioridad="baja">
+        <td>
+          <div class="tarea-title">Informe de horas de servicio</div>
+          <div class="tarea-meta">Aprendizaje y Servicio · Coord. Pérez</div>
+        </td>
+        <td>AyS</td>
+        <td><span class="priority-dot baja"></span>Baja</td>
+        <td>18 jun 2026</td>
+        <td><span class="badge badge-info">En revisión</span></td>
+        <td class="table-actions"><button class="btn btn-ghost btn-icon btn-sm">→</button></td>
+      </tr>
+      <tr data-estado="completada" data-materia="mates" data-prioridad="alta">
+        <td>
+          <div class="tarea-title">Ensayo — Series y Sucesiones</div>
+          <div class="tarea-meta">Matemáticas · Lic. Medina</div>
+        </td>
+        <td>Matemáticas</td>
+        <td><span class="priority-dot alta"></span>Alta</td>
+        <td>22 jun 2026</td>
+        <td><span class="badge badge-success">Completada</span></td>
+        <td class="table-actions"><button class="btn btn-ghost btn-icon btn-sm">→</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  // ====== Filtrado por estado ======
+  var chips = document.querySelectorAll('[data-filter="estado"] .chip');
+  var filas = document.querySelectorAll('#tablaTareas tbody tr');
+  var busqueda = document.getElementById('searchTareas');
+
+  function aplicarFiltros() {
+    var chipActivo = document.querySelector('[data-filter="estado"] .chip.is-active');
+    var filtro = chipActivo ? chipActivo.dataset.filterValue : 'todas';
+    var texto = busqueda.value.toLowerCase().trim();
+
+    filas.forEach(function(row) {
+      var matchEstado = (filtro === 'todas') || (row.dataset.estado === filtro);
+      var matchBusqueda = !texto || row.textContent.toLowerCase().indexOf(texto) !== -1;
+      row.style.display = (matchEstado && matchBusqueda) ? '' : 'none';
+    });
+
+    // Actualizar contadores
+    var visibles = document.querySelectorAll('#tablaTareas tbody tr:not([style*="display: none"])').length;
+    chipActivo.textContent = chipActivo.dataset.filterValue === 'todas'
+      ? 'Todas · ' + visibles
+      : chipActivo.textContent.split(' · ')[0] + ' · ' + visibles;
+  }
+
+  chips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      chips.forEach(function(c) { c.classList.remove('is-active'); });
+      chip.classList.add('is-active');
+      aplicarFiltros();
+    });
+  });
+
+  busqueda.addEventListener('input', aplicarFiltros);
+})();
+</script>
+{% endblock %}

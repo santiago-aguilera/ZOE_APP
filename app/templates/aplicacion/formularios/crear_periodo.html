@@ -1,0 +1,48 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/formularios.css') }}">
+{% endblock %}
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('configuracion') }}">Administración</a>
+  <span class="sep">/</span>
+  <span>Crear Período</span>
+</div>
+<div class="form-page">
+  <div class="form-card">
+    <div class="form-card-header"><h2>Crear Período Académico</h2></div>
+    <form onsubmit="event.preventDefault(); showToast('Período creado exitosamente'); setTimeout(function(){ window.location.href='{{ url_for('configuracion') }}'; }, 1200);">
+      <div class="form-card-body">
+        <div class="form-section">
+          <div class="form-section-title">Información del período</div>
+          <div class="form-group">
+            <label class="form-label">Nombre del período <span class="required">*</span></label>
+            <input type="text" class="form-control" placeholder="Ej: Primer Período 2026" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Fecha de inicio <span class="required">*</span></label>
+              <input type="date" class="form-control" required id="fechaInicio">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Fecha de fin <span class="required">*</span></label>
+              <input type="date" class="form-control" required id="fechaFin">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Descripción</label>
+            <textarea class="form-control" rows="3" placeholder="Notas sobre el período..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="form-card-footer">
+        <a href="{{ url_for('configuracion') }}" class="btn">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Crear período</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>function showToast(msg){var t=document.createElement('div');t.className='toast-success';t.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> '+msg;document.body.appendChild(t);setTimeout(function(){t.remove()},2000);}</script>
+{% endblock %}

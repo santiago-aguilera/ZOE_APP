@@ -1,63 +1,70 @@
 {% extends "layout.html" %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/pagina/ques.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='styles/pagina/layout.css') }}">
 {% endblock %}
 
 {% block content %}
 <div class="zoe-container">
-  <section class="intro">
+  <section class="zoe-intro">
     <h1>¿Qué es ZOE?</h1>
     <p>
-      ZOE (Zona de Organización Estudiantil) es una plataforma académica integral diseñada específicamente para el Programa de Orientación Profesional (POP) del Bachillerato Internacional.
+      <strong>ZOE (Zona de Organización Estudiantil)</strong> es una plataforma
+      académica integral diseñada específicamente para el Programa de
+      Orientación Profesional (POP) del Bachillerato Internacional.
     </p>
     <p>
-      Centraliza todos los componentes académicos del programa IB en un solo ecosistema digital, facilitando la gestión de portafolios, tareas, comunicación y recursos educativos.
+      Centraliza todos los componentes académicos del programa IB en un solo
+      ecosistema digital, facilitando la gestión de portafolios, tareas,
+      comunicación y recursos educativos.
     </p>
   </section>
 
-  <section class="fundacion">
+  <section class="zoe-fundacion">
     <h2>¿Por qué se fundó?</h2>
     <p>
-      La dispersión de materiales, tareas y comunicaciones en múltiples plataformas genera ineficiencias y dificulta el seguimiento académico. ZOE nace como solución centralizada para unificar todos los componentes del programa.
+      La dispersión de materiales, tareas y comunicaciones en múltiples
+      plataformas genera ineficiencias y dificulta el seguimiento académico.
+      ZOE nace como solución centralizada para unificar todos los componentes
+      del programa en un único lugar.
     </p>
   </section>
 
-  <section class="beneficios">
-    <h2>Beneficios por Rol</h2>
+  <section class="zoe-beneficios">
+    <h2>Beneficios por rol</h2>
     <div class="roles-grid">
-      <div class="role-card estudiante">
+      <article class="role-card estudiante">
         <h3>Estudiantes</h3>
         <ul>
           <li>Acceso centralizado a materiales</li>
           <li>Calendario personalizado</li>
           <li>Seguimiento de progreso</li>
         </ul>
-      </div>
-      <div class="role-card profesor">
+      </article>
+      <article class="role-card profesor">
         <h3>Profesores</h3>
         <ul>
           <li>Gestión de grupos y tareas</li>
           <li>Publicación de recursos</li>
           <li>Comunicación organizada</li>
         </ul>
-      </div>
-      <div class="role-card coordinador">
+      </article>
+      <article class="role-card coordinador">
         <h3>Coordinadores</h3>
         <ul>
           <li>Visión integral del programa</li>
           <li>Reportes en tiempo real</li>
           <li>Gestión administrativa</li>
         </ul>
-      </div>
-      <div class="role-card institucion">
+      </article>
+      <article class="role-card institucion">
         <h3>Institución</h3>
         <ul>
           <li>Estandarización de procesos</li>
           <li>Reducción administrativa</li>
           <li>Mejora en calidad educativa</li>
         </ul>
-      </div>
+      </article>
     </div>
   </section>
 </div>

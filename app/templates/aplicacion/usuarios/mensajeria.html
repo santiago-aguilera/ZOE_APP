@@ -1,0 +1,201 @@
+{% extends 'aplicacion/layout_1.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/mensajeris.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Mensajería</h1>
+    <p class="page-subtitle">Conversaciones con tu equipo académico</p>
+  </div>
+  <div class="page-actions">
+    <button class="btn">Marcar todo como leído</button>
+  </div>
+</header>
+
+<div class="chat-shell">
+
+  <!-- Lista de conversaciones -->
+  <aside class="chat-list">
+    <div class="chat-list-header">
+      <h3>Conversaciones</h3>
+      <p>4 mensajes sin leer</p>
+    </div>
+    <div class="chat-list-search">
+      <input type="search" placeholder="Buscar mensajes…" id="searchChats">
+    </div>
+    <div class="chat-list-items" id="listaChats">
+      <div class="list-item is-active" data-chat="coord" data-nombre="Coordinación académica">
+        <div class="avatar avatar-sm">CM</div>
+        <div class="list-item-body">
+          <div class="list-item-title">Coordinación académica</div>
+          <div class="list-item-meta">Recordatorio: Semana IB…</div>
+        </div>
+        <span class="chat-unread">2</span>
+      </div>
+      <div class="list-item" data-chat="medina" data-nombre="Lic. Medina">
+        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#10B981,#047857)">LM</div>
+        <div class="list-item-body">
+          <div class="list-item-title">Lic. Medina · Matemáticas</div>
+          <div class="list-item-meta">Revisión del ensayo lista</div>
+        </div>
+      </div>
+      <div class="list-item" data-chat="reyes" data-nombre="Lic. Reyes">
+        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#F59E0B,#D97706)">LR</div>
+        <div class="list-item-body">
+          <div class="list-item-title">Lic. Reyes · Lengua</div>
+          <div class="list-item-meta">Material complementario…</div>
+        </div>
+        <span class="chat-unread">1</span>
+      </div>
+      <div class="list-item" data-chat="perez" data-nombre="Coord. Pérez">
+        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#3B82F6,#1D4ED8)">CP</div>
+        <div class="list-item-body">
+          <div class="list-item-title">Coord. Pérez · CAS</div>
+          <div class="list-item-meta">Actualización de portafolio</div>
+        </div>
+        <span class="chat-unread">1</span>
+      </div>
+      <div class="list-item" data-chat="grupo" data-nombre="Grupo 11°A">
+        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#8B5CF6,#6D28D9)">DP</div>
+        <div class="list-item-body">
+          <div class="list-item-title">Grupo 11°A</div>
+          <div class="list-item-meta">Karen: ¿Alguien tiene…?</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Hilo de mensajes -->
+  <section class="chat-thread">
+    <header class="chat-thread-header">
+      <div class="avatar avatar-sm">CM</div>
+      <div class="thread-meta">
+        <h4>Coordinación académica</h4>
+        <p>5 miembros · Activo hace 2 h</p>
+      </div>
+    </header>
+
+    <div class="chat-messages">
+      <div class="chat-day-sep">Hoy</div>
+      <div class="bubble them">
+        <p>Buenos días. Recuerden que esta semana inician las evaluaciones IB. Asegúrense de tener todo al día.</p>
+        <span class="bubble-time">09:12</span>
+      </div>
+      <div class="bubble me">
+        <p>Gracias por el recordatorio, ¿hay algún cronograma publicado?</p>
+        <span class="bubble-time">09:18</span>
+      </div>
+      <div class="bubble them">
+        <p>Sí, ya está en la sección de Comunicados. También lo compartimos en la cartelera principal.</p>
+        <span class="bubble-time">09:21</span>
+      </div>
+      <div class="bubble them">
+        <p>Además, les recuerdo subir las entregas pendientes antes del viernes.</p>
+        <span class="bubble-time">11:02</span>
+      </div>
+      <div class="bubble me">
+        <p>Perfecto, lo tengo en cuenta.</p>
+        <span class="bubble-time">11:05</span>
+      </div>
+    </div>
+
+    <form class="chat-composer" id="chatComposer" onsubmit="event.preventDefault();">
+      <button type="button" class="topbar-icon-btn" aria-label="Adjuntar">📎</button>
+      <input type="text" placeholder="Escribe un mensaje…" id="chatInput">
+      <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+  </section>
+
+  <!-- Panel lateral -->
+  <aside class="chat-info">
+    <div class="chat-info-header">
+      <div class="avatar">CM</div>
+      <h4>Coordinación académica</h4>
+      <p>5 miembros</p>
+    </div>
+    <div class="chat-info-body">
+      <h5>Archivos compartidos</h5>
+      <ul class="list">
+        <li class="list-item" style="padding: var(--space-2) 0; border:none;">
+          <span class="list-item-title">📄 cronograma-ib-2026.pdf</span>
+          <span class="list-item-meta">324 KB</span>
+        </li>
+        <li class="list-item" style="padding: var(--space-2) 0; border:none;">
+          <span class="list-item-title">📄 guia-evaluaciones.docx</span>
+          <span class="list-item-meta">128 KB</span>
+        </li>
+      </ul>
+      <h5 style="margin-top: var(--space-5);">Miembros (5)</h5>
+      <ul class="list">
+        <li class="list-item" style="padding: var(--space-2) 0; border:none;">
+          <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#10B981,#047857)">LM</div>
+          <div class="list-item-body">
+            <div class="list-item-title">Lic. Medina</div>
+            <div class="list-item-meta">Matemáticas</div>
+          </div>
+        </li>
+        <li class="list-item" style="padding: var(--space-2) 0; border:none;">
+          <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#F59E0B,#D97706)">LR</div>
+          <div class="list-item-body">
+            <div class="list-item-title">Lic. Reyes</div>
+            <div class="list-item-meta">Lengua y Literatura</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  // ====== Búsqueda de chats ======
+  var busqueda = document.getElementById('searchChats');
+  var items = document.querySelectorAll('#listaChats .list-item');
+
+  busqueda.addEventListener('input', function() {
+    var texto = busqueda.value.toLowerCase().trim();
+    items.forEach(function(item) {
+      var match = !texto || item.dataset.nombre.toLowerCase().indexOf(texto) !== -1
+        || item.textContent.toLowerCase().indexOf(texto) !== -1;
+      item.style.display = match ? '' : 'none';
+    });
+  });
+
+  // ====== Cambiar chat activo ======
+  items.forEach(function(item) {
+    item.addEventListener('click', function() {
+      items.forEach(function(i) { i.classList.remove('is-active'); });
+      item.classList.add('is-active');
+      // Quitar badge de no leído
+      var badge = item.querySelector('.chat-unread');
+      if (badge) badge.remove();
+    });
+  });
+
+  // ====== Enviar mensaje ======
+  var composer = document.getElementById('chatComposer');
+  var input = document.getElementById('chatInput');
+  composer.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var texto = input.value.trim();
+    if (!texto) return;
+    var msgs = document.querySelector('.chat-messages');
+    var div = document.createElement('div');
+    div.className = 'bubble me';
+    var now = new Date();
+    var h = String(now.getHours()).padStart(2,'0');
+    var m = String(now.getMinutes()).padStart(2,'0');
+    div.innerHTML = '<p>' + texto.replace(/</g,'<') + '</p><span class="bubble-time">' + h + ':' + m + '</span>';
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    input.value = '';
+  });
+})();
+</script>
+{% endblock %}

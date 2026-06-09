@@ -1,0 +1,197 @@
+/* =============================================================================
+ * ZOE — Sistema de diseño global
+ * ----------------------------------------------------------------------
+ * Fuente única de verdad para colores, tipografía, espaciados, radios y
+ * sombras. Inspirado en Notion, Linear, Stripe Dashboard y GitHub.
+ * Cualquier ajuste visual debe iniciar aquí.
+ * ============================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ---------------------------------------------------------------------- */
+  /* Paleta neutra (slate / ink) — superficies y texto                       */
+  /* ---------------------------------------------------------------------- */
+  --ink-50:  #F8FAFC;
+  --ink-100: #F1F5F9;
+  --ink-200: #E2E8F0;
+  --ink-300: #CBD5E1;
+  --ink-400: #94A3B8;
+  --ink-500: #64748B;
+  --ink-600: #475569;
+  --ink-700: #334155;
+  --ink-800: #1E293B;
+  --ink-900: #0F172A;
+  --ink-950: #020617;
+
+  /* ---------------------------------------------------------------------- */
+  /* Marca — azul ZOE (académico, confiable)                                */
+  /* ---------------------------------------------------------------------- */
+  --brand-50:  #EEF2FF;
+  --brand-100: #E0E7FF;
+  --brand-200: #C7D2FE;
+  --brand-300: #A5B4FC;
+  --brand-400: #818CF8;
+  --brand-500: #6366F1;
+  --brand-600: #4F46E5;
+  --brand-700: #4338CA;
+  --brand-800: #3730A3;
+  --brand-900: #312E81;
+
+  /* ---------------------------------------------------------------------- */
+  /* Semánticos                                                             */
+  /* ---------------------------------------------------------------------- */
+  --success-50:  #ECFDF5;
+  --success-500: #10B981;
+  --success-600: #059669;
+  --success-700: #047857;
+
+  --warning-50:  #FFFBEB;
+  --warning-500: #F59E0B;
+  --warning-600: #D97706;
+
+  --danger-50:  #FEF2F2;
+  --danger-500: #EF4444;
+  --danger-600: #DC2626;
+
+  --info-50:  #EFF6FF;
+  --info-500: #3B82F6;
+  --info-600: #2563EB;
+
+  /* ---------------------------------------------------------------------- */
+  /* Mapeo semántico (usar estos en componentes, no las escalas directas)    */
+  /* ---------------------------------------------------------------------- */
+  --color-bg:           var(--ink-50);
+  --color-surface:      #FFFFFF;
+  --color-surface-alt:  var(--ink-100);
+  --color-surface-sunk: var(--ink-100);
+
+  --color-text:         var(--ink-900);
+  --color-text-muted:   var(--ink-500);
+  --color-text-subtle:  var(--ink-400);
+  --color-text-inverse: #FFFFFF;
+
+  --color-border:       var(--ink-200);
+  --color-border-strong:var(--ink-300);
+  --color-divider:      var(--ink-100);
+
+  --color-primary:        var(--brand-600);
+  --color-primary-hover:  var(--brand-700);
+  --color-primary-soft:   var(--brand-50);
+  --color-primary-text:   #FFFFFF;
+
+  /* ---------------------------------------------------------------------- */
+  /* Tipografía                                                             */
+  /* ---------------------------------------------------------------------- */
+  --font-sans: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont,
+               'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular,
+               Menlo, Consolas, monospace;
+
+  --text-xs:   0.75rem;   /* 12 */
+  --text-sm:   0.875rem;  /* 14 */
+  --text-base: 0.9375rem; /* 15 — base de la app */
+  --text-md:   1rem;      /* 16 */
+  --text-lg:   1.125rem;  /* 18 */
+  --text-xl:   1.25rem;   /* 20 */
+  --text-2xl:  1.5rem;    /* 24 */
+  --text-3xl:  1.875rem;  /* 30 */
+  --text-4xl:  2.25rem;   /* 36 */
+
+  --leading-tight: 1.2;
+  --leading-snug:  1.35;
+  --leading-base:  1.55;
+  --leading-loose: 1.7;
+
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* ---------------------------------------------------------------------- */
+  /* Espaciado (escala 4px)                                                 */
+  /* ---------------------------------------------------------------------- */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-7:  1.75rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* ---------------------------------------------------------------------- */
+  /* Radios                                                                 */
+  /* ---------------------------------------------------------------------- */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  14px;
+  --radius-xl:  20px;
+  --radius-2xl:  28px;
+  --radius-pill: 999px;
+
+  /* ---------------------------------------------------------------------- */
+  /* Sombras (discretas, tipo Linear / GitHub)                              */
+  /* ---------------------------------------------------------------------- */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 12px 24px -8px rgba(15, 23, 42, 0.12), 0 4px 8px -4px rgba(15, 23, 42, 0.06);
+  --shadow-xl: 0 24px 48px -12px rgba(15, 23, 42, 0.18);
+
+  /* ---------------------------------------------------------------------- */
+  /* Layout                                                                 */
+  /* ---------------------------------------------------------------------- */
+  --sidebar-width:        260px;
+  --sidebar-width-collapsed: 72px;
+  --topbar-height:        64px;
+  --navbar-height:        68px;
+  --content-max-width:    1280px;
+  --content-padding:      var(--space-8);
+
+  /* ---------------------------------------------------------------------- */
+  /* Transiciones                                                           */
+  /* ---------------------------------------------------------------------- */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast:   120ms;
+  --duration-base:   180ms;
+  --duration-slow:   280ms;
+
+  /* ---------------------------------------------------------------------- */
+  /* Z-index                                                                */
+  /* ---------------------------------------------------------------------- */
+  --z-base:    1;
+  --z-sticky:  100;
+  --z-overlay: 800;
+  --z-modal:   900;
+  --z-toast:   1000;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Modo oscuro — preparado para activación futura                         */
+/* ---------------------------------------------------------------------- */
+[data-theme="dark"] {
+  --color-bg:           var(--ink-950);
+  --color-surface:      var(--ink-900);
+  --color-surface-alt:  var(--ink-800);
+  --color-surface-sunk: #0B1120;
+
+  --color-text:         var(--ink-50);
+  --color-text-muted:   var(--ink-400);
+  --color-text-subtle:  var(--ink-500);
+
+  --color-border:       var(--ink-800);
+  --color-border-strong:var(--ink-700);
+  --color-divider:      var(--ink-800);
+
+  --color-primary-soft: rgba(99, 102, 241, 0.15);
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 12px 24px -8px rgba(0, 0, 0, 0.6);
+}

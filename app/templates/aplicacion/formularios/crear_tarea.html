@@ -1,0 +1,87 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/formularios.css') }}">
+{% endblock %}
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('tareas') }}">Tareas</a>
+  <span class="sep">/</span>
+  <span>Crear Tarea</span>
+</div>
+<div class="form-page">
+  <div class="form-card">
+    <div class="form-card-header"><h2>Crear Tarea</h2></div>
+    <form onsubmit="event.preventDefault(); showToast('Tarea creada exitosamente'); setTimeout(function(){ window.location.href='{{ url_for('tareas') }}'; }, 1200);">
+      <div class="form-card-body">
+        <div class="form-section">
+          <div class="form-section-title">Información general</div>
+          <div class="form-group">
+            <label class="form-label">Título <span class="required">*</span></label>
+            <input type="text" class="form-control" placeholder="Ej: Ensayo de Matemáticas — Series" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Descripción</label>
+            <textarea class="form-control" rows="4" placeholder="Instrucciones detalladas de la tarea..."></textarea>
+          </div>
+        </div>
+        <div class="form-section">
+          <div class="form-section-title">Configuración</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Materia <span class="required">*</span></label>
+              <select class="form-control" required>
+                <option value="">Seleccionar...</option>
+              <option>Matemáticas</option>
+              <option>Inglés</option>
+              <option>Lengua y Literatura</option>
+              <option>Desarrollo de Lenguas</option>
+              <option>HPP</option>
+              <option>Aprendizaje y Servicio</option>
+              <option>Proyecto de Reflexión</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Prioridad <span class="required">*</span></label>
+              <select class="form-control" required>
+                <option value="">Seleccionar...</option>
+                <option value="alta">Alta</option>
+                <option value="media">Media</option>
+                <option value="baja">Baja</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Fecha de entrega <span class="required">*</span></label>
+              <input type="date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Grupo <span class="required">*</span></label>
+              <select class="form-control" required>
+                <option value="">Seleccionar...</option>
+                <option>11°</option>
+                <option>Todos</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Período</label>
+            <select class="form-control">
+              <option value="">Seleccionar...</option>
+              <option>Primer Período 2026</option>
+              <option>Segundo Período 2026</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="form-card-footer">
+        <a href="{{ url_for('tareas') }}" class="btn">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Crear tarea</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>function showToast(msg){var t=document.createElement('div');t.className='toast-success';t.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> '+msg;document.body.appendChild(t);setTimeout(function(){t.remove()},2000);}</script>
+{% endblock %}

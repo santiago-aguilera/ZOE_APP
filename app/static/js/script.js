@@ -1,13 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
-
-    const menuToggle = document.getElementById("menu-toggle");
-
-    const menu = document.getElementById("menu");
-
-    menuToggle.addEventListener("click", () => {
-
-        menu.classList.toggle("show");
-
-    });
-
-});
+/* =============================================================================
+ * Script legacy — el comportamiento ahora vive en ui.js
+ * Este archivo se mantiene para no romper imports antiguos.
+ * ============================================================================= */

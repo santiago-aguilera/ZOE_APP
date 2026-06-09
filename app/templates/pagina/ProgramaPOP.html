@@ -1,34 +1,38 @@
 {% extends 'layout.html' %}
 
 {% block extra_css %}
-<link href="../../static/styles/pagina/programa.css" rel="stylesheet">
-<link href="../../static/styles/pagina/layout.css" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/pagina/programa.css') }}">
 {% endblock %}
 
 {% block content %}
-    <div class="program-container">
-    <h1 class="program-title">Programa de Orientación Profesional</h1>
-    <div class="program-grid">
-        <div class="program-card hpp">
-        <div class="icon">🧠</div>
-        <h2>HPP</h2>
-        <p>Habilidades para el Pensamiento</p>
-        </div>
-        <div class="program-card reflexion">
-        <div class="icon">📚</div>
-        <h2>Proyecto de Reflexión</h2>
-        <p>Investigación profesional</p>
-        </div>
-        <div class="program-card servicio">
-        <div class="icon">🤝</div>
-        <h2>Aprendizaje-Servicio</h2>
-        <p>Creatividad y Servicio</p>
-        </div>
-        <div class="program-card lenguas">
-        <div class="icon">🌍</div>
-        <h2>Desarrollo de Lenguas</h2>
-        <p>Competencia multilingüe</p>
-        </div>
-    </div>
-    </div>
+<div class="program-container">
+  <h1>Programa de Orientación Profesional</h1>
+  <p>Los cuatro bloques que articulan el POP del Bachillerato Internacional</p>
+
+  <div class="program-grid">
+    <article class="program-card hpp">
+      <div class="icon">🧠</div>
+      <h2>HPP</h2>
+      <p>Habilidades para el Pensamiento</p>
+    </article>
+
+    <article class="program-card reflexion">
+      <div class="icon">📚</div>
+      <h2>Proyecto de Reflexión</h2>
+      <p>Investigación profesional</p>
+    </article>
+
+    <article class="program-card servicio">
+      <div class="icon">🤝</div>
+      <h2>Aprendizaje-Servicio</h2>
+      <p>Creatividad y Servicio</p>
+    </article>
+
+    <article class="program-card lenguas">
+      <div class="icon">🌍</div>
+      <h2>Desarrollo de Lenguas</h2>
+      <p>Competencia multilingüe</p>
+    </article>
+  </div>
+</div>
 {% endblock %}

@@ -1,0 +1,170 @@
+/* =============================================================================
+ * ZOE — Reportes
+ * ----------------------------------------------------------------------
+ * KPIs con barras de progreso, gráficas de barras, tablas de detalle.
+ * Estilo Stripe Analytics / Linear Insights.
+ * ============================================================================= */
+
+/* ==========================================================================
+ *  Toolbar / Filtros
+ * ========================================================================== */
+.reportes-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+ *  KPI Cards
+ * ========================================================================== */
+.reportes-kpi {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.reportes-kpi-card {
+  padding: var(--space-5) var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow var(--duration-base) var(--ease-out),
+              border-color var(--duration-base) var(--ease-out);
+}
+.reportes-kpi-card:hover {
+  box-shadow: var(--shadow-sm);
+  border-color: var(--color-border-strong);
+}
+
+.reportes-kpi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.reportes-kpi-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.reportes-kpi-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+}
+.reportes-kpi-trend.is-up { color: var(--success-600); }
+.reportes-kpi-trend.is-down { color: var(--danger-600); }
+.reportes-kpi-trend.is-flat { color: var(--color-text-muted); }
+
+.reportes-kpi-value {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-3);
+}
+
+.reportes-kpi-bar {
+  height: 6px;
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.reportes-kpi-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transition: width var(--duration-slow) var(--ease-out);
+}
+
+/* ==========================================================================
+ *  Charts Grid
+ * ========================================================================== */
+.reportes-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  margin-bottom: var(--space-8);
+}
+@media (max-width: 960px) {
+  .reportes-charts { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+ *  Bar Chart (horizontal)
+ * ========================================================================== */
+.reportes-bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.reportes-bar-item {
+  display: grid;
+  grid-template-columns: 140px 1fr 48px;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.reportes-bar-label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reportes-bar-track {
+  height: 24px;
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.reportes-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  transition: width var(--duration-slow) var(--ease-out);
+}
+
+.reportes-bar-value {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .reportes-bar-item {
+    grid-template-columns: 100px 1fr 40px;
+    gap: var(--space-2);
+  }
+  .reportes-bar-label { font-size: var(--text-xs); }
+}
+
+/* ==========================================================================
+ *  Responsive
+ * ========================================================================== */
+@media (max-width: 768px) {
+  .reportes-kpi {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .reportes-kpi {
+    grid-template-columns: 1fr;
+  }
+}

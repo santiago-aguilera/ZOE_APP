@@ -1,0 +1,89 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/reportes.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Reportes</h1>
+    <p class="page-subtitle">Análisis del rendimiento académico y avance del programa</p>
+  </div>
+</header>
+
+<!-- Filtros -->
+<div class="reportes-toolbar">
+  <div class="filter-chips" data-filter="vista">
+    <button class="chip is-active" data-filter-value="general">General</button>
+    <button class="chip" data-filter-value="materias">Materias</button>
+    <button class="chip" data-filter-value="troncales">Troncales</button>
+    <button class="chip" data-filter-value="periodo">Por período</button>
+  </div>
+</div>
+
+<!-- KPIs -->
+<section class="reportes-kpi" id="kpiGeneral">
+  <div class="reportes-kpi-card"><div class="reportes-kpi-header"><span class="reportes-kpi-label">Promedio general</span><span class="reportes-kpi-trend is-up">↑ +0.3</span></div><div class="reportes-kpi-value">16.8<span class="text-sm text-muted">/20</span></div><div class="reportes-kpi-bar"><div class="reportes-kpi-fill" style="width:84%;background:var(--brand-500)"></div></div></div>
+  <div class="reportes-kpi-card"><div class="reportes-kpi-header"><span class="reportes-kpi-label">Tasa de cumplimiento</span><span class="reportes-kpi-trend is-up">↑ +4%</span></div><div class="reportes-kpi-value">94<span class="text-sm text-muted">%</span></div><div class="reportes-kpi-bar"><div class="reportes-kpi-fill" style="width:94%;background:var(--success-500)"></div></div></div>
+  <div class="reportes-kpi-card"><div class="reportes-kpi-header"><span class="reportes-kpi-label">Entregas a tiempo</span><span class="reportes-kpi-trend is-flat">—</span></div><div class="reportes-kpi-value">87<span class="text-sm text-muted">%</span></div><div class="reportes-kpi-bar"><div class="reportes-kpi-fill" style="width:87%;background:var(--info-500)"></div></div></div>
+  <div class="reportes-kpi-card"><div class="reportes-kpi-header"><span class="reportes-kpi-label">Horas de servicio</span><span class="reportes-kpi-trend is-up">↑ +12h</span></div><div class="reportes-kpi-value">148<span class="text-sm text-muted">h</span></div><div class="reportes-kpi-bar"><div class="reportes-kpi-fill" style="width:74%;background:var(--warning-500)"></div></div></div>
+</section>
+
+<!-- Gráfica por materias -->
+<section class="reportes-charts">
+  <article class="panel">
+    <header class="panel-header"><div><h3 class="panel-title">Rendimiento por materia</h3><p class="panel-subtitle">Promedio del periodo actual</p></div></header>
+    <div class="panel-body">
+      <div class="reportes-bar-chart">
+        <div class="reportes-bar-item"><div class="reportes-bar-label">Matemáticas</div><div class="reportes-bar-track"><div class="reportes-bar-fill" style="width:90%;background:var(--brand-500)"></div></div><div class="reportes-bar-value">18.0</div></div>
+        <div class="reportes-bar-item"><div class="reportes-bar-label">Lengua y Lit.</div><div class="reportes-bar-track"><div class="reportes-bar-fill" style="width:85%;background:var(--brand-400)"></div></div><div class="reportes-bar-value">17.0</div></div>
+        <div class="reportes-bar-item"><div class="reportes-bar-label">Inglés</div><div class="reportes-bar-track"><div class="reportes-bar-fill" style="width:80%;background:var(--info-500)"></div></div><div class="reportes-bar-value">16.0</div></div>
+        <div class="reportes-bar-item"><div class="reportes-bar-label">HPP</div><div class="reportes-bar-track"><div class="reportes-bar-fill" style="width:82%;background:var(--success-500)"></div></div><div class="reportes-bar-value">16.4</div></div>
+        <div class="reportes-bar-item"><div class="reportes-bar-label">Proy. Reflexión</div><div class="reportes-bar-track"><div class="reportes-bar-fill" style="width:78%;background:var(--warning-500)"></div></div><div class="reportes-bar-value">15.6</div></div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- Tabla detalle -->
+<section class="mt-8">
+  <div class="panel">
+    <header class="panel-header"><div><h3 class="panel-title">Detalle por materia</h3><p class="panel-subtitle">Calificaciones, entregas y asistencia</p></div></header>
+    <div class="table-wrapper">
+      <table class="table" id="tablaReportes">
+        <thead><tr><th>Materia</th><th>Tipo</th><th>Promedio</th><th>Entregas</th><th>Asistencia</th><th>Tendencia</th></tr></thead>
+        <tbody>
+          <tr data-tipo="regular"><td class="font-semibold">Matemáticas</td><td><span class="badge badge-primary">Regular</span></td><td><span class="badge badge-success">18.0</span></td><td>12/12</td><td>96%</td><td class="text-success text-sm">↑ Mejorando</td></tr>
+          <tr data-tipo="regular"><td class="font-semibold">Lengua y Literatura</td><td><span class="badge badge-primary">Regular</span></td><td><span class="badge badge-success">17.0</span></td><td>10/11</td><td>92%</td><td class="text-success text-sm">↑ Mejorando</td></tr>
+          <tr data-tipo="regular"><td class="font-semibold">Inglés</td><td><span class="badge badge-primary">Regular</span></td><td><span class="badge badge-info">16.0</span></td><td>9/10</td><td>88%</td><td class="text-muted text-sm">→ Estable</td></tr>
+          <tr data-tipo="troncal"><td class="font-semibold">Desarrollo de Lenguas</td><td><span class="badge badge-warning">Troncal</span></td><td><span class="badge badge-success">16.4</span></td><td>8/9</td><td>94%</td><td class="text-success text-sm">↑ Mejorando</td></tr>
+          <tr data-tipo="troncal"><td class="font-semibold">HPP</td><td><span class="badge badge-warning">Troncal</span></td><td><span class="badge badge-success">16.4</span></td><td>8/9</td><td>94%</td><td class="text-success text-sm">↑ Mejorando</td></tr>
+          <tr data-tipo="troncal"><td class="font-semibold">Aprendizaje y Servicio</td><td><span class="badge badge-warning">Troncal</span></td><td><span class="badge badge-warning">15.6</span></td><td>6/8</td><td>90%</td><td class="text-warning text-sm">↓ Revisar</td></tr>
+          <tr data-tipo="troncal"><td class="font-semibold">Proyecto de Reflexión</td><td><span class="badge badge-warning">Troncal</span></td><td><span class="badge badge-success">16.2</span></td><td>7/8</td><td>91%</td><td class="text-success text-sm">↑ Mejorando</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  var chips = document.querySelectorAll('[data-filter="vista"] .chip');
+  var rows = document.querySelectorAll('#tablaReportes tbody tr');
+
+  chips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      chips.forEach(function(c) { c.classList.remove('is-active'); });
+      chip.classList.add('is-active');
+      var filtro = chip.dataset.filterValue;
+      rows.forEach(function(row) {
+        var match = (filtro === 'general') || (filtro === 'periodo') || (row.dataset.tipo === filtro);
+        row.style.display = match ? '' : 'none';
+      });
+    });
+  });
+})();
+</script>
+{% endblock %}

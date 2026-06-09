@@ -1,0 +1,140 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/cronograma.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Cronograma</h1>
+    <p class="page-subtitle">Visualiza tus entregas y fechas importantes del periodo</p>
+  </div>
+</header>
+
+<!-- Filtros -->
+<div class="crono-toolbar">
+  <div class="filter-chips" data-filter="estado">
+    <button class="chip is-active" data-filter-value="todas">Todas</button>
+    <button class="chip" data-filter-value="pendiente">Pendientes</button>
+    <button class="chip" data-filter-value="revisión">En revisión</button>
+    <button class="chip" data-filter-value="completada">Completadas</button>
+  </div>
+  <div class="input-group" style="width: 280px;">
+    <span class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></span>
+    <input type="search" placeholder="Buscar en cronograma..." id="searchCrono">
+  </div>
+</div>
+
+<!-- Resumen -->
+<section class="crono-summary">
+  <div class="crono-summary-card"><div class="crono-summary-icon bg-danger-soft"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="crono-summary-value">2</div><div class="crono-summary-label">Vencen esta semana</div></div></div>
+  <div class="crono-summary-card"><div class="crono-summary-icon bg-warning-soft"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div><div class="crono-summary-value">3</div><div class="crono-summary-label">Próximos 14 días</div></div></div>
+  <div class="crono-summary-card"><div class="crono-summary-icon bg-success-soft"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="crono-summary-value">8</div><div class="crono-summary-label">Completadas este mes</div></div></div>
+</section>
+
+<!-- Timeline -->
+<section class="crono-timeline" id="cronoTimeline">
+  <div class="crono-week">
+    <div class="crono-week-header"><h3>Esta semana</h3><span class="badge badge-danger badge-dot">2 urgentes</span></div>
+    <div class="crono-event" data-estado="pendiente" data-materia="hpp">
+      <div class="crono-event-date"><span class="crono-day">09</span><span class="crono-month">jun</span></div>
+      <div class="crono-event-line"></div>
+      <div class="crono-event-card card card-hover"><div class="card-body-sm">
+        <div class="d-flex items-center justify-between mb-2"><span class="badge badge-danger">Alta</span><span class="text-xs text-muted">HPP</span></div>
+        <h4>Proyecto de Reflexión — Borrador 2</h4>
+        <p class="text-sm text-muted mt-1">Lic. Medina</p>
+        <div class="d-flex items-center gap-3 mt-3"><span class="text-xs text-muted">⏰ En 3 días</span><span class="badge badge-warning">Pendiente</span></div>
+      </div></div>
+    </div>
+    <div class="crono-event" data-estado="pendiente" data-materia="lengua">
+      <div class="crono-event-date"><span class="crono-day">11</span><span class="crono-month">jun</span></div>
+      <div class="crono-event-line"></div>
+      <div class="crono-event-card card card-hover"><div class="card-body-sm">
+        <div class="d-flex items-center justify-between mb-2"><span class="badge badge-warning">Media</span><span class="text-xs text-muted">Lengua y Literatura</span></div>
+        <h4>Análisis literario — Páramo</h4>
+        <p class="text-sm text-muted mt-1">Lic. Reyes</p>
+        <div class="d-flex items-center gap-3 mt-3"><span class="text-xs text-muted">⏰ En 5 días</span><span class="badge badge-warning">Pendiente</span></div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="crono-week">
+    <div class="crono-week-header"><h3>Siguiente semana</h3></div>
+    <div class="crono-event" data-estado="revisión" data-materia="mates">
+      <div class="crono-event-date"><span class="crono-day">15</span><span class="crono-month">jun</span></div>
+      <div class="crono-event-line"></div>
+      <div class="crono-event-card card card-hover"><div class="card-body-sm">
+        <div class="d-flex items-center justify-between mb-2"><span class="badge badge-warning">Media</span><span class="text-xs text-muted">Matemáticas</span></div>
+        <h4>Ensayo — Series y Sucesiones</h4>
+        <p class="text-sm text-muted mt-1">Lic. Medina</p>
+        <div class="d-flex items-center gap-3 mt-3"><span class="text-xs text-muted">⏰ En 9 días</span><span class="badge badge-info">En revisión</span></div>
+      </div></div>
+    </div>
+    <div class="crono-event" data-estado="revisión" data-materia="dlenaguas">
+      <div class="crono-event-date"><span class="crono-day">18</span><span class="crono-month">jun</span></div>
+      <div class="crono-event-line"></div>
+      <div class="crono-event-card card card-hover"><div class="card-body-sm">
+        <div class="d-flex items-center justify-between mb-2"><span class="badge badge-info">Baja</span><span class="text-xs text-muted">Desarrollo de Lenguas</span></div>
+        <h4>Portafolio de lectura — Actualización</h4>
+        <p class="text-sm text-muted mt-1">Lic. Gómez</p>
+        <div class="d-flex items-center gap-3 mt-3"><span class="text-xs text-muted">⏰ En 12 días</span><span class="badge badge-info">En revisión</span></div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="crono-week">
+    <div class="crono-week-header"><h3>Más adelante</h3></div>
+    <div class="crono-event" data-estado="completada" data-materia="ingles">
+      <div class="crono-event-date"><span class="crono-day">22</span><span class="crono-month">jun</span></div>
+      <div class="crono-event-line"></div>
+      <div class="crono-event-card card card-hover"><div class="card-body-sm">
+        <div class="d-flex items-center justify-between mb-2"><span class="badge badge-success">Completada</span><span class="text-xs text-muted">Inglés</span></div>
+        <h4>Ensayo argumentativo — Environment</h4>
+        <p class="text-sm text-muted mt-1">Lic. Torres</p>
+        <div class="d-flex items-center gap-3 mt-3"><span class="text-xs text-muted">✅ Completada</span><span class="badge badge-success">18/20</span></div>
+      </div></div>
+    </div>
+    <div class="crono-event" data-estado="pendiente" data-materia="ays">
+      <div class="crono-event-date"><span class="crono-day">28</span><span class="crono-month">jun</span></div>
+      <div class="crono-event-line"></div>
+      <div class="crono-event-card card card-hover"><div class="card-body-sm">
+        <div class="d-flex items-center justify-between mb-2"><span class="badge badge-danger">Alta</span><span class="text-xs text-muted">Aprendizaje y Servicio</span></div>
+        <h4>Informe de horas de servicio</h4>
+        <p class="text-sm text-muted mt-1">Coord. Pérez</p>
+        <div class="d-flex items-center gap-3 mt-3"><span class="text-xs text-muted">⏰ En 22 días</span><span class="badge badge-warning">Pendiente</span></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  var chips = document.querySelectorAll('[data-filter="estado"] .chip');
+  var eventos = document.querySelectorAll('#cronoTimeline .crono-event');
+  var busqueda = document.getElementById('searchCrono');
+
+  function aplicarFiltros() {
+    var chipActivo = document.querySelector('[data-filter="estado"] .chip.is-active');
+    var filtro = chipActivo ? chipActivo.dataset.filterValue : 'todas';
+    var texto = busqueda.value.toLowerCase().trim();
+
+    eventos.forEach(function(ev) {
+      var matchEstado = (filtro === 'todas') || (ev.dataset.estado === filtro);
+      var matchBusqueda = !texto || ev.textContent.toLowerCase().indexOf(texto) !== -1;
+      ev.style.display = (matchEstado && matchBusqueda) ? '' : 'none';
+    });
+  }
+
+  chips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      chips.forEach(function(c) { c.classList.remove('is-active'); });
+      chip.classList.add('is-active');
+      aplicarFiltros();
+    });
+  });
+  busqueda.addEventListener('input', aplicarFiltros);
+})();
+</script>
+{% endblock %}

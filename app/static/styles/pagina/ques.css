@@ -1,74 +1,38 @@
-/* Contenedor general */
+/* =============================================================================
+ * ZOE — QUES (¿Qué es ZOE?)
+ * ============================================================================= */
+
 .zoe-container {
-  max-width: 1100px;
+  max-width: 880px;
   margin: 0 auto;
-  padding: 2rem;
-  font-family: 'Segoe UI', sans-serif;
-  color: #333;
+  padding: var(--space-12) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
 }
 
-/* Secciones intro y fundación */
-.intro, .fundacion {
-  background: #fafafa;
-  border-radius: 12px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+.zoe-intro,
+.zoe-fundacion {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-xs);
 }
-
-.intro h1, .fundacion h2 {
-  margin-bottom: 1rem;
-  color: #222;
+.zoe-intro h1,
+.zoe-fundacion h2 {
+  margin: 0 0 var(--space-3);
 }
+.zoe-intro p,
+.zoe-fundacion p {
+  color: var(--color-text-muted);
+  font-size: var(--text-md);
+  line-height: var(--leading-loose);
+}
+.zoe-intro p + p,
+.zoe-fundacion p + p { margin-top: var(--space-3); }
 
-/* Beneficios */
-.beneficios h2 {
+.zoe-beneficios h2 {
   text-align: center;
-  margin-bottom: 2rem;
-  color: #222;
+  margin: var(--space-6) 0 var(--space-5);
 }
-
-/* Grid de roles */
-.roles-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.5rem;
-}
-
-/* Tarjetas de rol */
-.role-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.role-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-}
-
-.role-card h3 {
-  margin-bottom: 1rem;
-  font-size: 1.2rem;
-  color: #222;
-}
-
-.role-card ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.role-card li {
-  margin-bottom: 0.5rem;
-  color: #555;
-  font-size: 0.95rem;
-}
-
-/* Colores diferenciados en borde superior */
-.estudiante { border-top: 6px solid #4a90e2; }
-.profesor   { border-top: 6px solid #f5a623; }
-.coordinador{ border-top: 6px solid #7ed321; }
-.institucion{ border-top: 6px solid #bd10e0; }

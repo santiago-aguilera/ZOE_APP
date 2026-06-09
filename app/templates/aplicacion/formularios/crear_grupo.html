@@ -1,0 +1,60 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/formularios.css') }}">
+{% endblock %}
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('configuracion') }}">Administración</a>
+  <span class="sep">/</span>
+  <span>Crear Grupo</span>
+</div>
+<div class="form-page">
+  <div class="form-card">
+    <div class="form-card-header"><h2>Crear Grupo</h2></div>
+    <form onsubmit="event.preventDefault(); showToast('Grupo creado exitosamente'); setTimeout(function(){ window.location.href='{{ url_for('configuracion') }}'; }, 1200);">
+      <div class="form-card-body">
+        <div class="form-section">
+          <div class="form-section-title">Información del grupo</div>
+          <div class="form-group">
+            <label class="form-label">Materia <span class="required">*</span></label>
+            <select class="form-control" required>
+              <option value="">Seleccionar...</option>
+              <option>Matemáticas</option>
+              <option>Inglés</option>
+              <option>Lengua y Literatura</option>
+              <option>Desarrollo de Lenguas</option>
+              <option>HPP</option>
+              <option>Aprendizaje y Servicio</option>
+              <option>Proyecto de Reflexión</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Grado <span class="required">*</span></label>
+            <select class="form-control" required>
+              <option value="11">11°</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Profesor responsable <span class="required">*</span></label>
+            <select class="form-control" required>
+              <option value="">Seleccionar...</option>
+              <option>Lic. Medina</option>
+              <option>Lic. Reyes</option>
+              <option>Lic. Torres</option>
+              <option>Lic. Gómez</option>
+              <option>Coord. Pérez</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="form-card-footer">
+        <a href="{{ url_for('configuracion') }}" class="btn">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Crear grupo</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>function showToast(msg){var t=document.createElement('div');t.className='toast-success';t.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> '+msg;document.body.appendChild(t);setTimeout(function(){t.remove()},2000);}</script>
+{% endblock %}

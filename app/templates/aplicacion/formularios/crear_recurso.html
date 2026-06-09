@@ -1,0 +1,95 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/formularios.css') }}">
+{% endblock %}
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('recursos') }}">Recursos</a>
+  <span class="sep">/</span>
+  <span>Subir Recurso</span>
+</div>
+<div class="form-page">
+  <div class="form-card">
+    <div class="form-card-header"><h2>Subir Recurso</h2></div>
+    <form onsubmit="event.preventDefault(); showToast('Recurso subido exitosamente'); setTimeout(function(){ window.location.href='{{ url_for('recursos') }}'; }, 1200);">
+      <div class="form-card-body">
+        <div class="form-section">
+          <div class="form-section-title">Información del recurso</div>
+          <div class="form-group">
+            <label class="form-label">Nombre del recurso <span class="required">*</span></label>
+            <input type="text" class="form-control" placeholder="Ej: Guía de laboratorio — Química" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Materia <span class="required">*</span></label>
+              <select class="form-control" required>
+                <option value="">Seleccionar...</option>
+                <option>Matemáticas</option>
+                <option>Inglés</option>
+                <option>Lengua y Literatura</option>
+                <option>Desarrollo de Lenguas</option>
+                <option>HPP</option>
+                <option>Aprendizaje y Servicio</option>
+                <option>Proyecto de Reflexión</option>
+                <option>General</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tipo <span class="required">*</span></label>
+              <select class="form-control" required id="tipoRecurso" onchange="toggleUploadFields()">
+                <option value="">Seleccionar...</option>
+                <option value="documento">Documento (PDF, Word)</option>
+                <option value="presentacion">Presentación (PPT)</option>
+                <option value="enlace">Enlace externo</option>
+                <option value="video">Video</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="form-section" id="archivoSection">
+          <div class="form-section-title">Archivo</div>
+          <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </div>
+            <div class="upload-text"><strong>Clic para seleccionar</strong> o arrastra el archivo</div>
+            <div class="text-xs text-muted">PDF, DOCX, PPTX — Máx. 50 MB</div>
+          </div>
+          <input type="file" id="fileInput" style="display:none" onchange="showFileName(this)">
+          <p id="fileName" class="form-help" style="display:none; color: var(--success-600); font-weight: 500;"></p>
+        </div>
+        <div class="form-section" id="enlaceSection" style="display:none;">
+          <div class="form-section-title">Enlace</div>
+          <div class="form-group">
+            <label class="form-label">URL del recurso <span class="required">*</span></label>
+            <input type="url" class="form-control" placeholder="https://...">
+          </div>
+        </div>
+        <div class="form-section">
+          <div class="form-section-title">Descripción</div>
+          <div class="form-group">
+            <label class="form-label">Descripción</label>
+            <textarea class="form-control" rows="3" placeholder="Breve descripción del recurso..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="form-card-footer">
+        <a href="{{ url_for('recursos') }}" class="btn">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Subir recurso</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+function showToast(msg){var t=document.createElement('div');t.className='toast-success';t.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> '+msg;document.body.appendChild(t);setTimeout(function(){t.remove()},2000);}
+function toggleUploadFields(){var tipo=document.getElementById('tipoRecurso').value;var isFile=(tipo==='documento'||tipo==='presentacion');var isLink=(tipo==='enlace'||tipo==='video');document.getElementById('archivoSection').style.display=isFile?'block':'none';document.getElementById('enlaceSection').style.display=isLink?'block':'none';}
+function showFileName(input){if(input.files.length>0){var el=document.getElementById('fileName');el.textContent='✓ '+input.files[0].name;el.style.display='block';}}
+toggleUploadFields();
+</script>
+{% endblock %}

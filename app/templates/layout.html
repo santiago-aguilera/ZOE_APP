@@ -1,52 +1,76 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZOE — Organización Académica IB</title>
-  <link rel="stylesheet" href="static/styles/pagina/layout.css">
-  {% block extra_css %}
-  {% endblock %}
+  <title>ZOE — {{ page_title or "Organización Académica IB" }}</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/tokens.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/pagina/layout.css') }}">
+
+  {% block extra_css %}{% endblock %}
 </head>
+
 <body>
-  <!-- Navbar -->
+  <!-- =====================================================================
+       Navbar
+  ====================================================================== -->
   <header class="navbar">
-    <div class="logo">
-      <span class="menu-icon">☰</span>
-      <h2>ZOE</h2>
-    </div>
-    <nav class="nav-links">
-      <a href="/">¿Qué es ZOE?</a>
-      <a href="/programa-pop">Programa POP</a>
-      <a href="/Estructura">Estructura</a>
+    <a href="/" class="navbar-brand">
+      <span class="brand-mark">Z</span>
+      <span>ZOE</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Navegación principal">
+      <a href="{{ url_for('ques') }}" class="{% if active_page == 'ques' %}is-active{% endif %}">¿Qué es ZOE?</a>
+      <a href="{{ url_for('programa_pop') }}" class="{% if active_page == 'programa-pop' %}is-active{% endif %}">Programa POP</a>
+      <a href="{{ url_for('estructura') }}" class="{% if active_page == 'estructura' %}is-active{% endif %}">Estructura</a>
     </nav>
-    <button class="login-btn" ><a href="/login">Login</a></button>
+
+    <div class="navbar-actions">
+      <a href="{{ url_for('login') }}" class="btn-login">Iniciar sesión</a>
+    </div>
   </header>
 
-  <!-- Contenido dinámico -->
-  <main class="content">
-    {% block content %}
-    <!-- Contenido específico de cada página -->
-    {% endblock %}
+  <!-- =====================================================================
+       Contenido dinámico
+  ====================================================================== -->
+  <main>
+    {% block content %}{% endblock %}
   </main>
 
-  <!-- Footer -->
+  <!-- =====================================================================
+       Footer
+  ====================================================================== -->
   <footer class="footer">
     <div class="footer-content">
-      <div class="footer-left">
+      <div class="footer-brand">
         <h3>ZOE</h3>
-        <p>Organización Académica del Bachillerato Internacional</p>
+        <p>Organización Académica del Bachillerato Internacional — Programa de Orientación Profesional.</p>
       </div>
+
       <div class="footer-links">
+        <h4>Plataforma</h4>
         <a href="/">Inicio</a>
-        <a href="/programa-pop">Programa POP</a>
-        <a href="/estructura">Estructura</a>
-        <a href="/contacto">Contacto</a>
+        <a href="{{ url_for('programa_pop') }}">Programa POP</a>
+        <a href="{{ url_for('estructura') }}">Estructura</a>
+        <a href="{{ url_for('ques') }}">¿Qué es ZOE?</a>
       </div>
-      <div class="footer-right">
-        <p>© 2026 ZOE — Todos los derechos reservados</p>
+
+      <div class="footer-links">
+        <h4>Institución</h4>
+        <a href="#">Colegio Técnico Digital Julio Flórez</a>
+        <a href="#">Contacto</a>
+        <a href="#">Soporte</a>
       </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 ZOE — Todos los derechos reservados</span>
+      <span>Hecho para instituciones educativas internacionales</span>
     </div>
   </footer>
 </body>
+
 </html>

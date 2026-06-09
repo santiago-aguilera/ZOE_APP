@@ -1,0 +1,210 @@
+{% extends 'aplicacion/layout_1.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/usuarios.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Usuarios</h1>
+    <p class="page-subtitle">Gestiona los usuarios de la plataforma ZOE</p>
+  </div>
+  {% if rol == 'coordinador' %}
+  <div class="page-actions">
+    <a href="{{ url_for('form_crear_usuario') }}" class="btn btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Nuevo usuario
+    </a>
+  </div>
+  {% endif %}
+</header>
+
+<!-- Filtros y búsqueda -->
+<div class="usuarios-toolbar">
+  <div class="filter-chips" data-filter="rol_usuario">
+    <button class="chip is-active" data-filter-value="todos">Todos</button>
+    <button class="chip" data-filter-value="estudiante">Estudiantes</button>
+    <button class="chip" data-filter-value="profesor">Profesores</button>
+    <button class="chip" data-filter-value="coordinador">Coordinadores</button>
+  </div>
+  <div class="input-group" style="width: 280px;">
+    <span class="input-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/>
+      </svg>
+    </span>
+    <input type="search" placeholder="Buscar por nombre, email o rol…" id="searchUsuarios">
+  </div>
+</div>
+
+<!-- Tabla de usuarios -->
+<div class="table-wrapper">
+  <table class="table" id="tablaUsuarios">
+    <thead>
+      <tr>
+        <th>Usuario</th>
+        <th>Rol</th>
+        <th>Estado</th>
+        <th>Último acceso</th>
+        <th style="width: 1%;"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-rol="profesor">
+        <td>
+          <div class="d-flex items-center gap-3">
+            <div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--success-500), var(--success-700));">LM</div>
+            <div>
+              <div class="font-semibold">Lic. Roberto Medina</div>
+              <div class="text-xs text-muted">r.medina@colegio.mx</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="badge badge-warning">Profesor</span></td>
+        <td><span class="badge badge-success badge-dot">Activo</span></td>
+        <td class="text-sm text-muted">Hace 1 h</td>
+        <td class="table-actions"><button class="btn btn-ghost btn-icon btn-sm">→</button></td>
+      </tr>
+      <tr data-rol="profesor">
+        <td>
+          <div class="d-flex items-center gap-3">
+            <div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--warning-500), var(--warning-600));">LR</div>
+            <div>
+              <div class="font-semibold">Lic. María Reyes</div>
+              <div class="text-xs text-muted">m.reyes@colegio.mx</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="badge badge-warning">Profesor</span></td>
+        <td><span class="badge badge-success badge-dot">Activo</span></td>
+        <td class="text-sm text-muted">Hace 3 h</td>
+        <td class="table-actions"><button class="btn btn-ghost btn-icon btn-sm">→</button></td>
+      </tr>
+      <tr data-rol="profesor">
+        <td>
+          <div class="d-flex items-center gap-3">
+            <div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--brand-400), var(--brand-600));">LT</div>
+            <div>
+              <div class="font-semibold">Lic. Laura Torres</div>
+              <div class="text-xs text-muted">l.torres@colegio.mx</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="badge badge-warning">Profesor</span></td>
+        <td><span class="badge badge-success badge-dot">Activo</span></td>
+        <td class="text-sm text-muted">Hace 2 h</td>
+        <td class="table-actions"><button class="btn btn-ghost btn-icon btn-sm">→</button></td>
+      </tr>
+      <tr data-rol="profesor">
+        <td>
+          <div class="d-flex items-center gap-3">
+            <div class="avatar avatar-sm" style="background: linear-gradient(135deg, #7C3AED, #5B21B6);">LG</div>
+            <div>
+              <div class="font-semibold">Lic. Diana Gómez</div>
+              <div class="text-xs text-muted">d.gomez@colegio.mx</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="badge badge-warning">Profesor</span></td>
+        <td><span class="badge badge-success badge-dot">Activo</span></td>
+        <td class="text-sm text-muted">Hace 30 min</td>
+        <td class="table-actions"><button class="btn btn-ghost btn-icon btn-sm">→</button></td>
+      </tr>
+      <tr data-rol="coordinador">
+        <td>
+          <div class="d-flex items-center gap-3">
+            <div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--brand-500), var(--brand-700));">CP</div>
+            <div>
+              <div class="font-semibold">Coord. Carlos Pérez</div>
+              <div class="text-xs text-muted">c.perez@colegio.mx</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="badge badge-info">Coordinador</span></td>
+        <td><span class="badge badge-success badge-dot">Activo</span></td>
+        <td class="text-sm text-muted">Ahora</td>
+        <td class="table-actions"><button class="btn btn-ghost btn-icon btn-sm">→</button></td>
+      </tr>
+      <tr data-rol="estudiante">
+        <td>
+          <div class="d-flex items-center gap-3">
+            <div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--brand-500), var(--brand-700));">AM</div>
+            <div>
+              <div class="font-semibold">Ana Martínez</div>
+              <div class="text-xs text-muted">ana.martinez@colegio.mx</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="badge badge-primary">Estudiante</span></td>
+        <td><span class="badge badge-success badge-dot">Activo</span></td>
+        <td class="text-sm text-muted">Hace 2 h</td>
+        <td class="table-actions"><button class="btn btn-ghost btn-icon btn-sm">→</button></td>
+      </tr>
+      <tr data-rol="estudiante">
+        <td>
+          <div class="d-flex items-center gap-3">
+            <div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--info-500), #1D4ED8);">CR</div>
+            <div>
+              <div class="font-semibold">Carlos Rodríguez</div>
+              <div class="text-xs text-muted">carlos.rodriguez@colegio.mx</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="badge badge-primary">Estudiante</span></td>
+        <td><span class="badge badge-success badge-dot">Activo</span></td>
+        <td class="text-sm text-muted">Hace 5 h</td>
+        <td class="table-actions"><button class="btn btn-ghost btn-icon btn-sm">→</button></td>
+      </tr>
+      <tr data-rol="estudiante">
+        <td>
+          <div class="d-flex items-center gap-3">
+            <div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--danger-500), var(--danger-600));">SO</div>
+            <div>
+              <div class="font-semibold">Sofía Ortega</div>
+              <div class="text-xs text-muted">s.ortega@colegio.mx</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="badge badge-primary">Estudiante</span></td>
+        <td><span class="badge badge-warning badge-dot">Inactivo</span></td>
+        <td class="text-sm text-muted">Hace 3 días</td>
+        <td class="table-actions"><button class="btn btn-ghost btn-icon btn-sm">→</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  // ====== Filtro por rol ======
+  var chips = document.querySelectorAll('[data-filter="rol_usuario"] .chip');
+  var rows = document.querySelectorAll('#tablaUsuarios tbody tr');
+  var busqueda = document.getElementById('searchUsuarios');
+
+  function aplicarFiltros() {
+    var chipActivo = document.querySelector('[data-filter="rol_usuario"] .chip.is-active');
+    var filtro = chipActivo ? chipActivo.dataset.filterValue : 'todos';
+    var texto = busqueda.value.toLowerCase().trim();
+    rows.forEach(function(row) {
+      var matchRol = (filtro === 'todos') || (row.dataset.rol === filtro);
+      var matchBusqueda = !texto || row.textContent.toLowerCase().indexOf(texto) !== -1;
+      row.style.display = (matchRol && matchBusqueda) ? '' : 'none';
+    });
+  }
+
+  chips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      chips.forEach(function(c) { c.classList.remove('is-active'); });
+      chip.classList.add('is-active');
+      aplicarFiltros();
+    });
+  });
+  busqueda.addEventListener('input', aplicarFiltros);
+})();
+</script>
+{% endblock %}

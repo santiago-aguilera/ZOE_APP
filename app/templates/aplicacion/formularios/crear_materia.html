@@ -1,0 +1,88 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/formularios.css') }}">
+{% endblock %}
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('configuracion') }}">Administración</a>
+  <span class="sep">/</span>
+  <span>Crear Materia</span>
+</div>
+<div class="form-page">
+  <div class="form-card">
+    <div class="form-card-header"><h2>Crear Materia</h2></div>
+    <form onsubmit="event.preventDefault(); showToast('Materia creada exitosamente'); setTimeout(function(){ window.location.href='{{ url_for('configuracion') }}'; }, 1200);">
+      <div class="form-card-body">
+        <div class="form-section">
+          <div class="form-section-title">Información de la materia</div>
+          <div class="form-group">
+            <label class="form-label">Nombre de la materia <span class="required">*</span></label>
+            <input type="text" class="form-control" placeholder="Ej: Matemáticas HL" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Nivel <span class="required">*</span></label>
+              <select class="form-control" required>
+              <option value="">Seleccionar...</option>
+              <option value="regular">Regular</option>
+              <option value="troncal">Troncal</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Profesor responsable <span class="required">*</span></label>
+              <select class="form-control" required>
+                <option value="">Seleccionar...</option>
+                <option>Lic. Medina</option>
+                <option>Lic. Reyes</option>
+                <option>Lic. Torres</option>
+                <option>Lic. Gómez</option>
+                <option>Coord. Pérez</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="form-section">
+          <div class="form-section-title">Asignación</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Grupo(s) <span class="required">*</span></label>
+              <select class="form-control" required>
+                <option value="">Seleccionar...</option>
+                <option>11°</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Período</label>
+              <select class="form-control">
+                <option value="">Seleccionar...</option>
+                <option>Primer Período 2026</option>
+                <option>Segundo Período 2026</option>
+                <option>Tercer Período 2026</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Descripción</label>
+            <textarea class="form-control" rows="3" placeholder="Descripción breve de la materia..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="form-card-footer">
+        <a href="{{ url_for('configuracion') }}" class="btn">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Crear materia</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+function showToast(msg) {
+  var t = document.createElement('div');
+  t.className = 'toast-success';
+  t.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> ' + msg;
+  document.body.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 2000);
+}
+</script>
+{% endblock %}

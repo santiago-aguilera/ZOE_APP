@@ -1,0 +1,201 @@
+{% extends 'aplicacion/layout_1.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/recursos.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Recursos Académicos</h1>
+    <p class="page-subtitle">Biblioteca de documentos, presentaciones y enlaces</p>
+  </div>
+  <div class="page-actions" id="recursosActions">
+    {% if rol in ['profesor', 'coordinador'] %}
+    <a href="{{ url_for('form_crear_recurso') }}" class="btn btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      Subir recurso
+    </a>
+    {% endif %}
+  </div>
+</header>
+
+<!-- Filtros -->
+<div class="recursos-toolbar">
+  <div class="filter-chips" data-filter="tipo">
+    <button class="chip is-active" data-filter-value="todos">Todos</button>
+    <button class="chip" data-filter-value="documento">Documentos</button>
+    <button class="chip" data-filter-value="presentacion">Presentaciones</button>
+    <button class="chip" data-filter-value="enlace">Enlaces</button>
+    <button class="chip" data-filter-value="video">Videos</button>
+  </div>
+  <div class="input-group" style="width: 280px;">
+    <span class="input-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/>
+      </svg>
+    </span>
+    <input type="search" placeholder="Buscar recursos..." id="searchRecursos">
+  </div>
+</div>
+
+<!-- Grid de recursos -->
+<section class="recursos-grid" id="gridRecursos">
+  <article class="recurso-card card card-hover" data-tipo="documento" data-materia="quimica">
+    <div class="recurso-card-icon bg-primary-soft">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/>
+      </svg>
+    </div>
+    <div class="card-body-sm">
+      <h4 class="recurso-title">Guía de laboratorio — Química</h4>
+      <p class="text-xs text-muted mt-1">Química SL · Lic. Ortega</p>
+      <div class="d-flex items-center justify-between mt-3">
+        <span class="badge badge-info">Documento</span>
+        <span class="text-xs text-muted">324 KB</span>
+      </div>
+      <div class="recurso-actions mt-3">
+        <button class="btn btn-ghost btn-sm">Descargar</button>
+        {% if rol in ['profesor', 'coordinador'] %}<button class="btn btn-ghost btn-sm">Editar</button>{% endif %}
+      </div>
+    </div>
+  </article>
+
+  <article class="recurso-card card card-hover" data-tipo="presentacion" data-materia="mates">
+    <div class="recurso-card-icon bg-warning-soft">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>
+      </svg>
+    </div>
+    <div class="card-body-sm">
+      <h4 class="recurso-title">Presentación — Series y Sucesiones</h4>
+      <p class="text-xs text-muted mt-1">Matemáticas · Lic. Medina</p>
+      <div class="d-flex items-center justify-between mt-3">
+        <span class="badge badge-warning">Presentación</span>
+        <span class="text-xs text-muted">1.2 MB</span>
+      </div>
+      <div class="recurso-actions mt-3">
+        <button class="btn btn-ghost btn-sm">Descargar</button>
+        {% if rol in ['profesor', 'coordinador'] %}<button class="btn btn-ghost btn-sm">Editar</button>{% endif %}
+      </div>
+    </div>
+  </article>
+
+  <article class="recurso-card card card-hover" data-tipo="enlace" data-materia="hpp">
+    <div class="recurso-card-icon bg-success-soft">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+      </svg>
+    </div>
+    <div class="card-body-sm">
+      <h4 class="recurso-title">Guía de reflexión — HPP</h4>
+      <p class="text-xs text-muted mt-1">HPP · Coord. Pérez</p>
+      <div class="d-flex items-center justify-between mt-3">
+        <span class="badge badge-success">Enlace</span>
+        <span class="text-xs text-muted">Externo</span>
+      </div>
+      <div class="recurso-actions mt-3">
+        <button class="btn btn-ghost btn-sm">Abrir</button>
+        {% if rol in ['profesor', 'coordinador'] %}<button class="btn btn-ghost btn-sm">Editar</button>{% endif %}
+      </div>
+    </div>
+  </article>
+
+  <article class="recurso-card card card-hover" data-tipo="video" data-materia="lengua">
+    <div class="recurso-card-icon" style="background: rgba(139,92,246,0.1); color: #7C3AED;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+      </svg>
+    </div>
+    <div class="card-body-sm">
+      <h4 class="recurso-title">Video — Análisis literario Páramo</h4>
+      <p class="text-xs text-muted mt-1">Lengua y Literatura · Lic. Reyes</p>
+      <div class="d-flex items-center justify-between mt-3">
+        <span class="badge" style="background: rgba(139,92,246,0.1); color: #7C3AED;">Video</span>
+        <span class="text-xs text-muted">YouTube</span>
+      </div>
+      <div class="recurso-actions mt-3">
+        <button class="btn btn-ghost btn-sm">Ver</button>
+        {% if rol in ['profesor', 'coordinador'] %}<button class="btn btn-ghost btn-sm">Editar</button>{% endif %}
+      </div>
+    </div>
+  </article>
+
+  <article class="recurso-card card card-hover" data-tipo="documento" data-materia="dl">
+    <div class="recurso-card-icon bg-info-soft">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+      </svg>
+    </div>
+    <div class="card-body-sm">
+      <h4 class="recurso-title">Guía de lectura — Desarrollo de Lenguas</h4>
+      <p class="text-xs text-muted mt-1">Desarrollo de Lenguas · Lic. Gómez</p>
+      <div class="d-flex items-center justify-between mt-3">
+        <span class="badge badge-info">Documento</span>
+        <span class="text-xs text-muted">89 KB</span>
+      </div>
+      <div class="recurso-actions mt-3">
+        <button class="btn btn-ghost btn-sm">Descargar</button>
+        {% if rol in ['profesor', 'coordinador'] %}<button class="btn btn-ghost btn-sm">Editar</button>{% endif %}
+      </div>
+    </div>
+  </article>
+
+  <article class="recurso-card card card-hover" data-tipo="documento" data-materia="ays">
+    <div class="recurso-card-icon bg-danger-soft">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>
+      </svg>
+    </div>
+    <div class="card-body-sm">
+      <h4 class="recurso-title">Plantilla — Informe de Servicio</h4>
+      <p class="text-xs text-muted mt-1">Aprendizaje y Servicio · Coord. Pérez</p>
+      <div class="d-flex items-center justify-between mt-3">
+        <span class="badge badge-danger">Plantilla</span>
+        <span class="text-xs text-muted">156 KB</span>
+      </div>
+      <div class="recurso-actions mt-3">
+        <button class="btn btn-ghost btn-sm">Descargar</button>
+        {% if rol in ['profesor', 'coordinador'] %}<button class="btn btn-ghost btn-sm">Editar</button>{% endif %}
+      </div>
+    </div>
+  </article>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  var chips = document.querySelectorAll('[data-filter="tipo"] .chip');
+  var tarjetas = document.querySelectorAll('#gridRecursos .recurso-card');
+  var busqueda = document.getElementById('searchRecursos');
+
+  function aplicarFiltros() {
+    var chipActivo = document.querySelector('[data-filter="tipo"] .chip.is-active');
+    var filtro = chipActivo ? chipActivo.dataset.filterValue : 'todos';
+    var texto = busqueda.value.toLowerCase().trim();
+
+    tarjetas.forEach(function(card) {
+      var matchTipo = (filtro === 'todos') || (card.dataset.tipo === filtro);
+      var matchBusqueda = !texto || card.textContent.toLowerCase().indexOf(texto) !== -1;
+      card.style.display = (matchTipo && matchBusqueda) ? '' : 'none';
+    });
+  }
+
+  chips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      chips.forEach(function(c) { c.classList.remove('is-active'); });
+      chip.classList.add('is-active');
+      aplicarFiltros();
+    });
+  });
+
+  busqueda.addEventListener('input', aplicarFiltros);
+})();
+</script>
+{% endblock %}

@@ -1,64 +1,255 @@
 {% extends 'layout.html' %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='styles/pagina/index.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='styles/pagina/layout.css') }}">
-{% endblock %}
-
 {% block content %}
 
-<main class="hero">
+<!-- =====================================================================
+     Hero — con partículas/ondas animadas
+====================================================================== -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <div class="hero-particle p1"></div>
+    <div class="hero-particle p2"></div>
+    <div class="hero-particle p3"></div>
+    <div class="hero-particle p4"></div>
+  </div>
   <div class="hero-content">
-    <span class="badge">Sistema Académico IB</span>
-    <h1><span class="highlight">ZOE</span> — Organización Académica del Bachillerato Internacional</h1>
-    <p>
-      ZOE es una plataforma educativa diseñada para centralizar portafolios, tareas, comunicación y recursos del Programa de Orientación Profesional en una sola aplicación.
+    <span class="hero-badge animate-fade-in">
+      <span class="pulse"></span>
+      Sistema Académico IB · POP
+    </span>
+    <h1 class="animate-slide-up">
+      <span class="highlight">ZOE</span> — Organización Académica
+      del Bachillerato Internacional
+    </h1>
+    <p class="animate-slide-up delay-1">
+      ZOE es la plataforma educativa que centraliza portafolios, tareas,
+      comunicación y recursos del Programa de Orientación Profesional en un
+      solo ecosistema digital.
     </p>
-    <div class="hero-buttons">
-      <button class="primary-btn"><a href="{{ url_for('login') }}">Comenzar ahora</a></button>
-      <button class="secondary-btn"><a href="{{ url_for('ques') }}">Conocer más</a></button>
+    <div class="hero-stats animate-fade-in delay-2">
+      <div class="hero-stat">
+        <span class="hero-stat-value">7</span>
+        <span class="hero-stat-label">Materias</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-value">30+</span>
+        <span class="hero-stat-label">Estudiantes</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-value">3</span>
+        <span class="hero-stat-label">Roles</span>
+      </div>
+    </div>
+    <div class="hero-buttons animate-slide-up delay-2">
+      <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg btn-glow">Comenzar ahora</a>
+      <a href="{{ url_for('ques') }}" class="btn btn-lg">Conocer más</a>
     </div>
   </div>
+</section>
 
-  <!-- Sección informativa -->
-  <section class="info-grid">
-    <div class="info-card">
-      <h3>¿Qué es ZOE?</h3>
-      <p>
-        Es un sistema integral que unifica todos los componentes del Programa de Orientación Profesional del IB en un solo ecosistema digital.
-      </p>
-      <p>
-        Fue creado para resolver la dispersión de materiales y comunicaciones en múltiples plataformas, facilitando la gestión académica efectiva.
-      </p>
+<!-- =====================================================================
+     Materias — mini grid animado
+====================================================================== -->
+<section class="section section-dark">
+  <div class="container">
+    <h2 class="section-title animate-on-scroll">Nuestras materias</h2>
+    <p class="section-subtitle animate-on-scroll delay-1">
+      3 regulares y 4 troncales — todo para el grado 11°
+    </p>
+    <div class="materias-preview-grid">
+      <div class="materia-preview-card" style="--accent: var(--brand-500);">
+        <span class="materia-preview-icon">∑</span>
+        <h4>Matemáticas</h4>
+        <span class="badge badge-primary">Regular</span>
+      </div>
+      <div class="materia-preview-card" style="--accent: var(--info-500);">
+        <span class="materia-preview-icon">EN</span>
+        <h4>Inglés</h4>
+        <span class="badge badge-primary">Regular</span>
+      </div>
+      <div class="materia-preview-card" style="--accent: var(--warning-500);">
+        <span class="materia-preview-icon">LL</span>
+        <h4>Lengua y Lit.</h4>
+        <span class="badge badge-primary">Regular</span>
+      </div>
+      <div class="materia-preview-card" style="--accent: #7C3AED;">
+        <span class="materia-preview-icon">DL</span>
+        <h4>Des. de Lenguas</h4>
+        <span class="badge badge-warning">Troncal</span>
+      </div>
+      <div class="materia-preview-card" style="--accent: var(--success-500);">
+        <span class="materia-preview-icon">HP</span>
+        <h4>HPP</h4>
+        <span class="badge badge-warning">Troncal</span>
+      </div>
+      <div class="materia-preview-card" style="--accent: var(--danger-500);">
+        <span class="materia-preview-icon">AS</span>
+        <h4>AyS</h4>
+        <span class="badge badge-warning">Troncal</span>
+      </div>
+      <div class="materia-preview-card" style="--accent: var(--warning-600);">
+        <span class="materia-preview-icon">PR</span>
+        <h4>Proy. Reflexión</h4>
+        <span class="badge badge-warning">Troncal</span>
+      </div>
     </div>
+  </div>
+</section>
 
-    <div class="info-card">
-      <h3>Beneficios Clave</h3>
-      <ul>
-        <li>✅ Acceso centralizado a materias y tareas</li>
-        <li>✅ Calendario personalizado con entregas</li>
-        <li>✅ Comunicación directa entre roles</li>
-        <li>✅ Seguimiento de progreso en tiempo real</li>
-      </ul>
+<!-- =====================================================================
+     Características — cards con hover 3D
+====================================================================== -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title animate-on-scroll">Una plataforma, todo el programa</h2>
+    <p class="section-subtitle animate-on-scroll delay-1">
+      Centraliza los componentes del POP del IB en un ecosistema único y moderno.
+    </p>
+    <div class="features-grid">
+      <div class="feature-card animate-on-scroll delay-1">
+        <div class="feature-icon" style="background: var(--brand-50); color: var(--brand-600);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="4" width="16" height="16" rx="2"/><path d="m9 12 2 2 4-4"/>
+          </svg>
+        </div>
+        <h3>Tareas y entregas</h3>
+        <p>Gestiona tus tareas con fechas, prioridades y estado. Profesores pueden crear, estudiantes entregar.</p>
+      </div>
+      <div class="feature-card animate-on-scroll delay-2">
+        <div class="feature-icon" style="background: var(--info-50); color: var(--info-600);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          </svg>
+        </div>
+        <h3>Biblioteca de recursos</h3>
+        <p>Documentos, presentaciones, enlaces y videos organizados por materia y tipo.</p>
+      </div>
+      <div class="feature-card animate-on-scroll delay-3">
+        <div class="feature-icon" style="background: var(--success-50); color: var(--success-600);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="20" x2="4" y2="10"/><line x1="10" y1="20" x2="10" y2="4"/>
+            <line x1="16" y1="20" x2="16" y2="14"/><line x1="22" y1="20" x2="2" y2="20"/>
+          </svg>
+        </div>
+        <h3>Reportes en vivo</h3>
+        <p>Métricas de rendimiento, cumplimiento y actividad por materia con tendencias.</p>
+      </div>
+      <div class="feature-card animate-on-scroll delay-1">
+        <div class="feature-icon" style="background: var(--warning-50); color: var(--warning-600);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+        <h3>Cronograma visual</h3>
+        <p>Timeline con todas las entregas, filtros por estado y búsqueda inteligente.</p>
+      </div>
+      <div class="feature-card animate-on-scroll delay-2">
+        <div class="feature-icon" style="background: rgba(139,92,246,0.1); color: #7C3AED;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <h3>Mensajería</h3>
+        <p>Chat en tiempo real con búsqueda, badges de no leído y envío instantáneo.</p>
+      </div>
+      <div class="feature-card animate-on-scroll delay-3">
+        <div class="feature-icon" style="background: var(--danger-50); color: var(--danger-600);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1A2 2 0 1 1 4.4 17l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1A2 2 0 1 1 7 4.4l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1A2 2 0 1 1 19.6 7l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+          </svg>
+        </div>
+        <h3>Control por roles</h3>
+        <p>Estudiante, profesor y coordinador cada uno con su vista adaptada.</p>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Sección de roles -->
-  <section class="roles-grid">
-    <div class="role-card estudiante">
-      👩‍🎓 Estudiantes<br>
-      <span>Gestión completa de portafolios y entregas</span>
-    </div>
-    <div class="role-card profesor">
-      👨‍🏫 Profesores<br>
-      <span>Seguimiento y publicación de recursos</span>
-    </div>
-    <div class="role-card coordinador">
-      🧑‍💼 Coordinadores<br>
-      <span>Visión integral y gestión administrativa</span>
-    </div>
-  </section>
-</main>
+<!-- =====================================================================
+     Roles — con hover y animaciones
+====================================================================== -->
+<section class="section section-dark">
+  <div class="container">
+    <h2 class="section-title animate-on-scroll">Diseñado para cada rol</h2>
+    <p class="section-subtitle animate-on-scroll delay-1">
+      Vistas, permisos y herramientas adaptados a estudiantes, profesores y coordinadores.
+    </p>
+    <div class="roles-grid">
+      <article class="role-card estudiante animate-on-scroll delay-1">
+        <div class="role-card-icon">👨‍🎓</div>
+        <h3>Estudiantes</h3>
+        <ul>
+          <li>✅ Gestión de tareas y entregas</li>
+          <li>✅ Acceso a recursos académicos</li>
+          <li>✅ Cronograma personalizado</li>
+          <li>✅ Mensajería con profesores</li>
+          <li>✅ Reportes personales</li>
+        </ul>
+      </article>
 
+      <article class="role-card profesor animate-on-scroll delay-2">
+        <div class="role-card-icon">👨‍🏫</div>
+        <h3>Profesores</h3>
+        <ul>
+          <li>✅ Crear y calificar tareas</li>
+          <li>✅ Subir recursos educativos</li>
+          <li>✅ Ver grupos y materias</li>
+          <li>✅ Reportes de sus materias</li>
+          <li>✅ Comunicación directa</li>
+        </ul>
+      </article>
 
+      <article class="role-card coordinador animate-on-scroll delay-3">
+        <div class="role-card-icon">👨‍💼</div>
+        <h3>Coordinadores</h3>
+        <ul>
+          <li>✅ Gestión de usuarios y roles</li>
+          <li>✅ Configuración del sistema</li>
+          <li>✅ Reportes globales</li>
+          <li>✅ CRUD completo de materias</li>
+          <li>✅ Visión integral del programa</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     CTA Final
+====================================================================== -->
+<section class="section cta-section">
+  <div class="container">
+    <div class="cta-card">
+      <h2>¿Listo para empezar?</h2>
+      <p>Únete a ZOE y centraliza tu experiencia académica IB en un solo lugar.</p>
+      <div class="hero-buttons">
+        <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg btn-glow">Acceder ahora</a>
+        <a href="{{ url_for('programa_pop') }}" class="btn btn-lg">Conoce el POP</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ====== Scroll animations ======
+(function() {
+  var elements = document.querySelectorAll('.animate-on-scroll');
+  if (elements.length === 0) return;
+  function checkVisibility() {
+    elements.forEach(function(el) {
+      var rect = el.getBoundingClientRect();
+      var isVisible = rect.top < window.innerHeight - 60;
+      el.classList.toggle('is-visible', isVisible);
+    });
+  }
+  window.addEventListener('scroll', checkVisibility);
+  checkVisibility();
+})();
+</script>
 {% endblock %}
