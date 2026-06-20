@@ -1,7 +1,8 @@
 {% extends 'layout.html' %}
-<head>
-  {% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='styles/pagina/index.css') }}">{% endblock %}
-</head>
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/pagina/index.css') }}">
+{% endblock %}
 
 {% block content %}
 

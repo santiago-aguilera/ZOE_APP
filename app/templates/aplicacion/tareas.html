@@ -10,30 +10,32 @@
     <h1>Módulo de Tareas</h1>
     <p>Listado de tareas por materias</p>
     <div class="filters">
-      <button onclick="filterTasks('all')" class="active">Todas</button>
-      <button onclick="filterTasks('pendiente')">Pendientes</button>
-      <button onclick="filterTasks('completada')">Completadas</button>
-      <button onclick="filterTasks('revision')">En revisión</button>
-      <a href="#" class="btn-create">+ Crear Tarea</a>
+      <button onclick="filterTasks('all')" class="active">Todas ({{ tareas|length }})</button>
+      <a href="{{ url_for('form_crear_tarea') }}" class="btn-create">+ Crear Tarea</a>
     </div>
   </header>
 
   <div class="tasks-list">
-    {% for tarea in tareas %}
-    <div class="task-card {{ tarea.estado }}">
-      <h3>{{ tarea.materia }}</h3>
-      <p><strong>{{ tarea.titulo }}</strong></p>
-      <p>Responsable: {{ tarea.responsable }}</p>
-      <p>Estado: {{ tarea.estado|capitalize }}</p>
-      <p>Fecha entrega: {{ tarea.fecha }}</p>
-      <div class="actions">
-        <a href="#" class="btn">Revisar</a>
-        {% if tarea.estado == "pendiente" %}
-          <a href="#" class="btn secondary">Marcar completada</a>
-        {% endif %}
+    {% if tareas %}
+      {% for tarea in tareas %}
+      <div class="task-card">
+        <h3>{{ tarea.materia }}</h3>
+        <p><strong>{{ tarea.titulo }}</strong></p>
+        <p>Responsable: {{ tarea.creador }}</p>
+        <p>Fecha límite: {{ tarea.fecha_limite }}</p>
+        <p>Entregas: {{ tarea.entregas }}</p>
+        <div class="actions">
+          <a href="#" class="btn">Revisar</a>
+          <a href="#" class="btn secondary">Detalles</a>
+        </div>
       </div>
-    </div>
-    {% endfor %}
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">
+        <p>No hay tareas registradas</p>
+        <a href="{{ url_for('form_crear_tarea') }}" class="btn">Crear la primera tarea</a>
+      </div>
+    {% endif %}
   </div>
 </div>
 
