@@ -1,50 +1,154 @@
-# Variables de conexión a la BD ZOE (XAMPP/phpMyAdmin)
-# Asegúrate de que XAMPP esté corriendo y la BD 'zoe' exista
+"""
+Conexión a Base de Datos MySQL usando mysql-connector-python
+Patrón Singleton para evitar conexiones duplicadas
+"""
 
-import os
-from datetime import timedelta
-from pathlib import Path
+import mysql.connector
+from mysql.connector import Error
 from dotenv import load_dotenv
+from pathlib import Path
+import os
 
-# Cargar variables del archivo .env
+# Cargar variables de entorno
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
-class Config:
-    """Configuración base de la aplicación ZOE."""
+
+class ConexionBaseDatos:
+    """
+    Clase Singleton para manejar la conexión a MySQL.
+    Garantiza una única instancia de conexión en toda la aplicación.
+    """
+    _instancia = None
     
-    # Rutas de carpetas
+    def __new__(cls):
+        if cls._instancia is None:
+            cls._instancia = super().__new__(cls)
+            cls._instancia._conexion = None
+            cls._instancia._config = {
+                'host': os.environ.get("DB_HOST", "localhost"),
+                'port': int(os.environ.get("DB_PORT", "3306")),
+                'user': os.environ.get("DB_USER", "root"),
+                'password': os.environ.get("DB_PASSWORD", ""),
+                'database': os.environ.get("DB_NAME", "sistema_tickets_v2"),
+                'charset': 'utf8mb4',
+                'collation': 'utf8mb4_unicode_ci',
+            }
+        return cls._instancia
+    
+    def conectar(self):
+        """Establece la conexión a MySQL."""
+        try:
+            if self._conexion is None or not self._conexion.is_connected():
+                self._conexion = mysql.connector.connect(**self._config)
+            return self._conexion
+        except Error as e:
+            print(f"Error al conectar a MySQL: {e}")
+            raise
+    
+    def desconectar(self):
+        """Cierra la conexión a MySQL."""
+        if self._conexion and self._conexion.is_connected():
+            self._conexion.close()
+            self._conexion = None
+    
+    def ejecutar_consulta(self, consulta, parametros=None):
+        """
+        Ejecuta una consulta SQL y retorna los resultados.
+        
+        Args:
+            consulta: Consulta SQL con placeholders (%s)
+            parametros: Tupla de parámetros para la consulta
+            
+        Returns:
+            Lista de diccionarios con los resultados
+        """
+        conexion = self.conectar()
+        cursor = conexion.cursor(dictionary=True)
+        
+        try:
+            cursor.execute(consulta, parametros)
+            resultados = cursor.fetchall()
+            conexion.commit()
+            return resultados
+        except Error as e:
+            conexion.rollback()
+            print(f"Error en consulta: {e}")
+            raise
+        finally:
+            cursor.close()
+    
+    def ejecutar_insercion(self, consulta, parametros=None):
+        """
+        Ejecuta una consulta de inserción y retorna el ID generado.
+        
+        Args:
+            consulta: Consulta SQL INSERT con placeholders (%s)
+            parametros: Tupla de parámetros para la consulta
+            
+        Returns:
+            ID del último registro insertado
+        """
+        conexion = self.conectar()
+        cursor = conexion.cursor()
+        
+        try:
+            cursor.execute(consulta, parametros)
+            conexion.commit()
+            return cursor.lastrowid
+        except Error as e:
+            conexion.rollback()
+            print(f"Error en inserción: {e}")
+            raise
+        finally:
+            cursor.close()
+    
+    def ejecutar_actualizacion(self, consulta, parametros=None):
+        """
+        Ejecuta una consulta de actualización/eliminación.
+        
+        Args:
+            consulta: Consulta SQL UPDATE/DELETE con placeholders (%s)
+            parametros: Tupla de parámetros para la consulta
+            
+        Returns:
+            Número de filas afectadas
+        """
+        conexion = self.conectar()
+        cursor = conexion.cursor()
+        
+        try:
+            cursor.execute(consulta, parametros)
+            conexion.commit()
+            return cursor.rowcount
+        except Error as e:
+            conexion.rollback()
+            print(f"Error en actualización: {e}")
+            raise
+        finally:
+            cursor.close()
+
+
+# Instancia global de conexión (Singleton)
+db = ConexionBaseDatos()
+
+
+# Configuración de Flask
+class Config:
+    """Configuración base de la aplicación."""
+    
+    # Rutas
     APP_DIR = Path(__file__).resolve().parent
     TEMPLATES_FOLDER = APP_DIR / "templates"
     STATIC_FOLDER = APP_DIR / "static"
     
-    # Sesiones Flask
+    # Sesiones
     SECRET_KEY = os.environ.get("SECRET_KEY", "zoe-desarrollo-cambiar-en-produccion")
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
-    PERMANENT_SESSION_LIFETIME = timedelta(hours=1)
+    PERMANENT_SESSION_LIFETIME = 3600  # 1 hora en segundos
     
     # Desarrollo
     DEBUG = os.environ.get("FLASK_DEBUG", "1") == "1"
-    
-    # =====================================================================
-    # CONFIGURACIÓN DE BASE DE DATOS - XAMPP/MySQL
-    # =====================================================================
-    
-    # Conexión a MySQL (XAMPP por defecto)
-    DB_HOST = os.environ.get("DB_HOST", "localhost")
-    DB_PORT = int(os.environ.get("DB_PORT", "3306"))
-    DB_USER = os.environ.get("DB_USER", "root")
-    DB_PASSWORD = os.environ.get("DB_PASSWORD", "")
-    DB_NAME = os.environ.get("DB_NAME", "zoe")
-    
-    # URL de conexión para SQLAlchemy
-    SQLALCHEMY_DATABASE_URI = (
-        f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-        if DB_PASSWORD
-        else f"mysql+pymysql://{DB_USER}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    )
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ECHO = DEBUG  # Mostrar queries en desarrollo
 
 
 class DevelopmentConfig(Config):
@@ -57,10 +161,9 @@ class ProductionConfig(Config):
     DEBUG = False
 
 
-# Seleccionar configuración según ambiente
+# Diccionario de configuraciones
 config = {
     'development': DevelopmentConfig,
     'production': ProductionConfig,
     'default': DevelopmentConfig
 }
-

@@ -24,8 +24,8 @@
         ================================================================== -->
         <aside class="sidebar" id="sidebar" aria-label="Navegación principal">
             <div class="sidebar-header">
-                <a href="{{ url_for('dashboard') }}" class="sidebar-brand">
-                    <img src="{{ url_for('static', filename='../static/img/Logos/logo_zoe.png') }}" alt="Logo de ZOE" class="brand-logo">
+                <a href="{{ url_for('dashboard.dashboard') }}" class="sidebar-brand">
+                    <img src="{{ url_for('static', filename='img/Logos/logo_zoe.png') }}" alt="Logo de ZOE" class="brand-logo">
                 </a>
                 <button class="sidebar-toggle" type="button" data-sidebar-toggle aria-label="Colapsar menú">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -41,7 +41,7 @@
                 {# ===== Todos los roles ===== #}
                 <div class="nav-section">
                     <div class="nav-section-title">Principal</div>
-                    <a href="{{ url_for('dashboard') }}"
+                    <a href="{{ url_for('dashboard.dashboard') }}"
                         class="nav-item {% if active_page == 'dashboard' %}is-active{% endif %}">
                         <span class="nav-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
