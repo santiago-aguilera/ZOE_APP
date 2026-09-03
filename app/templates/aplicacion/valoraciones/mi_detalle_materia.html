@@ -1,0 +1,41 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/valoraciones.css') }}">
+{% endblock %}
+{% block content %}
+<header class="page-header calif-detalle-header">
+  <div>
+    <h1 class="page-title">{{ materia.nombre }}</h1>
+    <p class="page-subtitle">Desglose de tus valoraciones · Valoración mínima para aprobar: {{ materia.valoracion_minima_aprobatoria }}</p>
+  </div>
+  <a href="{{ url_for('valoraciones.mis_notas') }}" class="btn">← Volver a Mis Valoraciones</a>
+</header>
+
+<div class="table-wrapper">
+  <table class="table">
+    <thead><tr><th>Actividad</th><th>Tipo</th><th>% Peso</th><th>Fecha</th><th>Tu valoración</th><th>Comentario</th></tr></thead>
+    <tbody>
+      {% if detalle %}
+        {% for d in detalle %}
+        <tr>
+          <td class="font-semibold">{{ d.nombre }}</td>
+          <td class="text-sm text-muted">{{ d.tipo|capitalize }}</td>
+          <td>{{ d.porcentaje }}%</td>
+          <td class="text-sm">{{ d.fecha or '—' }}</td>
+          <td>
+            {% if d.valor %}
+              <span class="calif-nota-pill {{ 'pass' if valor_ordinal[d.valor] >= valor_ordinal[materia.valoracion_minima_aprobatoria] else 'fail' }}">{{ d.valor }}</span>
+            {% else %}
+              <span class="calif-nota-pill pending">Sin valorar</span>
+            {% endif %}
+          </td>
+          <td class="text-sm text-muted">{{ d.comentario or '—' }}</td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr><td colspan="6" class="text-center text-muted">Esta materia todavía no tiene actividades valorativas cargadas.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

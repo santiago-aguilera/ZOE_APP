@@ -1,0 +1,58 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/cursos.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Especialidades</h1>
+    <p class="page-subtitle">Se crean solas con cada cohorte, con un profesor asignado</p>
+  </div>
+</header>
+
+<div class="cursos-toolbar">
+  <form method="GET" class="input-group" style="width: 260px;">
+    <select name="cohorte_id" class="form-control" onchange="this.form.submit()">
+      <option value="">Todas las cohortes</option>
+      {% for c in cohortes %}
+      <option value="{{ c.id }}" {% if filtro_cohorte == c.id %}selected{% endif %}>{{ c.nombre }}</option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
+
+{% if especialidades %}
+<div class="card">
+  <div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Especialidad</th>
+        <th>Cohorte</th>
+        <th>Profesor</th>
+        <th>Estudiantes</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in especialidades %}
+      <tr>
+        <td><strong>{{ e.nombre }}</strong></td>
+        <td>{{ e.cohorte_nombre or 'Sin cohorte' }}</td>
+        <td>{{ e.profesor_nombre or 'Sin asignar' }}</td>
+        <td>{{ e.total_estudiantes|default(0) }}</td>
+        <td><a href="{{ url_for('especialidades.ver_especialidad', especialidad_id=e.id) }}" class="btn btn-sm">Ver</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% else %}
+<div class="empty-state">
+  <p>No hay especialidades registradas todavía.</p>
+  <p class="text-sm text-muted">Se crean automáticamente al registrar una nueva cohorte.</p>
+</div>
+{% endif %}
+{% endblock %}

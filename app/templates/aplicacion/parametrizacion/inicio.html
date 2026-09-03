@@ -1,0 +1,61 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/parametrizacion.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Parametrización</h1>
+    <p class="page-subtitle">Configuración avanzada del sistema — solo coordinador</p>
+  </div>
+</header>
+
+<section class="param-grid">
+  <a href="{{ url_for('parametrizacion.modulos') }}" class="param-card card card-hover">
+    <div class="param-card-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+    </div>
+    <h3>Módulos del sistema</h3>
+    <p>Activá o desactivá secciones completas de la plataforma (Tareas, Cursos, Grupos, Valoraciones...).</p>
+    <div class="param-card-footer">{{ modulos_activos }}/{{ total_modulos }} módulos activos</div>
+  </a>
+
+  <a href="{{ url_for('parametrizacion.permisos') }}" class="param-card card card-hover">
+    <div class="param-card-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2 3 7v6c0 5 4 9 9 9s9-4 9-9V7z"/>
+      </svg>
+    </div>
+    <h3>Roles y permisos</h3>
+    <p>Definí, módulo por módulo, si estudiantes y profesores pueden verlo.</p>
+    <div class="param-card-footer">Matriz rol × módulo</div>
+  </a>
+
+  <a href="{{ url_for('parametrizacion.general') }}" class="param-card card card-hover">
+    <div class="param-card-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1A2 2 0 1 1 4.4 17l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1A2 2 0 1 1 7 4.4l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1A2 2 0 1 1 19.6 7l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+      </svg>
+    </div>
+    <h3>Configuración general</h3>
+    <p>Nombre de la institución, correo de soporte, cohorte activa por defecto y más.</p>
+    <div class="param-card-footer">Ajustes base del sistema</div>
+  </a>
+
+  <a href="{{ url_for('configuracion.configuracion') }}" class="param-card card card-hover">
+    <div class="param-card-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>
+      </svg>
+    </div>
+    <h3>Usuarios, materias y cohortes</h3>
+    <p>Gestión del día a día: usuarios, materias, grupos, cohortes y matriculados.</p>
+    <div class="param-card-footer">Ir a Configuración →</div>
+  </a>
+</section>
+{% endblock %}

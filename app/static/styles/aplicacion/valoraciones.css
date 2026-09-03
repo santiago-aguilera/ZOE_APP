@@ -1,0 +1,263 @@
+/* =============================================================================
+ * ZOE — Calificaciones
+ * Módulo de libro de notas por actividad, boletín y vista del estudiante.
+ * ============================================================================= */
+
+.calif-materias-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-4, 16px);
+  margin-top: var(--space-5, 20px);
+}
+
+.calif-materia-card {
+  display: block;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg, 12px);
+  padding: var(--space-5, 20px);
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow .15s ease, transform .15s ease, border-color .15s ease;
+}
+.calif-materia-card:hover {
+  box-shadow: 0 12px 24px -12px rgba(15, 23, 42, .18);
+  border-color: var(--brand-300);
+  transform: translateY(-1px);
+}
+
+.calif-materia-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md, 10px);
+  background: var(--brand-50);
+  color: var(--brand-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-3, 12px);
+}
+
+.calif-materia-card h3 {
+  font-size: var(--text-lg, 17px);
+  font-weight: var(--weight-semibold, 600);
+  margin: 0 0 4px;
+  color: var(--color-text);
+}
+
+.calif-materia-card p {
+  font-size: var(--text-sm, 13px);
+  color: var(--color-text-subtle);
+  margin: 0;
+}
+
+.calif-materia-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-4, 16px);
+  padding-top: var(--space-3, 12px);
+  border-top: 1px solid var(--color-border);
+}
+
+.calif-umbral {
+  font-size: var(--text-xs, 12px);
+  color: var(--color-text-subtle);
+}
+.calif-umbral strong { color: var(--color-text); }
+
+.calif-materia-arrow {
+  color: var(--color-text-subtle);
+  transition: transform .15s ease, color .15s ease;
+}
+.calif-materia-card:hover .calif-materia-arrow {
+  color: var(--brand-600);
+  transform: translateX(3px);
+}
+
+.calif-umbral-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4, 16px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg, 12px);
+  padding: var(--space-4, 16px) var(--space-5, 20px);
+  margin-bottom: var(--space-4, 16px);
+}
+
+.calif-umbral-bar-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.calif-umbral-bar-info .icon-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--brand-50);
+  color: var(--brand-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.calif-umbral-bar-info .label {
+  font-size: var(--text-xs, 12px);
+  color: var(--color-text-subtle);
+  display: block;
+}
+.calif-umbral-bar-info .value {
+  font-size: var(--text-md, 16px);
+  font-weight: var(--weight-semibold, 600);
+}
+
+.calif-umbral-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+.calif-umbral-form input {
+  width: 100px;
+  text-align: center;
+}
+
+.calif-alerta {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--warning-50);
+  border: 1px solid var(--warning-500);
+  border-radius: var(--radius-lg, 12px);
+  padding: var(--space-4, 16px) var(--space-5, 20px);
+  margin-bottom: var(--space-4, 16px);
+}
+.calif-alerta svg { flex-shrink: 0; color: var(--warning-600); margin-top: 2px; }
+.calif-alerta p { margin: 0; font-size: var(--text-sm, 13px); color: var(--warning-700, #92400e); line-height: 1.5; }
+.calif-alerta strong { color: var(--warning-700, #92400e); }
+
+.calif-add-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.calif-add-form .form-control { flex: 1; min-width: 140px; }
+
+.calif-porcentaje-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4, 16px);
+  margin-top: var(--space-3, 12px);
+  padding-top: var(--space-3, 12px);
+  border-top: 1px dashed var(--color-border);
+  font-size: var(--text-xs, 12px);
+  color: var(--color-text-subtle);
+}
+.calif-porcentaje-info strong { color: var(--color-text); }
+#disponible { color: var(--success-600); font-weight: var(--weight-semibold, 600); }
+
+.calif-matrix-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-lg, 12px);
+}
+
+.calif-matrix {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.calif-matrix thead th {
+  background: var(--color-surface-alt);
+  text-align: center;
+  vertical-align: top;
+  padding: 12px 10px;
+  font-size: var(--text-xs, 12px);
+  font-weight: var(--weight-semibold, 600);
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+.calif-matrix thead th:first-child {
+  text-align: left;
+  position: sticky;
+  left: 0;
+  background: var(--color-surface-alt);
+  z-index: 2;
+}
+
+.calif-matrix .actividad-peso {
+  display: block;
+  font-weight: var(--weight-regular, 400);
+  color: var(--color-text-subtle);
+  margin: 2px 0 6px;
+}
+.calif-matrix .actividad-acciones {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.calif-matrix tbody td {
+  text-align: center;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--color-border);
+}
+.calif-matrix tbody td:first-child {
+  text-align: left;
+  font-weight: var(--weight-medium, 500);
+  position: sticky;
+  left: 0;
+  background: var(--color-surface);
+  white-space: nowrap;
+}
+.calif-matrix tbody tr:hover td { background: var(--color-surface-alt); }
+.calif-matrix tbody tr:hover td:first-child { background: var(--color-surface-alt); }
+
+.calif-nota-input {
+  width: 72px;
+  text-align: center;
+  padding: 6px 4px;
+}
+
+.calif-matrix-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-4, 16px);
+}
+
+.calif-estado-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.calif-nota-pill {
+  display: inline-block;
+  min-width: 52px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-weight: var(--weight-semibold, 600);
+  font-size: var(--text-sm, 13px);
+  text-align: center;
+}
+.calif-nota-pill.pass { background: var(--success-50); color: var(--success-700, #047857); }
+.calif-nota-pill.fail { background: var(--danger-50); color: var(--danger-600); }
+.calif-nota-pill.pending { background: var(--warning-50); color: var(--warning-600); }
+
+.calif-detalle-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3, 12px);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .calif-materias-grid { grid-template-columns: 1fr; }
+  .calif-add-form { flex-direction: column; align-items: stretch; }
+  .calif-add-form .form-control { width: 100%; }
+  .calif-umbral-bar { flex-direction: column; align-items: stretch; }
+}

@@ -1,0 +1,100 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/archivo.css') }}">
+{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Archivo Histórico</h1>
+    <p class="page-subtitle">Proyectos concluidos de cursos y cohortes anteriores</p>
+  </div>
+  {% if rol in ['profesor', 'coordinador'] %}
+  <a href="{{ url_for('archivo.subir_proyecto') }}" class="btn btn-primary">+ Archivar proyecto</a>
+  {% endif %}
+</header>
+
+<form method="GET" action="{{ url_for('archivo.listar_archivo') }}" class="archivo-toolbar">
+  <div class="input-group">
+    <span class="input-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/>
+      </svg>
+    </span>
+    <input type="search" name="q" placeholder="Buscar por título, descripción o palabra clave..." value="{{ filtro_texto or '' }}">
+  </div>
+  <select name="materia_id" class="form-control" onchange="this.form.submit()">
+    <option value="">Todas las materias</option>
+    {% for m in materias %}
+    <option value="{{ m.id }}" {% if filtro_materia == m.id %}selected{% endif %}>{{ m.nombre }}</option>
+    {% endfor %}
+  </select>
+  <select name="cohorte_id" class="form-control" onchange="this.form.submit()">
+    <option value="">Todas las cohortes</option>
+    {% for p in cohortes %}
+    <option value="{{ p.id }}" {% if filtro_cohorte == p.id %}selected{% endif %}>{{ p.nombre }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="btn">Buscar</button>
+</form>
+
+<section class="archivo-grid">
+  {% if proyectos %}
+    {% for p in proyectos %}
+    <article class="archivo-card">
+      <div class="archivo-card-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
+      <h3>{{ p.titulo }}</h3>
+      <p>{{ p.descripcion or 'Sin descripción' }}</p>
+      <div class="archivo-card-meta">
+        {% if p.materia_nombre %}<span class="badge badge-info">{{ p.materia_nombre }}</span>{% endif %}
+        {% if p.cohorte_nombre %}<span class="badge">{{ p.cohorte_nombre }}</span>{% endif %}
+      </div>
+      <div class="archivo-card-footer">
+        <span class="archivo-card-autor">{{ p.autor or 'Autor no especificado' }}</span>
+        <div>
+          {% if p.url_archivo %}
+          <a href="{{ p.url_archivo }}" target="_blank" class="btn btn-ghost btn-sm">Abrir</a>
+          {% endif %}
+          {% if rol == 'coordinador' %}
+          <form method="POST" action="{{ url_for('archivo.eliminar_proyecto', proyecto_id=p.id) }}" style="display:inline;"
+                onsubmit="return confirm('¿Eliminar {{ p.titulo }} del archivo?');">
+            <button type="submit" class="btn btn-ghost btn-icon btn-sm" title="Eliminar">🗑</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state" style="grid-column: 1/-1;">
+      <p>No se encontraron proyectos archivados{% if filtro_texto %} para "{{ filtro_texto }}"{% endif %}.</p>
+      {% if rol in ['profesor', 'coordinador'] %}
+      <a href="{{ url_for('archivo.subir_proyecto') }}" class="btn">Archivar el primero</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</section>
+
+{% if total_paginas > 1 %}
+<div class="pager">
+  <span class="pager-info">Página {{ pagina }} de {{ total_paginas }} — {{ total_proyectos }} proyecto(s) en total</span>
+  <div class="pager-links">
+    {% set qs = {'q': filtro_texto, 'materia_id': filtro_materia, 'cohorte_id': filtro_cohorte} %}
+    <a class="{{ 'is-disabled' if pagina <= 1 }}" href="{{ url_for('archivo.listar_archivo', pagina=pagina-1, **qs) }}">‹ Anterior</a>
+    {% for p in range(1, total_paginas + 1) %}
+      {% if p == pagina %}
+      <span class="is-current">{{ p }}</span>
+      {% elif p == 1 or p == total_paginas or (p >= pagina - 1 and p <= pagina + 1) %}
+      <a href="{{ url_for('archivo.listar_archivo', pagina=p, **qs) }}">{{ p }}</a>
+      {% elif p == pagina - 2 or p == pagina + 2 %}
+      <span>…</span>
+      {% endif %}
+    {% endfor %}
+    <a class="{{ 'is-disabled' if pagina >= total_paginas }}" href="{{ url_for('archivo.listar_archivo', pagina=pagina+1, **qs) }}">Siguiente ›</a>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

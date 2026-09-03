@@ -1,0 +1,42 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/parametrizacion.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('parametrizacion.inicio') }}">Parametrización</a>
+  <span class="sep">/</span>
+  <span>Configuración general</span>
+</div>
+
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Configuración general</h1>
+    <p class="page-subtitle">Ajustes base del sistema</p>
+  </div>
+</header>
+
+<div class="panel">
+  <div class="panel-body">
+    <form method="POST" action="{{ url_for('parametrizacion.guardar_general') }}">
+      {% for a in ajustes %}
+      <div class="form-group">
+        <label class="form-label">{{ a.descripcion or a.clave }}</label>
+        {% if a.tipo == 'booleano' %}
+        <label class="toggle-switch" style="margin-top:4px;">
+          <input type="checkbox" name="ajuste_{{ a.clave }}" value="1" {% if a.valor == '1' %}checked{% endif %}>
+          <span class="toggle-slider"></span>
+        </label>
+        {% elif a.tipo == 'numero' %}
+        <input type="number" name="ajuste_{{ a.clave }}" class="form-control" value="{{ a.valor }}">
+        {% else %}
+        <input type="text" name="ajuste_{{ a.clave }}" class="form-control" value="{{ a.valor }}">
+        {% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

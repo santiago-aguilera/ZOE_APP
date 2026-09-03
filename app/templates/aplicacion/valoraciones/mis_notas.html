@@ -1,0 +1,49 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/valoraciones.css') }}">
+{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Mis Valoraciones</h1>
+    <p class="page-subtitle">Tu valoración final y estado en cada materia</p>
+  </div>
+</header>
+
+<div class="table-wrapper">
+  <table class="table">
+    <thead><tr><th>Materia</th><th>Actividades valoradas</th><th>Valoración final</th><th>Estado</th><th style="width:1%;"></th></tr></thead>
+    <tbody>
+      {% if resumen %}
+        {% for r in resumen %}
+        <tr>
+          <td class="font-semibold">{{ r.materia_nombre }}</td>
+          <td>{{ r.actividades_calificadas }}/{{ r.total_actividades }}</td>
+          <td>
+            {% if r.valoracion_final %}
+            <span class="calif-nota-pill {{ 'pass' if r.aprobado else 'fail' }}">{{ r.valoracion_final }}</span>
+            {% else %}
+            <span class="calif-nota-pill pending">—</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if not r.valoracion_final %}
+              <span class="badge badge-warning badge-dot">Sin valorar</span>
+            {% elif r.aprobado %}
+              <span class="badge badge-success badge-dot">{{ 'Aprobado' if r.completo else 'Aprobado (provisional)' }}</span>
+            {% else %}
+              <span class="badge badge-danger badge-dot">{{ 'Reprobado' if r.completo else 'En riesgo (provisional)' }}</span>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{{ url_for('valoraciones.mi_detalle_materia', materia_id=r.materia_id) }}" class="btn btn-ghost btn-sm">Ver detalle →</a>
+          </td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr><td colspan="5" class="text-center text-muted">Todavía no hay actividades valoradas en tus materias.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

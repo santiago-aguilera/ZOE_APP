@@ -1,0 +1,136 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/reportes.css') }}">
+{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">{{ 'Mi Rendimiento' if rol == 'estudiante' else 'Reportes' }}</h1>
+    <p class="page-subtitle">
+      {% if rol == 'estudiante' %}Tu avance real en cada materia
+      {% elif vista_limitada %}Análisis de rendimiento de tus materias
+      {% else %}Análisis del rendimiento académico y avance del programa{% endif %}
+    </p>
+  </div>
+</header>
+
+{% if rol == 'estudiante' %}
+<section class="rpt-kpi-grid">
+  <div class="rpt-kpi c-violeta"><span class="rpt-kpi-ico">✅</span><div><div class="rpt-kpi-val">{{ entregas_completadas }}</div><div class="rpt-kpi-lbl">Tareas entregadas</div></div></div>
+  <div class="rpt-kpi c-ambar"><span class="rpt-kpi-ico">⏳</span><div><div class="rpt-kpi-val">{{ entregas_pendientes }}</div><div class="rpt-kpi-lbl">Pendientes</div></div></div>
+  <div class="rpt-kpi c-verde"><span class="rpt-kpi-ico">📈</span><div><div class="rpt-kpi-val">{{ avance_promedio }}%</div><div class="rpt-kpi-lbl">Avance promedio</div></div></div>
+</section>
+
+<article class="panel">
+  <header class="panel-header"><h3 class="panel-title">Tu avance por materia</h3></header>
+  <div class="panel-body">
+    {% if progreso_materias %}
+      {% for m in progreso_materias %}
+      <div class="rpt-bar-row">
+        <span class="rpt-bar-lbl">{{ m.nombre }}</span>
+        <div class="rpt-bar-track"><div class="rpt-bar-fill {{ 'g-verde' if m.porcentaje >= 70 else 'g-ambar' if m.porcentaje >= 40 else 'g-rojo' }}" style="width:{{ m.porcentaje }}%"></div></div>
+        <span class="rpt-bar-val">{{ m.porcentaje }}%</span>
+      </div>
+      {% endfor %}
+    {% else %}<div class="empty-state"><p>Todavía no estás inscrito en materias con tareas.</p></div>{% endif %}
+  </div>
+</article>
+
+{% else %}
+<section class="rpt-kpi-grid">
+  <div class="rpt-kpi c-violeta"><span class="rpt-kpi-ico">🎯</span><div><div class="rpt-kpi-val">{{ promedio }}<small>/20</small></div><div class="rpt-kpi-lbl">Promedio general</div></div></div>
+  <div class="rpt-kpi c-verde"><span class="rpt-kpi-ico">✅</span><div><div class="rpt-kpi-val">{{ tasa_calificadas }}%</div><div class="rpt-kpi-lbl">Entregas calificadas</div></div></div>
+  <div class="rpt-kpi c-azul"><span class="rpt-kpi-ico">⏱️</span><div><div class="rpt-kpi-val">{{ tasa_a_tiempo }}%</div><div class="rpt-kpi-lbl">Entregas a tiempo</div></div></div>
+</section>
+
+<div class="rpt-grid-2">
+  <article class="panel">
+    <header class="panel-header"><h3 class="panel-title">Avance por materia</h3></header>
+    <div class="panel-body">
+      {% if progreso_materias %}
+        {% for m in progreso_materias %}
+        <div class="rpt-bar-row">
+          <span class="rpt-bar-lbl">{{ m.nombre }}</span>
+          <div class="rpt-bar-track"><div class="rpt-bar-fill {{ 'g-verde' if m.porcentaje >= 70 else 'g-ambar' if m.porcentaje >= 40 else 'g-rojo' }}" style="width:{{ m.porcentaje }}%"></div></div>
+          <span class="rpt-bar-val">{{ m.porcentaje }}%</span>
+        </div>
+        {% endfor %}
+      {% else %}<div class="empty-state"><p>Sin materias con tareas todavía.</p></div>{% endif %}
+    </div>
+  </article>
+
+  <article class="panel">
+    <header class="panel-header"><h3 class="panel-title">Desempeño por materia</h3></header>
+    <div class="panel-body rpt-donut-wrap">
+      {% set total = distribucion.bajo + distribucion.basico + distribucion.alto + distribucion.superior %}
+      {% if total > 0 %}
+      <svg viewBox="0 0 42 42" class="rpt-donut">
+        {% set acc = namespace(v=0) %}
+        {% for clave, color in [('superior','#22c55e'),('alto','#3b82f6'),('basico','#f59e0b'),('bajo','#ef4444')] %}
+          {% set val = distribucion[clave] %}
+          {% if val > 0 %}
+          <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="{{ color }}" stroke-width="6"
+            stroke-dasharray="{{ (val/total*100)|round(2) }} {{ 100-(val/total*100)|round(2) }}"
+            stroke-dashoffset="{{ 25 - acc.v }}" />
+          {% set acc.v = acc.v + (val/total*100) %}
+          {% endif %}
+        {% endfor %}
+      </svg>
+      <div class="rpt-donut-legend">
+        <span><i style="background:#22c55e"></i>Superior ({{ distribucion.superior }})</span>
+        <span><i style="background:#3b82f6"></i>Alto ({{ distribucion.alto }})</span>
+        <span><i style="background:#f59e0b"></i>Básico ({{ distribucion.basico }})</span>
+        <span><i style="background:#ef4444"></i>Bajo ({{ distribucion.bajo }})</span>
+      </div>
+      {% else %}<div class="empty-state"><p>Sin entregas calificadas todavía.</p></div>{% endif %}
+    </div>
+  </article>
+</div>
+
+<article class="panel mt-4">
+  <header class="panel-header"><h3 class="panel-title">Entregas por semana</h3></header>
+  <div class="panel-body">
+    {% if tendencia_semanal %}
+      {% set maximo = tendencia_semanal|map(attribute='total')|max %}
+      {% for s in tendencia_semanal %}
+      <div class="rpt-bar-row">
+        <span class="rpt-bar-lbl">{{ s.semana }}</span>
+        <div class="rpt-bar-track"><div class="rpt-bar-fill g-azul" style="width:{{ (s.total/maximo*100) if maximo else 0 }}%"></div></div>
+        <span class="rpt-bar-val">{{ s.total }}</span>
+      </div>
+      {% endfor %}
+    {% else %}<div class="empty-state"><p>Sin entregas registradas en las últimas semanas.</p></div>{% endif %}
+  </div>
+</article>
+
+<div class="rpt-grid-2 mt-4">
+  <article class="panel">
+    <header class="panel-header"><h3 class="panel-title">Desglose por materia</h3></header>
+    <div class="table-wrapper">
+      <table class="table"><thead><tr><th>Materia</th><th>Entregas</th><th>Promedio</th><th>%Cal.</th><th>%Tiempo</th></tr></thead>
+        <tbody>
+          {% if detalle_materias %}{% for d in detalle_materias %}
+          <tr><td class="font-semibold">{{ d.materia_nombre }}</td><td>{{ d.total_entregas }}</td>
+            <td><span class="badge badge-{{ 'success' if d.promedio >= 14 else 'warning' if d.promedio >= 10 else 'danger' }}">{{ d.promedio }}/20</span></td>
+            <td>{{ d.tasa_calificadas }}%</td><td>{{ d.tasa_a_tiempo }}%</td></tr>
+          {% endfor %}{% else %}<tr><td colspan="5" class="text-center text-muted">Sin datos todavía</td></tr>{% endif %}
+        </tbody></table>
+    </div>
+  </article>
+
+  <article class="panel">
+    <header class="panel-header"><h3 class="panel-title">🏆 Mejores promedios</h3></header>
+    <div class="table-wrapper">
+      <table class="table"><thead><tr><th>#</th><th>Estudiante</th><th>Promedio</th></tr></thead>
+        <tbody>
+          {% if top_estudiantes %}{% for e in top_estudiantes %}
+          <tr><td class="text-muted">{{ loop.index }}</td><td class="font-semibold">{{ e.estudiante_nombre }}</td>
+            <td><span class="badge badge-success">{{ e.promedio }}/20</span></td></tr>
+          {% endfor %}{% else %}<tr><td colspan="3" class="text-center text-muted">Sin notas registradas</td></tr>{% endif %}
+        </tbody></table>
+    </div>
+  </article>
+</div>
+
+{% endif %}
+{% endblock %}

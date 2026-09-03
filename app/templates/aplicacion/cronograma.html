@@ -1,0 +1,106 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/cronograma.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Cronograma</h1>
+    <p class="page-subtitle">Eventos, tareas y actividades del programa IB</p>
+  </div>
+</header>
+
+<div class="crono-toolbar">
+  <div class="crono-view-toggle">
+    <button class="btn btn-sm is-active">Próximos</button>
+  </div>
+  <div class="crono-actions">
+    {% if session['rol'] in ['profesor', 'coordinador'] %}
+    <a href="{{ url_for('cronograma.crear_evento') }}" class="btn btn-primary">Crear Evento</a>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Resumen rápido -->
+<section class="crono-summary">
+  <div class="crono-summary-card">
+    <div class="crono-summary-icon bg-primary-soft">📅</div>
+    <div>
+      <div class="crono-summary-value">{{ eventos_proximos|default(0) }}</div>
+      <div class="crono-summary-label">Eventos próximos</div>
+    </div>
+  </div>
+  <div class="crono-summary-card">
+    <div class="crono-summary-icon bg-info-soft">🗂️</div>
+    <div>
+      <div class="crono-summary-value">{{ eventos|length }}</div>
+      <div class="crono-summary-label">Eventos totales en el sistema</div>
+    </div>
+  </div>
+  <div class="crono-summary-card">
+    <div class="crono-summary-icon bg-warning-soft">💬</div>
+    <div>
+      <div class="crono-summary-value">{{ mensajes_nuevos|default(0) }}</div>
+      <div class="crono-summary-label">Mensajes nuevos</div>
+    </div>
+  </div>
+</section>
+
+<!-- Timeline -->
+{% if timeline %}
+<div class="crono-timeline">
+  {% for semana in timeline %}
+  <div>
+    <div class="crono-week-header">
+      <h3>{{ semana.titulo }}</h3>
+    </div>
+    {% for ev in semana.eventos %}
+    <div class="crono-event">
+      <div class="crono-event-date">
+        <span class="crono-day">{{ ev.dia }}</span>
+        <span class="crono-month">{{ ev.mes }}</span>
+      </div>
+      <div class="crono-event-line"></div>
+      <div class="crono-event-card card">
+        <div class="card-body">
+          <h4>{{ ev.titulo }}</h4>
+          <p class="text-sm text-muted">{{ ev.descripcion or '' }}</p>
+          <div class="d-flex items-center gap-3 mt-2">
+            {% if ev.materia %}
+            <span class="badge badge-primary">{{ ev.materia }}</span>
+            {% endif %}
+            {% if ev.curso %}
+            <span class="badge badge-primary">Curso {{ ev.curso }}</span>
+            {% endif %}
+            {% if ev.tipo %}
+            <span class="text-xs text-muted">{{ ev.tipo|capitalize }}</span>
+            {% endif %}
+          </div>
+
+          <!-- Botones de acción solo para profesor/coordinador -->
+          {% if session['rol'] in ['profesor', 'coordinador'] %}
+          <div class="mt-3 d-flex gap-2">
+            <a href="{{ url_for('cronograma.editar_evento', evento_id=ev.id) }}" class="btn btn-sm btn-warning">Editar</a>
+            <form action="{{ url_for('cronograma.eliminar_evento', evento_id=ev.id) }}" method="post" style="display:inline;">
+              <button type="submit" class="btn btn-sm btn-danger"
+                      onclick="return confirm('¿Seguro que deseas eliminar este evento?');">
+                Eliminar
+              </button>
+            </form>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <p>No hay eventos próximos en el cronograma.</p>
+</div>
+{% endif %}
+{% endblock %}

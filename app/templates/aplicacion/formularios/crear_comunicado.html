@@ -1,0 +1,31 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/informacion.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Nuevo Comunicado</h1>
+    <p class="page-subtitle">Publica un anuncio oficial para el programa</p>
+  </div>
+</header>
+
+<form action="{{ url_for('comunicados.crear_comunicado') }}" method="post" class="form-comunicado">
+  <div class="form-group">
+    <label for="titulo">Título</label>
+    <input type="text" id="titulo" name="titulo" class="form-control" required>
+  </div>
+
+  <div class="form-group">
+    <label for="contenido">Contenido</label>
+    <textarea id="contenido" name="contenido" class="form-control" rows="6" required></textarea>
+  </div>
+
+  <div class="form-actions mt-4">
+    <button type="submit" class="btn btn-primary">Publicar Comunicado</button>
+    <a href="{{ url_for('comunicados.listar_comunicados') }}" class="btn btn-secondary">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

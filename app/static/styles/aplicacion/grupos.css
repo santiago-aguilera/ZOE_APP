@@ -1,0 +1,110 @@
+/* =============================================================================
+ * ZOE — Grupos
+ * ----------------------------------------------------------------------
+ * Tarjetas de grupos con stats, avatares de profesores, indicadores.
+ * Estilo Notion Database / Linear Projects.
+ * ============================================================================= */
+
+/* ==========================================================================
+ *  Toolbar / Filtros
+ * ========================================================================== */
+.grupos-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+ *  Grid de grupos
+ * ========================================================================== */
+.grupos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-5);
+}
+
+/* ==========================================================================
+ *  Tarjeta de grupo
+ * ========================================================================== */
+.grupo-card {
+  transition: box-shadow var(--duration-base) var(--ease-out),
+              transform var(--duration-base) var(--ease-out),
+              border-color var(--duration-base) var(--ease-out);
+}
+
+.grupo-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.grupo-name {
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  margin: 0;
+  line-height: var(--leading-tight);
+}
+
+/* Stats row */
+.grupo-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.grupo-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.grupo-stat-value {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-text);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.grupo-stat-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+/* Teachers */
+.grupo-teachers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* Footer */
+.grupo-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ==========================================================================
+ *  Responsive
+ * ========================================================================== */
+@media (max-width: 768px) {
+  .grupos-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .grupos-grid {
+    grid-template-columns: 1fr;
+  }
+}

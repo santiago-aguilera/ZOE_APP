@@ -1,0 +1,40 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/valoraciones.css') }}">
+{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Valoraciones</h1>
+    <p class="page-subtitle">Elegí una materia para gestionar su libro de notas</p>
+  </div>
+</header>
+
+<section class="calif-materias-grid">
+  {% if materias %}
+    {% for m in materias %}
+    <a href="{{ url_for('valoraciones.ver_materia', materia_id=m.id) }}" class="calif-materia-card">
+      <div class="calif-materia-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+        </svg>
+      </div>
+      <h3>{{ m.nombre }}</h3>
+      <p>{{ m.descripcion or 'Sin descripción' }}</p>
+      <div class="calif-materia-footer">
+        <span class="calif-umbral">Mínima: <strong>{{ m.valoracion_minima_aprobatoria }}</strong></span>
+        <span class="calif-materia-arrow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state" style="grid-column: 1/-1;">
+      <p>Todavía no tenés materias asignadas para calificar.</p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

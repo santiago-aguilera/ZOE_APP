@@ -1,0 +1,48 @@
+/* =============================================================================
+ * ZOE — Matrícula BI
+ * ============================================================================= */
+
+.matricula-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.matricula-stat-card {
+  padding: var(--space-4);
+  text-align: center;
+}
+
+.matricula-stat-value {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.matricula-stat-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--space-2);
+}
+
+.matricula-stat-card.is-total .matricula-stat-value { color: var(--color-primary); }
+
+.matricula-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.estado-select-inline {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .matricula-toolbar { flex-direction: column; align-items: flex-start; }
+}

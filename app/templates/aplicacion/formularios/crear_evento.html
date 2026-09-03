@@ -1,0 +1,82 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/formularios.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-breadcrumb">
+    <a href="{{ url_for('configuracion.configuracion') }}">Administración</a>
+    <span class="sep">/</span>
+    <span>{{ 'Editar Evento' if evento else 'Crear Evento' }}</span>
+</div>
+<div class="form-page">
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2>{{ 'Editar Evento' if evento else 'Crear Evento' }}</h2>
+        </div>
+        <form method="POST"
+            action="{{ url_for('cronograma.editar_evento', evento_id=evento.id) if evento else url_for('cronograma.crear_evento') }}">
+            <div class="form-card-body">
+                <div class="form-section">
+                    <div class="form-section-title">Detalles del evento</div>
+                    <div class="form-group">
+                        <label class="form-label">Título <span class="required">*</span></label>
+                        <input type="text" name="titulo" class="form-control" placeholder="Ej: Entrega ensayo TOK"
+                            value="{{ evento.titulo if evento else '' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Descripción</label>
+                        <textarea name="descripcion" class="form-control" rows="3"
+                            placeholder="Detalles del evento...">{{ evento.descripcion if evento else '' }}</textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Fecha <span class="required">*</span></label>
+                            <input type="date" name="fecha" class="form-control"
+                                value="{{ evento.fecha_evento if evento else '' }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tipo</label>
+                            <select name="tipo" class="form-control">
+                                <option value="">Sin especificar</option>
+                                <option value="tarea" {% if evento and evento.tipo=='tarea' %}selected{% endif %}>Tarea
+                                </option>
+                                <option value="examen" {% if evento and evento.tipo=='examen' %}selected{% endif %}>
+                                    Examen</option>
+                                <option value="actividad" {% if evento and evento.tipo=='actividad' %}selected{% endif
+                                    %}>Actividad</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Materia</label>
+                            <select name="materia_id" class="form-control">
+                                <option value="">Sin asignar (evento institucional)</option>
+                                {% for m in materias %}
+                                <option value="{{ m.id }}" {% if evento and evento.materia_id==m.id %}selected{% endif %}>{{
+                                    m.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Curso</label>
+                            <select name="curso_id" class="form-control">
+                                <option value="">Todos los cursos</option>
+                                {% for c in cursos %}
+                                <option value="{{ c.id }}" {% if evento and evento.curso_id==c.id %}selected{% endif %}>{{ c.codigo }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-card-footer">
+                <a href="{{ url_for('configuracion.configuracion') }}" class="btn">Cancelar</a>
+                <button type="submit" class="btn btn-primary">{{ 'Guardar cambios' if evento else 'Crear evento'
+                    }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

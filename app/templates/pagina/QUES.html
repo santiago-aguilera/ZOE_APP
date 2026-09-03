@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/pagina/ques.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="zoe-container">
+  <section class="zoe-intro">
+    <h1>¿Qué es ZOE?</h1>
+    <p>
+      <strong>ZOE (Zona de Organización Estudiantil)</strong> es una plataforma
+      académica integral diseñada específicamente para el Programa de
+      Orientación Profesional (POP) del Bachillerato Internacional.
+    </p>
+    <p>
+      Centraliza todos los componentes académicos del programa IB en un solo
+      ecosistema digital, facilitando la gestión de portafolios, tareas,
+      comunicación y recursos educativos.
+    </p>
+  </section>
+
+  <section class="zoe-fundacion">
+    <h2>¿Por qué se fundó?</h2>
+    <p>
+      La dispersión de materiales, tareas y comunicaciones en múltiples
+      plataformas genera ineficiencias y dificulta el seguimiento académico.
+      ZOE nace como solución centralizada para unificar todos los componentes
+      del programa en un único lugar.
+    </p>
+  </section>
+
+  <section class="zoe-creadores">
+  <h2>¿Quiénes son sus Desarrolladores?</h2>
+  <p>
+    Estudiantes del Colegio Instituto Técnico Distrital Julio Flórez desarrollaron 
+    esta aplicación como parte de su proyecto de grado, con el propósito de apoyar 
+    a la institución en su proceso de implementación del Bachillerato Internacional.
+  </p>
+
+  <!-- Tarjetas de los Creadores -->
+  <div class="creadores-grid">
+    
+    <!-- Tarjeta 1 -->
+    <article class="creador-card">
+      <div class="creador-header-line"></div>
+      <div class="creador-media">
+        <img src="{{ url_for('static', filename='img/fotos_web/Desarrolladores.jpg') }}" alt="Desarrollador 1">
+      </div>
+      <div class="creador-body">
+        <h3>Grupo de desarrolladores</h3>
+        <p class="creador-text">
+          
+        </p>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+  <section class="zoe-beneficios">
+    <h2>Beneficios por rol</h2>
+    <div class="roles-grid">
+      <article class="role-card estudiante">
+        <h3>Estudiantes</h3>
+        <ul>
+          <li>Acceso centralizado a materiales</li>
+          <li>Calendario personalizado</li>
+          <li>Seguimiento de progreso</li>
+        </ul>
+      </article>
+      <article class="role-card profesor">
+        <h3>Profesores</h3>
+        <ul>
+          <li>Gestión de grupos y tareas</li>
+          <li>Publicación de recursos</li>
+          <li>Comunicación organizada</li>
+        </ul>
+      </article>
+      <article class="role-card coordinador">
+        <h3>Coordinadores</h3>
+        <ul>
+          <li>Visión integral del programa</li>
+          <li>Reportes en tiempo real</li>
+          <li>Gestión administrativa</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+</div>
+{% endblock %}

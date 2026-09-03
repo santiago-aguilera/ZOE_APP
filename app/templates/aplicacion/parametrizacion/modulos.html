@@ -1,0 +1,39 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/parametrizacion.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('parametrizacion.inicio') }}">Parametrización</a>
+  <span class="sep">/</span>
+  <span>Módulos del sistema</span>
+</div>
+
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Módulos del sistema</h1>
+    <p class="page-subtitle">Al desactivar un módulo, desaparece del menú y bloquea el acceso directo para todos los roles.</p>
+  </div>
+</header>
+
+<div class="panel">
+  <div class="panel-body">
+    {% for m in modulos %}
+    <div class="modulo-row">
+      <div class="modulo-info">
+        <h4>{{ m.nombre }}</h4>
+        <p>{{ m.descripcion or '' }}</p>
+      </div>
+      <form method="POST" action="{{ url_for('parametrizacion.toggle_modulo', clave=m.clave) }}">
+        <input type="hidden" name="activo" value="{{ '0' if m.activo else '1' }}">
+        <label class="toggle-switch" title="{{ 'Desactivar' if m.activo else 'Activar' }}">
+          <input type="checkbox" {% if m.activo %}checked{% endif %} onchange="this.form.submit()">
+          <span class="toggle-slider"></span>
+        </label>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/formularios.css') }}">
+{% endblock %}
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('archivo.listar_archivo') }}">Archivo Histórico</a>
+  <span class="sep">/</span>
+  <span>Archivar Proyecto</span>
+</div>
+<div class="form-page">
+  <div class="form-card">
+    <div class="form-card-header"><h2>Archivar Proyecto</h2></div>
+    <form method="POST" action="{{ url_for('archivo.subir_proyecto') }}">
+      <div class="form-card-body">
+        <div class="form-section">
+          <div class="form-section-title">Información del proyecto</div>
+          <div class="form-group">
+            <label class="form-label">Título <span class="required">*</span></label>
+            <input type="text" name="titulo" class="form-control" placeholder="Ej: Sistema de gestión de biblioteca — Proyecto final 2025" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Descripción</label>
+            <textarea name="descripcion" class="form-control" rows="4" placeholder="De qué trataba el proyecto, qué tecnologías usó, etc."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Autor(es)</label>
+            <input type="text" name="autor" class="form-control" placeholder="Ej: Juan Pérez y María García">
+          </div>
+        </div>
+        <div class="form-section">
+          <div class="form-section-title">Clasificación</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Materia</label>
+              <select name="materia_id" class="form-control">
+                <option value="">Sin materia específica</option>
+                {% for m in materias %}
+                <option value="{{ m.id }}">{{ m.nombre }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Cohorte académica</label>
+              <select name="cohorte_id" class="form-control">
+                <option value="">Sin cohorte específica</option>
+                {% for p in cohortes %}
+                <option value="{{ p.id }}">{{ p.nombre }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Palabras clave</label>
+            <input type="text" name="palabras_clave" class="form-control" placeholder="Separadas por coma: java, base de datos, POO">
+            <p class="form-help">Ayudan a que el proyecto aparezca en más búsquedas.</p>
+          </div>
+        </div>
+        <div class="form-section">
+          <div class="form-group">
+            <label class="form-label">URL del archivo</label>
+            <input type="url" name="url_archivo" class="form-control" placeholder="https://drive.google.com/...">
+            <p class="form-help">Enlace de Drive, GitHub, Dropbox, etc.</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-card-footer">
+        <a href="{{ url_for('archivo.listar_archivo') }}" class="btn">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Archivar proyecto</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

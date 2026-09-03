@@ -1,0 +1,152 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/tareas.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Tareas</h1>
+    <p class="page-subtitle">Listado de tareas por materia</p>
+  </div>
+  {% if rol in ['profesor', 'coordinador'] %}
+    <a href="{{ url_for('tareas.crear_tarea') }}" class="btn btn-primary">+ Crear Tarea</a>
+  {% endif %}
+</header>
+
+<!-- Resumen -->
+<section class="tareas-summary">
+  <div class="tareas-summary-card">
+    <div class="tareas-summary-icon bg-primary-soft">📋</div>
+    <div>
+      <div class="tareas-summary-value">{{ total_tareas|default(0) }}</div>
+      <div class="tareas-summary-label">Total de tareas</div>
+    </div>
+  </div>
+  <div class="tareas-summary-card">
+    <div class="tareas-summary-icon bg-warning-soft">⏰</div>
+    <div>
+      <div class="tareas-summary-value">{{ tareas_proximas|default(0) }}</div>
+      <div class="tareas-summary-label">Por vencer (≤ 3 días)</div>
+    </div>
+  </div>
+  <div class="tareas-summary-card">
+    <div class="tareas-summary-icon bg-danger-soft">⚠️</div>
+    <div>
+      <div class="tareas-summary-value">{{ tareas_vencidas|default(0) }}</div>
+      <div class="tareas-summary-label">Vencidas</div>
+    </div>
+  </div>
+</section>
+
+<!-- Toolbar -->
+<div class="tareas-toolbar">
+  <div class="filter-chips" data-filter="estado">
+    <button class="chip is-active" data-filter-value="todos">Todas</button>
+    <button class="chip" data-filter-value="proxima">Por vencer</button>
+    <button class="chip" data-filter-value="vencida">Vencidas</button>
+  </div>
+  <div class="input-group" style="width: 260px;">
+    <input type="search" placeholder="Buscar tarea..." id="searchTareas">
+  </div>
+</div>
+
+<!-- Tabla de tareas -->
+<div class="table-wrapper">
+  <table class="table" id="tablaTareas">
+    <thead>
+      <tr>
+        <th>Tarea</th>
+        <th>Materia</th>
+        <th>Responsable</th>
+        <th>Fecha límite</th>
+        <th>Entregas</th>
+        <th style="width: 1%;"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if tareas %}
+        {% for tarea in tareas %}
+        <tr class="tarea-row" data-estado="{{ tarea.estado }}">
+          <td>
+            <span class="priority-dot {{ 'alta' if tarea.estado == 'vencida' else 'media' if tarea.estado == 'proxima' else 'baja' }}"></span>
+            <span class="tarea-title">{{ tarea.titulo }}</span>
+            <div class="tarea-meta">{{ tarea.instrucciones or '' }}</div>
+          </td>
+          <td class="text-sm">{{ tarea.materia_nombre or 'Sin materia' }} <span class="text-xs text-muted">· Curso {{ tarea.curso_codigo }}</span></td>
+          <td class="text-sm text-muted">{{ tarea.creador_nombre or 'Sin asignar' }}</td>
+          <td class="text-sm">{{ tarea.fecha_limite }}</td>
+          <td class="text-sm">{{ tarea.total_entregas|default(0) }}</td>
+          <td class="table-actions">
+            {% if rol == 'estudiante' %}
+              <a href="{{ url_for('tareas.entregar_tarea', tarea_id=tarea.id) }}" class="btn btn-primary btn-sm">Entregar</a>
+            {% elif rol == 'coordinador' or (rol == 'profesor' and tarea.creado_por == usuario_id) %}
+              <a href="{{ url_for('tareas.revisar_entregas', tarea_id=tarea.id) }}" class="btn btn-sm">Revisar</a>
+              <a href="{{ url_for('tareas.editar_tarea', tarea_id=tarea.id) }}" class="btn btn-ghost btn-icon btn-sm">✎</a>
+              <form action="{{ url_for('tareas.eliminar_tarea', tarea_id=tarea.id) }}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-ghost btn-icon btn-sm text-danger" onclick="return confirm('¿Eliminar tarea?');">🗑</button>
+              </form>
+            {% elif rol == 'profesor' %}
+              <span class="text-xs text-muted">No es tuya</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="6" class="text-center text-muted">
+            No hay tareas registradas.
+            {% if rol in ['profesor', 'coordinador'] %}
+              <a href="{{ url_for('tareas.crear_tarea') }}">Crear la primera tarea</a>
+            {% endif %}
+          </td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+{% if total_paginas > 1 %}
+<div class="pager">
+  <span class="pager-info">Página {{ pagina }} de {{ total_paginas }} — {{ total_tareas }} tarea(s) en total</span>
+  <div class="pager-links">
+    <a class="{{ 'is-disabled' if pagina <= 1 }}" href="{{ url_for('tareas.listar_tareas', pagina=pagina-1) }}">‹ Anterior</a>
+    {% for p in range(1, total_paginas + 1) %}
+      {% if p == pagina %}
+      <span class="is-current">{{ p }}</span>
+      {% elif p == 1 or p == total_paginas or (p >= pagina - 1 and p <= pagina + 1) %}
+      <a href="{{ url_for('tareas.listar_tareas', pagina=p) }}">{{ p }}</a>
+      {% elif p == pagina - 2 or p == pagina + 2 %}
+      <span>…</span>
+      {% endif %}
+    {% endfor %}
+    <a class="{{ 'is-disabled' if pagina >= total_paginas }}" href="{{ url_for('tareas.listar_tareas', pagina=pagina+1) }}">Siguiente ›</a>
+  </div>
+</div>
+{% endif %}
+
+<script>
+document.getElementById('searchTareas').addEventListener('input', function(e) {
+  const query = e.target.value.toLowerCase();
+  document.querySelectorAll('#tablaTareas tbody tr').forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(query) ? 'table-row' : 'none';
+  });
+});
+
+(function(){
+  var chips = document.querySelectorAll('[data-filter="estado"] .chip');
+  var filas = document.querySelectorAll('#tablaTareas tbody tr.tarea-row');
+  chips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      chips.forEach(function(c) { c.classList.remove('is-active'); });
+      chip.classList.add('is-active');
+      var filtro = chip.dataset.filterValue;
+      filas.forEach(function(fila) {
+        fila.style.display = (filtro === 'todos' || fila.dataset.estado === filtro) ? '' : 'none';
+      });
+    });
+  });
+})();
+</script>
+{% endblock %}

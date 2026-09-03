@@ -1,0 +1,118 @@
+{% extends "aplicacion/layout_1.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/mensajeris.css') }}">
+{% endblock %}
+
+{% block content %}
+  <div class="chat-wrapper">
+    <header>
+      <h1>Mensajería</h1>
+      <p>Comunicación interna académica</p>
+    </header>
+
+    <!-- Lista de mensajes recibidos -->
+    <section class="chat-list">
+      {% if mensajes_recibidos %}
+        {% for mensaje in mensajes_recibidos %}
+        <div class="chat-card {% if not mensaje.leido %}unread{% endif %}">
+          {% if mensaje.grupo_nombre %}
+          <span class="badge badge-info" style="margin-bottom:6px;">👥 Grupo: {{ mensaje.grupo_nombre }}</span>
+          {% endif %}
+          <h3>{{ mensaje.asunto }}</h3>
+          <p><strong>{{ mensaje.remitente_nombre or 'Desconocido' }}</strong></p>
+          <p>{{ mensaje.cuerpo }}</p>
+          <p class="fecha">{{ mensaje.enviado_en }}</p>
+          {% if not mensaje.leido %}
+          <form method="POST" action="{{ url_for('mensajeria.marcar_leido', mensaje_id=mensaje.id) }}" style="display:inline;">
+            <button type="submit" class="btn btn-ghost btn-sm">Marcar como leído</button>
+          </form>
+          {% endif %}
+          <form method="POST" action="{{ url_for('mensajeria.eliminar_mensaje', mensaje_id=mensaje.id) }}" style="display:inline;"
+                onsubmit="return confirm('¿Eliminar este mensaje de tu bandeja?');">
+            <button type="submit" class="btn btn-ghost btn-sm">Eliminar</button>
+          </form>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <p>No tenés mensajes todavía.</p>
+        </div>
+      {% endif %}
+    </section>
+
+    <!-- Formularios para enviar mensaje -->
+    <section class="chat-form">
+      <div class="mensaje-tabs" data-tabs="mensaje">
+        <button type="button" class="tab is-active" data-tab="individual">A un usuario</button>
+        {% if grupos_disponibles %}
+        <button type="button" class="tab" data-tab="grupo">A un grupo completo</button>
+        {% endif %}
+      </div>
+
+      <!-- Mensaje individual -->
+      <div class="mensaje-panel" data-tab-panel="individual" data-tab-group="mensaje">
+        <h2>Enviar a un usuario</h2>
+        <form method="POST" action="{{ url_for('mensajeria.chat') }}">
+          <label for="destinatario_id">Destinatario:</label>
+          <select id="destinatario_id" name="destinatario_id" required>
+            <option value="">Seleccionar...</option>
+            {% for u in usuarios_disponibles %}
+            <option value="{{ u.id }}">{{ u.nombre }} ({{ u.rol }})</option>
+            {% endfor %}
+          </select>
+
+          <label for="asunto">Asunto:</label>
+          <input type="text" id="asunto" name="asunto" required>
+
+          <label for="cuerpo">Mensaje:</label>
+          <textarea id="cuerpo" name="cuerpo" rows="4" required></textarea>
+
+          <button type="submit" class="btn">Enviar</button>
+        </form>
+      </div>
+
+      <!-- Mensaje a un grupo completo -->
+      {% if grupos_disponibles %}
+      <div class="mensaje-panel is-hidden" data-tab-panel="grupo" data-tab-group="mensaje">
+        <h2>Enviar a todo un grupo</h2>
+        <p class="form-help">Cada estudiante inscrito en el grupo va a recibir su propia copia del mensaje.</p>
+        <form method="POST" action="{{ url_for('mensajeria.enviar_a_grupo') }}">
+          <label for="grupo_id">Grupo:</label>
+          <select id="grupo_id" name="grupo_id" required>
+            <option value="">Seleccionar...</option>
+            {% for g in grupos_disponibles %}
+            <option value="{{ g.id }}">{{ g.nombre }} ({{ g.materia_nombre or 'Sin materia' }}) — {{ g.total_estudiantes|default(0) }} estudiante(s)</option>
+            {% endfor %}
+          </select>
+
+          <label for="asunto_grupo">Asunto:</label>
+          <input type="text" id="asunto_grupo" name="asunto_grupo" required>
+
+          <label for="cuerpo_grupo">Mensaje:</label>
+          <textarea id="cuerpo_grupo" name="cuerpo_grupo" rows="4" required></textarea>
+
+          <button type="submit" class="btn btn-primary">Enviar a todo el grupo</button>
+        </form>
+      </div>
+      {% endif %}
+    </section>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  var tabs = document.querySelectorAll('[data-tabs="mensaje"] [data-tab]');
+  var panels = document.querySelectorAll('[data-tab-panel][data-tab-group="mensaje"]');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      tabs.forEach(function (t) { t.classList.remove('is-active'); });
+      tab.classList.add('is-active');
+      var target = tab.dataset.tab;
+      panels.forEach(function (p) { p.classList.toggle('is-hidden', p.dataset.tabPanel !== target); });
+    });
+  });
+})();
+</script>
+{% endblock %}

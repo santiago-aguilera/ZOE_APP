@@ -1,0 +1,12 @@
+"""
+
+Punto de entrada principal de la aplicación ZOE.
+Ejecutar con: python run.py
+"""
+
+from app import create_app
+
+app = create_app("development")
+
+if __name__ == "__main__":
+    app.run(host="localhost", port=5000, debug=True)

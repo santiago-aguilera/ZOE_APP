@@ -1,0 +1,191 @@
+{% extends 'aplicacion/layout_1.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/usuarios.css') }}">
+{% endblock %}
+
+{% block content %}
+  <header class="page-header">
+    <div>
+      <h1 class="page-title">Usuarios</h1>
+      <p class="page-subtitle">Total: {{ usuarios|length }} usuarios en el sistema</p>
+    </div>
+    {% if rol == 'coordinador' %}
+    <div class="page-actions">
+      <a href="{{ url_for('usuarios.form_crear_usuario') }}" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Nuevo usuario
+      </a>
+    </div>
+    {% endif %}
+  </header>
+
+  <!-- Filtros y búsqueda -->
+  <div class="usuarios-toolbar">
+    <div class="input-group" style="width: 280px;">
+      <span class="input-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/>
+        </svg>
+      </span>
+      <input type="search" placeholder="Buscar por nombre o email…" id="searchUsuarios">
+    </div>
+    <form method="GET" class="input-group" style="width: 200px;">
+      <select name="rol" class="form-control" onchange="this.form.submit()">
+        <option value="">Todos los roles</option>
+        <option value="coordinador" {% if filtro_rol == 'coordinador' %}selected{% endif %}>Coordinador</option>
+        <option value="profesor" {% if filtro_rol == 'profesor' %}selected{% endif %}>Profesor</option>
+        <option value="estudiante" {% if filtro_rol == 'estudiante' %}selected{% endif %}>Estudiante</option>
+      </select>
+      <input type="hidden" name="cohorte_id" value="{{ filtro_cohorte or '' }}">
+      <input type="hidden" name="curso_id" value="{{ filtro_curso or '' }}">
+      <input type="hidden" name="estado_matricula" value="{{ filtro_estado or '' }}">
+    </form>
+    <form method="GET" class="input-group" style="width: 230px;">
+      <select name="cohorte_id" class="form-control" onchange="this.form.submit()">
+        <option value="">Todas las cohortes</option>
+        {% for c in cohortes %}
+        <option value="{{ c.id }}" {% if filtro_cohorte == c.id %}selected{% endif %}>{{ c.nombre }}</option>
+        {% endfor %}
+      </select>
+      <input type="hidden" name="rol" value="{{ filtro_rol or '' }}">
+      <input type="hidden" name="curso_id" value="{{ filtro_curso or '' }}">
+      <input type="hidden" name="estado_matricula" value="{{ filtro_estado or '' }}">
+    </form>
+    <form method="GET" class="input-group" style="width: 200px;">
+      <select name="curso_id" class="form-control" onchange="this.form.submit()">
+        <option value="">Todos los cursos</option>
+        {% for c in cursos %}
+        <option value="{{ c.id }}" {% if filtro_curso == c.id %}selected{% endif %}>{{ c.codigo }}</option>
+        {% endfor %}
+      </select>
+      <input type="hidden" name="rol" value="{{ filtro_rol or '' }}">
+      <input type="hidden" name="cohorte_id" value="{{ filtro_cohorte or '' }}">
+      <input type="hidden" name="estado_matricula" value="{{ filtro_estado or '' }}">
+    </form>
+    <form method="GET" class="input-group" style="width: 220px;">
+      <select name="estado_matricula" class="form-control" onchange="this.form.submit()">
+        <option value="">Todos los estados de matrícula</option>
+        {% for e in estados_matricula %}
+        <option value="{{ e }}" {% if filtro_estado == e %}selected{% endif %}>{{ etiquetas_estado[e] }}</option>
+        {% endfor %}
+      </select>
+      <input type="hidden" name="rol" value="{{ filtro_rol or '' }}">
+      <input type="hidden" name="cohorte_id" value="{{ filtro_cohorte or '' }}">
+      <input type="hidden" name="curso_id" value="{{ filtro_curso or '' }}">
+    </form>
+  </div>
+
+  <!-- Tabla de usuarios -->
+  <div class="table-wrapper">
+    <table class="table" id="tablaUsuarios">
+      <thead>
+        <tr>
+          <th>Usuario</th>
+          <th>Rol</th>
+          <th>Email</th>
+          <th>Matrícula BI</th>
+          <th>Estado</th>
+          <th style="width: 1%;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if usuarios %}
+          {% for usuario in usuarios %}
+          <tr data-rol="{{ usuario.rol }}">
+            <td>
+              <div class="d-flex items-center gap-3">
+                <div class="avatar avatar-sm" style="background: linear-gradient(135deg, hsl({{ loop.index0 * 45 }}, 100%, 60%), hsl({{ loop.index0 * 45 }}, 100%, 40%));">{{ usuario.nombre[:2]|upper }}</div>
+                <div>
+                  <div class="font-semibold">{{ usuario.nombre }}</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="badge badge-{% if usuario.rol == 'coordinador' %}danger{% elif usuario.rol == 'profesor' %}warning{% else %}info{% endif %}">{{ usuario.rol|capitalize }}</span></td>
+            <td class="text-sm text-muted">{{ usuario.correo }}</td>
+            <td>
+              {% if usuario.rol == 'estudiante' %}
+              <span class="badge {{ 'badge-success' if usuario.estado_matricula in ['MATRICULADO','ACTIVO'] else 'badge-danger' if usuario.estado_matricula in ['RETIRADO','CANCELADO'] else 'badge-warning' }}">
+                {{ etiquetas_estado.get(usuario.estado_matricula, 'No matriculado') }}
+              </span>
+              {% else %}
+              <span class="text-xs text-muted">—</span>
+              {% endif %}
+            </td>
+            <td><span class="badge badge-{{ 'success' if usuario.activo else 'warning' }} badge-dot">{{ 'Activo' if usuario.activo else 'Inactivo' }}</span></td>
+            <td class="table-actions">
+              <a href="{{ url_for('usuarios.editar_usuario', usuario_id=usuario.id) }}" class="btn btn-ghost btn-icon btn-sm">→</a>
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="6" class="text-center text-muted">No hay usuarios registrados</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if total_paginas > 1 %}
+  <div class="pager">
+    <span class="pager-info">Página {{ pagina }} de {{ total_paginas }} — {{ total_usuarios }} usuario(s) en total</span>
+    <div class="pager-links">
+      {% set qs = {'rol': filtro_rol, 'cohorte_id': filtro_cohorte, 'curso_id': filtro_curso, 'estado_matricula': filtro_estado} %}
+      <a class="{{ 'is-disabled' if pagina <= 1 }}" href="{{ url_for('usuarios.listar_usuarios', pagina=pagina-1, **qs) }}">‹ Anterior</a>
+      {% for p in range(1, total_paginas + 1) %}
+        {% if p == pagina %}
+        <span class="is-current">{{ p }}</span>
+        {% elif p == 1 or p == total_paginas or (p >= pagina - 1 and p <= pagina + 1) %}
+        <a href="{{ url_for('usuarios.listar_usuarios', pagina=p, **qs) }}">{{ p }}</a>
+        {% elif p == pagina - 2 or p == pagina + 2 %}
+        <span>…</span>
+        {% endif %}
+      {% endfor %}
+      <a class="{{ 'is-disabled' if pagina >= total_paginas }}" href="{{ url_for('usuarios.listar_usuarios', pagina=pagina+1, **qs) }}">Siguiente ›</a>
+    </div>
+  </div>
+  {% endif %}
+
+  <script>
+  document.getElementById('searchUsuarios').addEventListener('input', function(e) {
+    const query = e.target.value.toLowerCase();
+    document.querySelectorAll('#tablaUsuarios tbody tr').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(query) ? 'table-row' : 'none';
+    });
+  });
+  </script>
+  {% endblock %}
+
+  {% block extra_js %}
+  <script>
+  (function(){
+    var chips = document.querySelectorAll('[data-filter="rol_usuario"] .chip');
+    var rows = document.querySelectorAll('#tablaUsuarios tbody tr');
+    var busqueda = document.getElementById('searchUsuarios');
+
+    function aplicarFiltros() {
+      var chipActivo = document.querySelector('[data-filter="rol_usuario"] .chip.is-active');
+      var filtro = chipActivo ? chipActivo.dataset.filterValue : 'todos';
+      var texto = busqueda.value.toLowerCase().trim();
+      rows.forEach(function(row) {
+        var matchRol = (filtro === 'todos') || (row.dataset.rol === filtro);
+        var matchBusqueda = !texto || row.textContent.toLowerCase().indexOf(texto) !== -1;
+        row.style.display = (matchRol && matchBusqueda) ? '' : 'none';
+      });
+    }
+
+    chips.forEach(function(chip) {
+      chip.addEventListener('click', function() {
+        chips.forEach(function(c) { c.classList.remove('is-active'); });
+        chip.classList.add('is-active');
+        aplicarFiltros();
+      });
+    });
+    busqueda.addEventListener('input', aplicarFiltros);
+  })();
+  </script>
+{% endblock %}

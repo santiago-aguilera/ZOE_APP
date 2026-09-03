@@ -1,0 +1,93 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/parametrizacion.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('parametrizacion.inicio') }}">Parametrización</a>
+  <span class="sep">/</span>
+  <span>Roles y permisos</span>
+</div>
+
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Roles y permisos</h1>
+    <p class="page-subtitle">El coordinador siempre tiene acceso a todo. Desmarcá para ocultar un módulo a un rol puntual (aunque esté activo).</p>
+  </div>
+</header>
+
+<div class="panel">
+  <div class="panel-body">
+    <h3 class="panel-title" style="margin:0 0 4px;">Visibilidad de módulos</h3>
+    <p class="text-sm text-muted mb-3">Controla si el módulo aparece en el menú de cada rol.</p>
+  </div>
+  <div class="table-wrapper">
+    <form method="POST" action="{{ url_for('parametrizacion.guardar_permisos') }}" id="formPermisos">
+      <table class="table permisos-table">
+        <thead>
+          <tr>
+            <th>Módulo</th>
+            {% for rol in roles %}
+            <th>{{ rol|capitalize }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in modulos %}
+          <tr>
+            <td>{{ m.nombre }}</td>
+            {% for rol in roles %}
+            <td>
+              <input type="checkbox" name="permiso_{{ rol }}_{{ m.clave }}"
+                     {% if matriz.get((rol, m.clave), True) %}checked{% endif %}>
+            </td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="panel-body" style="border-top: 1px solid var(--color-divider); margin-top: var(--space-4);">
+        <h3 class="panel-title" style="margin:0 0 4px;">Acciones por módulo</h3>
+        <p class="text-sm text-muted mb-3">Controla qué puede HACER cada rol dentro del módulo (crear, editar, eliminar, etc). El coordinador siempre puede todo.</p>
+      </div>
+      {% for mod in modulos_acciones %}
+      <div class="table-wrapper" style="margin-bottom: var(--space-4);">
+        <table class="table permisos-table">
+          <thead>
+            <tr>
+              <th>{{ mod.nombre }}</th>
+              {% for accion in mod.acciones %}
+                {% if accion != 'ver' %}
+                <th>{{ etiquetas_accion.get(accion, accion) }}</th>
+                {% endif %}
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for rol in roles %}
+            <tr>
+              <td>{{ rol|capitalize }}</td>
+              {% for accion in mod.acciones %}
+                {% if accion != 'ver' %}
+                <td>
+                  <input type="checkbox" name="accion_{{ rol }}_{{ mod.clave }}_{{ accion }}"
+                         {% if matriz_completa.get((rol, mod.clave, accion), True) %}checked{% endif %}>
+                </td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endfor %}
+
+      <div class="panel-body">
+        <button type="submit" class="btn btn-primary">Guardar permisos</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

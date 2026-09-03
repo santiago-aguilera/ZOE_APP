@@ -1,0 +1,65 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/formularios.css') }}">
+{% endblock %}
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('tareas.listar_tareas') }}">Tareas</a>
+  <span class="sep">/</span>
+  <span>Entregar</span>
+</div>
+<div class="form-page">
+  <div class="form-card">
+    <div class="form-card-header">
+      <h2>{{ tarea.titulo }}</h2>
+      <p class="text-sm text-muted">{{ tarea.materia_nombre or 'Sin materia' }} · Fecha límite: {{ tarea.fecha_limite }}</p>
+    </div>
+
+    {% if tarea.instrucciones %}
+    <div class="form-card-body">
+      <div class="form-section">
+        <div class="form-section-title">Instrucciones</div>
+        <p class="text-sm">{{ tarea.instrucciones }}</p>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if entrega_existente %}
+    <div class="form-card-body">
+      <div class="empty-state" style="text-align:left;">
+        <p><strong>Ya entregaste esta tarea</strong> el {{ entrega_existente.entregado_en }}.</p>
+        {% if entrega_existente.estado == 'calificada' %}
+        <p>Calificación: <strong>{{ entrega_existente.nota }}</strong></p>
+        {% if entrega_existente.comentario %}<p>Comentario del profesor: {{ entrega_existente.comentario }}</p>{% endif %}
+        {% else %}
+        <p>Todavía no fue calificada.</p>
+        {% endif %}
+        <p class="text-xs text-muted mt-2">Si volvés a subir un archivo abajo, se reemplaza la entrega anterior.</p>
+      </div>
+    </div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('tareas.entregar_tarea', tarea_id=tarea.id) }}">
+      <div class="form-card-body">
+        <div class="form-section">
+          <div class="form-section-title">{{ 'Reemplazar entrega' if entrega_existente else 'Tu entrega' }}</div>
+          <div class="form-group">
+            <label class="form-label">Archivo <span class="required">*</span></label>
+            <input type="file" name="archivo" class="form-control" required
+                   accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.png,.jpg,.jpeg,.zip,.txt">
+            <p class="form-help">PDF, Word, PowerPoint, Excel, imagen o ZIP — máximo 20 MB</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Comentario (opcional)</label>
+            <textarea name="comentario" class="form-control" rows="3" placeholder="Algo que quieras aclarar sobre tu entrega..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="form-card-footer">
+        <a href="{{ url_for('tareas.listar_tareas') }}" class="btn">Cancelar</a>
+        <button type="submit" class="btn btn-primary">{{ 'Reemplazar entrega' if entrega_existente else 'Entregar tarea' }}</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

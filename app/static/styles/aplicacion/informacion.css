@@ -1,0 +1,70 @@
+/* =============================================================================
+ * ZOE — Información / Comunicados
+ * ============================================================================= */
+
+ .informacion-container .subtitle {
+    color: var(--color-text-subtle);
+    margin-top: 4px;
+  }
+  
+  .comunicados-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4, 16px);
+    margin-top: var(--space-5, 20px);
+  }
+  
+  .comunicado-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg, 12px);
+    padding: var(--space-5, 20px);
+  }
+  
+  .comunicado-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3, 12px);
+    margin-bottom: var(--space-2, 8px);
+  }
+  
+  .comunicado-header h2 {
+    font-size: var(--text-lg, 17px);
+    font-weight: var(--weight-semibold, 600);
+    margin: 0;
+  }
+  
+  .comunicado-fecha {
+    font-size: var(--text-xs, 12px);
+    color: var(--color-text-subtle);
+    white-space: nowrap;
+  }
+  
+  .comunicado-body p {
+    color: var(--color-text);
+    line-height: 1.6;
+    white-space: pre-line;
+  }
+  
+  .comunicado-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: var(--space-4, 16px);
+    padding-top: var(--space-3, 12px);
+    border-top: 1px solid var(--color-border);
+  }
+  
+  .comunicado-autor {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--text-sm, 13px);
+    color: var(--color-text-subtle);
+  }
+  
+  .comunicado-actions {
+    display: flex;
+    gap: 4px;
+  }

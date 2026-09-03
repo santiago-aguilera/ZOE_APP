@@ -1,0 +1,150 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/formularios.css') }}">
+{% endblock %}
+{% block content %}
+<div class="form-breadcrumb">
+    <a href="{{ url_for('configuracion.configuracion') }}">Administración</a>
+    <span class="sep">/</span>
+    <span>{{ 'Editar Usuario' if usuario_obj else 'Crear Usuario' }}</span>
+</div>
+<div class="form-page">
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2>{{ 'Editar Usuario' if usuario_obj else 'Crear Usuario' }}</h2>
+        </div>
+        <form id="formCrearUsuario" method="POST"
+            action="{{ url_for('usuarios.editar_usuario', usuario_id=usuario_obj.id) if usuario_obj else url_for('usuarios.form_crear_usuario') }}">
+            <div class="form-card-body">
+                <div class="form-section">
+                    <div class="form-section-title">Información personal</div>
+                    <div class="form-group">
+                        <label class="form-label">Nombre completo <span class="required">*</span></label>
+                        <input type="text" name="nombre" class="form-control" placeholder="Ej: Juan Pérez García"
+                               value="{{ usuario_obj.nombre if usuario_obj else '' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Correo institucional <span class="required">*</span></label>
+                        <input type="email" name="correo" class="form-control" placeholder="usuario@colegio.mx"
+                               value="{{ usuario_obj.correo if usuario_obj else '' }}" required>
+                        <p class="form-help">Se usará para iniciar sesión en la plataforma</p>
+                    </div>
+                    {% if usuario_obj %}
+                    <div class="form-group">
+                        <label class="form-label" style="display:flex; align-items:center; gap:8px;">
+                            <input type="checkbox" name="activo" {% if usuario_obj.activo %}checked{% endif %}>
+                            Usuario activo
+                        </label>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="form-section">
+                    <div class="form-section-title">Credenciales</div>
+                    {% if usuario_obj %}
+                    <p class="form-help">Dejá estos campos vacíos si no querés cambiar la contraseña actual.</p>
+                    {% endif %}
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Contraseña {% if not usuario_obj %}<span class="required">*</span>{% endif %}</label>
+                            <input type="password" name="contrasena" id="contrasena" class="form-control"
+                                placeholder="Mínimo 8 caracteres" {% if not usuario_obj %}required{% endif %} minlength="8">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirmar contraseña {% if not usuario_obj %}<span class="required">*</span>{% endif %}</label>
+                            <input type="password" id="confirmarContrasena" class="form-control"
+                                placeholder="Repetir contraseña" {% if not usuario_obj %}required{% endif %} minlength="8">
+                            <p id="errorPassword" class="form-help" style="display:none; color: var(--danger-500);">Las contraseñas no coinciden</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="form-section-title">Información académica</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Rol <span class="required">*</span></label>
+                            <select name="rol" class="form-control" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="coordinador" {% if usuario_obj and usuario_obj.rol == 'coordinador' %}selected{% endif %}>Coordinador</option>
+                                <option value="profesor" {% if usuario_obj and usuario_obj.rol == 'profesor' %}selected{% endif %}>Profesor</option>
+                                <option value="estudiante" {% if usuario_obj and usuario_obj.rol == 'estudiante' %}selected{% endif %}>Estudiante</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cohorte académica</label>
+                            <select name="cohorte_id" class="form-control">
+                                <option value="">Sin asignar</option>
+                                {% for p in cohortes %}
+                                <option value="{{ p.id }}" {% if usuario_obj and usuario_obj.cohorte_id == p.id %}selected{% endif %}>{{ p.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                            <p class="form-help">Para profesores: la cohorte en la que dicta clase. Para estudiantes: su cohorte.</p>
+                        </div>
+                    </div>
+                    <div class="form-row" id="campoCurso">
+                        <div class="form-group">
+                            <label class="form-label">Curso</label>
+                            <select name="curso_id" class="form-control">
+                                <option value="">Sin asignar</option>
+                                {% for c in cursos %}
+                                <option value="{{ c.id }}" {% if usuario_obj and usuario_obj.curso_id == c.id %}selected{% endif %}>{{ c.codigo }} — {{ c.grado }}° sección {{ c.seccion }}</option>
+                                {% endfor %}
+                            </select>
+                            <p class="form-help">Solo aplica a estudiantes.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section" id="campoIB">
+                    <div class="form-section-title">Información IB</div>
+                    <div class="form-group">
+                        <label class="form-label">Estado de matrícula BI</label>
+                        {% if usuario_obj %}
+                        <select name="estado_matricula" class="form-control">
+                            {% for e in estados_matricula %}
+                            <option value="{{ e }}" {% if usuario_obj.estado_matricula == e %}selected{% endif %}>{{ etiquetas_estado[e] }}</option>
+                            {% endfor %}
+                        </select>
+                        <p class="form-help">Cambiarlo acá queda registrado en el historial de matrícula del estudiante.</p>
+                        {% else %}
+                        <input type="text" class="form-control" value="No matriculado" disabled>
+                        <p class="form-help">Todo estudiante nuevo arranca como No matriculado. Se cambia desde Editar o desde el módulo de Matrícula BI.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="form-card-footer">
+                <a href="{{ url_for('configuracion.configuracion') }}" class="btn">Cancelar</a>
+                <button type="submit" class="btn btn-primary">{{ 'Guardar cambios' if usuario_obj else 'Crear usuario' }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+(function() {
+    var rolSelect = document.querySelector('select[name="rol"]');
+    var campoCurso = document.getElementById('campoCurso');
+    var campoIB = document.getElementById('campoIB');
+    function actualizar() {
+        var esEstudiante = rolSelect.value === 'estudiante';
+        campoCurso.style.display = esEstudiante ? '' : 'none';
+        campoIB.style.display = esEstudiante ? '' : 'none';
+    }
+    rolSelect.addEventListener('change', actualizar);
+    actualizar();
+})();
+document.getElementById('formCrearUsuario').addEventListener('submit', function(e) {
+    var pass = document.getElementById('contrasena').value;
+    var confirmar = document.getElementById('confirmarContrasena').value;
+    var error = document.getElementById('errorPassword');
+    if (pass || confirmar) {
+        if (pass !== confirmar) {
+            e.preventDefault();
+            error.style.display = 'block';
+        } else {
+            error.style.display = 'none';
+        }
+    }
+});
+</script>
+{% endblock %}

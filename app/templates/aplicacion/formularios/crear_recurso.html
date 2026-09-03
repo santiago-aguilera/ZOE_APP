@@ -1,0 +1,77 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/formularios.css') }}">
+{% endblock %}
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('recursos.listar_recursos') }}">Recursos</a>
+  <span class="sep">/</span>
+  <span>{{ 'Editar Recurso' if recurso else 'Subir Recurso' }}</span>
+</div>
+<div class="form-page">
+  <div class="form-card">
+    <div class="form-card-header"><h2>{{ 'Editar Recurso' if recurso else 'Subir Recurso' }}</h2></div>
+    <form method="POST" action="{{ url_for('recursos.editar_recurso', recurso_id=recurso.id) if recurso else url_for('recursos.form_crear_recurso') }}">
+      <div class="form-card-body">
+        <div class="form-section">
+          <div class="form-section-title">Información del recurso</div>
+          <div class="form-group">
+            <label class="form-label">Nombre del recurso <span class="required">*</span></label>
+            <input type="text" name="titulo" class="form-control" placeholder="Ej: Guía de laboratorio — Química" value="{{ recurso.titulo if recurso else '' }}" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Materia</label>
+              <select name="materia_id" class="form-control">
+                <option value="">General (sin materia específica)</option>
+                {% for m in materias %}
+                <option value="{{ m.id }}" {% if recurso and recurso.materia_id == m.id %}selected{% endif %}>{{ m.nombre }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tipo <span class="required">*</span></label>
+              <select name="tipo" class="form-control" required>
+                <option value="">Seleccionar...</option>
+                <option value="documento" {% if recurso and recurso.tipo == 'documento' %}selected{% endif %}>Documento (PDF, Word)</option>
+                <option value="presentacion" {% if recurso and recurso.tipo == 'presentacion' %}selected{% endif %}>Presentación (PPT)</option>
+                <option value="enlace" {% if recurso and recurso.tipo == 'enlace' %}selected{% endif %}>Enlace externo</option>
+                <option value="video" {% if recurso and recurso.tipo == 'video' %}selected{% endif %}>Video</option>
+                <option value="plantilla" {% if recurso and recurso.tipo == 'plantilla' %}selected{% endif %}>Plantilla</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Curso</label>
+            <select name="curso_id" class="form-control">
+              <option value="">General (todos los cursos)</option>
+              {% for c in cursos %}
+              <option value="{{ c.id }}" {% if recurso and recurso.curso_id == c.id %}selected{% endif %}>{{ c.codigo }} — {{ c.grado }}° sección {{ c.seccion }}</option>
+              {% endfor %}
+            </select>
+            <p class="form-help">Si elegís un curso, el recurso solo aparece para ese curso (no se mezcla con otros).</p>
+          </div>
+        </div>
+        <div class="form-section">
+          <div class="form-section-title">Ubicación del recurso</div>
+          <div class="form-group">
+            <label class="form-label">URL <span class="required">*</span></label>
+            <input type="url" name="url_archivo" class="form-control" placeholder="https://drive.google.com/..." value="{{ recurso.url_archivo if recurso else '' }}" required>
+            <p class="form-help">Pegá el enlace de Google Drive, Dropbox, YouTube, etc. — ZOE todavía no guarda archivos subidos directamente, solo enlaces.</p>
+          </div>
+        </div>
+        <div class="form-section">
+          <div class="form-group">
+            <label class="form-label">Descripción</label>
+            <textarea name="descripcion" class="form-control" rows="3" placeholder="Breve descripción del recurso...">{{ recurso.descripcion if recurso else '' }}</textarea>
+          </div>
+        </div>
+      </div>
+      <div class="form-card-footer">
+        <a href="{{ url_for('recursos.listar_recursos') }}" class="btn">Cancelar</a>
+        <button type="submit" class="btn btn-primary">{{ 'Guardar cambios' if recurso else 'Subir recurso' }}</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

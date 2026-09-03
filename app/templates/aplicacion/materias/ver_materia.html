@@ -1,0 +1,45 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/cursos.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('materias.listar_materias') }}">Materias</a>
+  <span class="sep">/</span>
+  <span>{{ materia.nombre }}</span>
+</div>
+
+<header class="page-header">
+  <div>
+    <h1 class="page-title">{{ materia.nombre }}</h1>
+    <p class="page-subtitle">{{ materia.descripcion or 'Sin descripción' }}</p>
+  </div>
+  {% if rol == 'coordinador' %}
+  <a href="{{ url_for('materias.editar_materia', materia_id=materia.id) }}" class="btn">Editar</a>
+  {% endif %}
+</header>
+
+<div class="card">
+  <div class="card-body">
+    <h2 class="curso-panel-title">Cursos donde se dicta ({{ asignaciones|length }})</h2>
+    <p class="text-sm text-muted mb-3">MATERIA → asignación académica → CURSO + PROFESOR</p>
+    {% if asignaciones %}
+      {% for a in asignaciones %}
+      <div class="curso-list-item">
+        <div>
+          <div class="font-semibold">Curso {{ a.curso_codigo }} <span class="text-xs text-muted">({{ a.grado }}° sección {{ a.seccion }})</span></div>
+          <div class="text-xs text-muted">{{ a.profesor_nombre or 'Sin profesor asignado' }}</div>
+        </div>
+        <a href="{{ url_for('cursos.ver_curso', curso_id=a.curso_id) }}" class="btn btn-sm">Ver curso</a>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state"><p>Esta materia todavía no está asignada a ningún curso.</p></div>
+    {% endif %}
+    {% if rol == 'coordinador' %}
+    <p class="text-xs text-muted mt-3">Para asignar esta materia a un curso, entrá al curso y agregala desde la pestaña Materias.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

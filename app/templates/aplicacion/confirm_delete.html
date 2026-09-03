@@ -1,0 +1,17 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h3>{{ title }}</h3>
+  <p>Vas a eliminar <strong>{{ entidad_nombre }}</strong> (id={{ entidad_id }}). Estas son las dependencias encontradas:</p>
+  <ul>
+    {% for tabla, cnt in dependencias %}
+      <li>{{ tabla }}: {{ cnt if cnt>=0 else 'error al contar' }}</li>
+    {% endfor %}
+  </ul>
+  <p class="text-danger">Esta operación es destructiva. Se eliminarán las filas relacionadas según el orden definido. Si no estás seguro, cancela.</p>
+  <form method="post">
+    <button type="submit" class="btn btn-danger">Confirmar eliminación</button>
+    <a href="{{ volver_url }}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

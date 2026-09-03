@@ -1,0 +1,49 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/informacion.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="informacion-container">
+  <div class="d-flex items-center justify-between mb-4">
+    <div>
+      <h1>Información y Comunicados</h1>
+      <p class="subtitle">Mantente al día con los anuncios oficiales del programa</p>
+    </div>
+    {% if session['rol'] in ['profesor', 'coordinador'] %}
+      <a href="{{ url_for('comunicados.crear_comunicado') }}" class="btn btn-primary">+ Nuevo Comunicado</a>
+    {% endif %}
+  </div>
+
+  <div class="comunicados-list">
+    {% if comunicados %}
+      {% for com in comunicados %}
+      <article class="comunicado-card">
+        <div class="comunicado-header">
+          <h2>{{ com.titulo }}</h2>
+          <span class="comunicado-fecha">
+            {{ com.publicado_en.strftime('%d/%m/%Y') if com.publicado_en else 'Sin fecha' }}
+          </span>
+        </div>
+        <div class="comunicado-body">
+          <p>{{ com.contenido }}</p>
+        </div>
+        <div class="comunicado-footer">
+          <span class="comunicado-autor">
+            <i class="fa-solid fa-user"></i> {{ com.autor_nombre }}
+          </span>
+        </div>
+      </article>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">
+        <i class="fa-solid fa-bullhorn"></i>
+        <p>No hay comunicados activos en este momento.</p>
+        {% if session['rol'] in ['profesor', 'coordinador'] %}
+          <a href="{{ url_for('comunicados.crear_comunicado') }}" class="btn">Crear el primer comunicado</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+.comunicados-wrapper header {
+  margin-bottom: 1.5rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.tab {
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  background: #f1f1f1;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.tab.active {
+  background: #4a90e2;
+  color: #fff;
+}
+
+.comunicados-list {
+  display: grid;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.comunicado-card {
+  background: #fff;
+  padding: 1.2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.comunicado-card h3 {
+  margin-top: 0;
+  color: #6c5ce7;
+}
+
+.comunicado-card p {
+  margin: 0.3rem 0;
+  color: #555;
+}
+
+/* Formulario */
+.upload-form {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.upload-form h2 {
+  margin-top: 0;
+  color: #4a90e2;
+}
+
+.upload-form label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+.upload-form input, .upload-form textarea {
+  width: 100%;
+  padding: 0.6rem;
+  margin-top: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.upload-form button {
+  margin-top: 1rem;
+}

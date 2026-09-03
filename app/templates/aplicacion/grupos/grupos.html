@@ -1,0 +1,85 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/grupos.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Grupos de Estudio</h1>
+    <p class="page-subtitle">Total: {{ grupos|length }} grupos — organizados por materia</p>
+  </div>
+  <a href="{{ url_for('grupos.form_crear_grupo') }}" class="btn btn-primary">+ Nuevo Grupo</a>
+</header>
+
+<div class="grupos-toolbar">
+  <div class="input-group" style="width: 280px;">
+    <input type="search" placeholder="Buscar grupos..." id="searchGrupos">
+  </div>
+</div>
+
+<section class="grupos-grid" id="gridGrupos">
+  {% if grupos %}
+    {% for grupo in grupos %}
+    <article class="grupo-card card card-hover">
+      <div class="card-body">
+        <div class="d-flex items-center gap-3 mb-3">
+          <div class="grupo-icon" style="background: hsl({{ loop.index0 * 45 }}, 100%, 90%); color: hsl({{ loop.index0 * 45 }}, 100%, 35%);">{{ grupo.nombre|first|upper }}</div>
+          <div>
+            <h3 class="grupo-name">{{ grupo.nombre }}</h3>
+            <p class="text-xs text-muted">{{ grupo.materia_nombre or 'Sin materia asignada' }}</p>
+          </div>
+        </div>
+        <p class="text-sm text-muted">{{ grupo.descripcion }}</p>
+        <div class="grupo-stats">
+          <div class="grupo-stat">
+            <span class="grupo-stat-value">{{ grupo.total_estudiantes|default(0) }}</span>
+            <span class="grupo-stat-label">Estudiantes</span>
+          </div>
+          <div class="grupo-stat">
+            <span class="grupo-stat-value">{{ grupo.profesor_nombre or '—' }}</span>
+            <span class="grupo-stat-label">Profesor</span>
+          </div>
+        </div>
+        <div class="grupo-footer mt-3">
+          <a href="#" class="btn btn-sm">Ver detalles</a>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state" style="grid-column: 1/-1;">
+      <p>No hay grupos registrados</p>
+      <a href="{{ url_for('grupos.form_crear_grupo') }}" class="btn">Crear el primer grupo</a>
+    </div>
+  {% endif %}
+</section>
+
+{% if total_paginas > 1 %}
+<div class="pager">
+  <span class="pager-info">Página {{ pagina }} de {{ total_paginas }} — {{ total_grupos }} grupo(s) en total</span>
+  <div class="pager-links">
+    <a class="{{ 'is-disabled' if pagina <= 1 }}" href="{{ url_for('grupos.listar_grupos', pagina=pagina-1) }}">‹ Anterior</a>
+    {% for p in range(1, total_paginas + 1) %}
+      {% if p == pagina %}
+      <span class="is-current">{{ p }}</span>
+      {% elif p == 1 or p == total_paginas or (p >= pagina - 1 and p <= pagina + 1) %}
+      <a href="{{ url_for('grupos.listar_grupos', pagina=p) }}">{{ p }}</a>
+      {% elif p == pagina - 2 or p == pagina + 2 %}
+      <span>…</span>
+      {% endif %}
+    {% endfor %}
+    <a class="{{ 'is-disabled' if pagina >= total_paginas }}" href="{{ url_for('grupos.listar_grupos', pagina=pagina+1) }}">Siguiente ›</a>
+  </div>
+</div>
+{% endif %}
+
+<script>
+document.getElementById('searchGrupos').addEventListener('input', function(e) {
+  const query = e.target.value.toLowerCase();
+  document.querySelectorAll('.grupo-card').forEach(card => {
+    card.style.display = card.textContent.toLowerCase().includes(query) ? 'block' : 'none';
+  });
+});
+</script>
+{% endblock %}

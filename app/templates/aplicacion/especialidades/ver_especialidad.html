@@ -1,0 +1,77 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/cursos.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('especialidades.listar_especialidades') }}">Especialidades</a>
+  <span class="sep">/</span>
+  <span>{{ especialidad.nombre }}</span>
+</div>
+
+<header class="page-header">
+  <div>
+    <h1 class="page-title">{{ especialidad.nombre }}</h1>
+    <p class="page-subtitle">Profesor: {{ especialidad.profesor_nombre or 'Sin asignar' }}</p>
+  </div>
+</header>
+
+<div class="curso-detalle-grid">
+
+  <div class="card">
+    <div class="card-body">
+      <h2 class="curso-panel-title">Estudiantes ({{ estudiantes|length }})</h2>
+      {% if estudiantes %}
+        {% for e in estudiantes %}
+        <div class="curso-list-item">
+          <div>
+            <div>{{ e.nombre }}</div>
+            <div class="text-xs text-muted">{{ e.correo }}</div>
+          </div>
+          {% if rol == 'coordinador' %}
+          <form method="POST" action="{{ url_for('especialidades.quitar_estudiante', especialidad_id=especialidad.id, asignacion_id=e.asignacion_id) }}">
+            <button type="submit" class="btn btn-sm btn-danger"
+                    onclick="return confirm('¿Quitar a {{ e.nombre }} de la especialidad?');">Quitar</button>
+          </form>
+          {% endif %}
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-sm text-muted">Aún no hay estudiantes inscritos.</p>
+      {% endif %}
+
+      {% if rol == 'coordinador' %}
+      <form method="POST" action="{{ url_for('especialidades.agregar_estudiante', especialidad_id=especialidad.id) }}" class="curso-inline-form">
+        <select name="estudiante_id" class="form-control" required>
+          <option value="">Agregar estudiante...</option>
+          {% for u in estudiantes_disponibles %}
+          <option value="{{ u.id }}">{{ u.nombre }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary btn-sm">Agregar</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h2 class="curso-panel-title">Profesor asignado</h2>
+      <p>{{ especialidad.profesor_nombre or 'Todavía no se ha asignado un profesor.' }}</p>
+      {% if rol == 'coordinador' %}
+      <form method="POST" action="{{ url_for('especialidades.asignar_profesor', especialidad_id=especialidad.id) }}" class="curso-inline-form">
+        <select name="profesor_id" class="form-control">
+          <option value="">Sin profesor</option>
+          {% for p in profesores %}
+          <option value="{{ p.id }}" {% if especialidad.profesor_id == p.id %}selected{% endif %}>{{ p.nombre }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

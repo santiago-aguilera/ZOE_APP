@@ -1,0 +1,109 @@
+/* =============================================================================
+ * ZOE — Cursos y Especialidades
+ * Vista de listado en tabla + vista de detalle (estudiantes / materias).
+ * ============================================================================= */
+
+.cursos-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.curso-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  height: 40px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-md);
+  flex-shrink: 0;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+/* ==========================================================================
+ *  Vista de detalle (curso / especialidad)
+ * ========================================================================== */
+.curso-detalle-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.curso-detalle-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.curso-panel-title {
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  margin: 0 0 var(--space-4) 0;
+}
+
+.curso-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-divider);
+  gap: var(--space-3);
+}
+
+.curso-list-item:last-child {
+  border-bottom: none;
+}
+
+.curso-inline-form {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.curso-badge.lg {
+  min-width: 72px;
+  height: 52px;
+  font-size: var(--text-lg);
+}
+
+.tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  margin-left: 4px;
+}
+.tab.is-active .tab-count {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.text-right { text-align: right; }
+
+@media (max-width: 900px) {
+  .curso-detalle-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .cursos-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

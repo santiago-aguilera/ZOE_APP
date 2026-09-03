@@ -1,0 +1,122 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/materias.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Materias</h1>
+    <p class="page-subtitle">Total: {{ materias|length }} asignaturas activas</p>
+  </div>
+  {% if session['rol'] in ['profesor', 'coordinador'] %}
+    <a href="{{ url_for('materias.form_crear_materia') }}" class="btn btn-primary">+ Nueva Materia</a>
+  {% endif %}
+</header>
+
+<!-- Filtros -->
+<div class="materias-toolbar">
+  <div class="input-group" style="width: 280px;">
+    <span class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></span>
+    <input type="search" placeholder="Buscar materia..." id="searchMaterias">
+  </div>
+</div>
+
+<!-- Grid de materias -->
+<section class="materias-grid" id="gridMaterias">
+  {% if materias %}
+    {% for materia in materias %}
+    <article class="materia-card card card-hover" data-materia="{{ materia.nombre|lower|replace(' ', '-') }}">
+      <div class="materia-card-accent" style="background: hsl({{ loop.index0 * 60 }}, 70%, 50%);"></div>
+      <div class="card-body">
+        <div class="d-flex items-center justify-between mb-3">
+          <span class="badge badge-primary">Catálogo</span>
+          <span class="text-xs text-muted">#{{ materia.id }}</span>
+        </div>
+        <h3 class="materia-card-title">{{ materia.nombre }}</h3>
+        <p class="text-sm text-muted mt-1">{{ materia.descripcion or 'Sin descripción' }}</p>
+        <div class="materia-card-meta mt-4">
+          <div class="materia-meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg>
+            <span>{{ materia.total_cursos|default(0) }} curso(s)</span>
+          </div>
+          <div class="materia-meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+            <span>{{ materia.total_profesores|default(0) }} profesor(es)</span>
+          </div>
+        </div>
+        <div class="materia-card-footer mt-4">
+          <a href="{{ url_for('materias.ver_materia', materia_id=materia.id) }}" class="btn btn-sm" style="width:100%; text-align:center;">Ver detalle</a>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state" style="grid-column: 1/-1;">
+      <p>No hay materias registradas</p>
+      {% if session['rol'] in ['profesor', 'coordinador'] %}
+        <a href="{{ url_for('materias.form_crear_materia') }}" class="btn">Crear la primera materia</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</section>
+
+{% if total_paginas > 1 %}
+<div class="pager">
+  <span class="pager-info">Página {{ pagina }} de {{ total_paginas }} — {{ total_materias }} materia(s) en total</span>
+  <div class="pager-links">
+    <a class="{{ 'is-disabled' if pagina <= 1 }}" href="{{ url_for('materias.listar_materias', pagina=pagina-1) }}">‹ Anterior</a>
+    {% for p in range(1, total_paginas + 1) %}
+      {% if p == pagina %}
+      <span class="is-current">{{ p }}</span>
+      {% elif p == 1 or p == total_paginas or (p >= pagina - 1 and p <= pagina + 1) %}
+      <a href="{{ url_for('materias.listar_materias', pagina=p) }}">{{ p }}</a>
+      {% elif p == pagina - 2 or p == pagina + 2 %}
+      <span>…</span>
+      {% endif %}
+    {% endfor %}
+    <a class="{{ 'is-disabled' if pagina >= total_paginas }}" href="{{ url_for('materias.listar_materias', pagina=pagina+1) }}">Siguiente ›</a>
+  </div>
+</div>
+{% endif %}
+
+<script>
+document.getElementById('searchMaterias').addEventListener('input', function(e) {
+  const query = e.target.value.toLowerCase();
+  document.querySelectorAll('.materia-card').forEach(card => {
+    const text = card.textContent.toLowerCase();
+    card.style.display = text.includes(query) ? 'block' : 'none';
+  });
+});
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  var chips = document.querySelectorAll('[data-filter="tipo"] .chip');
+  var cards = document.querySelectorAll('#gridMaterias .materia-card');
+  var busqueda = document.getElementById('searchMaterias');
+
+  function aplicarFiltros() {
+    var chipActivo = document.querySelector('[data-filter="tipo"] .chip.is-active');
+    var filtro = chipActivo ? chipActivo.dataset.filterValue : 'todas';
+    var texto = busqueda.value.toLowerCase().trim();
+    cards.forEach(function(card) {
+      var matchTipo = (filtro === 'todas') || (card.dataset.tipo === filtro);
+      var matchBusqueda = !texto || card.textContent.toLowerCase().indexOf(texto) !== -1;
+      card.style.display = (matchTipo && matchBusqueda) ? '' : 'none';
+    });
+  }
+
+  chips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      chips.forEach(function(c) { c.classList.remove('is-active'); });
+      chip.classList.add('is-active');
+      aplicarFiltros();
+    });
+  });
+  busqueda.addEventListener('input', aplicarFiltros);
+})();
+</script>
+{% endblock %}

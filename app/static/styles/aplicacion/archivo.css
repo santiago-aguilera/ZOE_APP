@@ -1,0 +1,89 @@
+/* =============================================================================
+ * ZOE — Archivo Histórico
+ * Repositorio buscable de proyectos concluidos de cursos/períodos anteriores.
+ * ============================================================================= */
+
+.archivo-toolbar {
+  display: flex;
+  gap: var(--space-3, 12px);
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: var(--space-5, 20px);
+}
+
+.archivo-toolbar .input-group {
+  flex: 1;
+  min-width: 220px;
+}
+
+.archivo-toolbar select {
+  min-width: 160px;
+}
+
+.archivo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4, 16px);
+}
+
+.archivo-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg, 12px);
+  padding: var(--space-5, 20px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.archivo-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md, 10px);
+  background: var(--brand-50);
+  color: var(--brand-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.archivo-card h3 {
+  font-size: var(--text-md, 16px);
+  font-weight: var(--weight-semibold, 600);
+  margin: 0;
+  color: var(--color-text);
+}
+
+.archivo-card p {
+  font-size: var(--text-sm, 13px);
+  color: var(--color-text-subtle);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.archivo-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.archivo-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: var(--space-3, 12px);
+  border-top: 1px solid var(--color-border);
+}
+
+.archivo-card-autor {
+  font-size: var(--text-xs, 12px);
+  color: var(--color-text-subtle);
+}
+
+@media (max-width: 640px) {
+  .archivo-grid { grid-template-columns: 1fr; }
+  .archivo-toolbar { flex-direction: column; align-items: stretch; }
+}

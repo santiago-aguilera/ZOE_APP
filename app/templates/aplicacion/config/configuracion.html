@@ -1,0 +1,295 @@
+{% extends 'aplicacion/layout_1.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/configuracion.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Administración</h1>
+    <p class="page-subtitle">Gestión del sistema — Solo Coordinadores</p>
+  </div>
+  <div class="page-actions">
+    <a href="{{ url_for('matricula.inicio') }}" class="btn">Matrícula BI</a>
+    <a href="{{ url_for('usuarios.form_crear_usuario') }}" class="btn btn-primary" id="adminCreateBtn">
+      <span id="createBtnLabel">Crear Usuario</span>
+    </a>
+  </div>
+</header>
+
+<div class="admin-tabs" data-tabs="admin">
+  <button class="tab is-active" data-tab="usuarios" data-create-url="{{ url_for('usuarios.form_crear_usuario') }}">Usuarios</button>
+  <button class="tab" data-tab="materias" data-create-url="{{ url_for('materias.form_crear_materia') }}">Materias</button>
+  <button class="tab" data-tab="grupos" data-create-url="{{ url_for('grupos.form_crear_grupo') }}">Grupos</button>
+  <button class="tab" data-tab="cohortes" data-create-url="{{ url_for('configuracion.form_crear_cohorte') }}">Cohortes Académicas</button>
+  <button class="tab" data-tab="asignaciones" data-create-url="">Grupos de trabajo</button>
+</div>
+
+<!-- Panel: Usuarios -->
+<div class="admin-panel" data-tab-panel="usuarios" data-tab-group="admin">
+  <div class="admin-toolbar">
+    <div class="input-group" style="width: 320px;">
+      <input type="search" placeholder="Buscar usuarios..." class="admin-search" data-table="tablaUsuarios">
+    </div>
+    <div class="filter-chips" data-filter="rol">
+      <button class="chip is-active" data-filter-value="todos">Todos</button>
+      <button class="chip" data-filter-value="coordinador">Coordinadores</button>
+      <button class="chip" data-filter-value="profesor">Profesores</button>
+      <button class="chip" data-filter-value="estudiante">Estudiantes</button>
+    </div>
+  </div>
+  <div class="table-wrapper">
+    <table class="table" id="tablaUsuarios">
+      <thead>
+        <tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+        {% if usuarios %}
+          {% for u in usuarios %}
+          <tr data-rol="{{ u.rol }}">
+            <td>
+              <div class="d-flex items-center gap-3">
+                <div class="avatar avatar-sm" style="background: linear-gradient(135deg, hsl({{ loop.index0 * 40 }}, 70%, 55%), hsl({{ loop.index0 * 40 }}, 70%, 40%));">{{ u.nombre[:2]|upper }}</div>
+                <span class="font-semibold">{{ u.nombre }}</span>
+              </div>
+            </td>
+            <td class="text-muted">{{ u.correo }}</td>
+            <td><span class="badge badge-{% if u.rol == 'coordinador' %}danger{% elif u.rol == 'profesor' %}warning{% else %}info{% endif %}">{{ u.rol|capitalize }}</span></td>
+            <td><span class="badge badge-{{ 'success' if u.activo else 'warning' }} badge-dot">{{ 'Activo' if u.activo else 'Inactivo' }}</span></td>
+            <td>
+              <a href="{{ url_for('usuarios.editar_usuario', usuario_id=u.id) }}" class="btn btn-sm btn-warning">Editar</a>
+              <form action="{{ url_for('usuarios.eliminar_usuario', usuario_id=u.id) }}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-sm btn-danger"
+                        onclick="return confirm('¿Seguro que deseas eliminar este usuario?');">
+                  Eliminar
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr><td colspan="5" class="text-center text-muted">No hay usuarios registrados</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Panel: Materias -->
+<div class="admin-panel is-hidden" data-tab-panel="materias" data-tab-group="admin">
+  <div class="admin-toolbar">
+    <div class="input-group" style="width: 320px;">
+      <input type="search" placeholder="Buscar materias..." class="admin-search" data-table="tablaMaterias">
+    </div>
+  </div>
+  <div class="table-wrapper">
+    <table class="table" id="tablaMaterias">
+      <thead><tr><th>Materia</th><th>Grupos</th><th>Tareas</th><th>Acciones</th></tr></thead>
+      <tbody>
+        {% if materias %}
+          {% for m in materias %}
+          <tr>
+            <td class="font-semibold">{{ m.nombre }}</td>
+            <td>{{ m.total_grupos|default(0) }}</td>
+            <td>{{ m.total_tareas|default(0) }}</td>
+            <td>
+              <a href="{{ url_for('materias.editar_materia', materia_id=m.id) }}" class="btn btn-sm btn-warning">Editar</a>
+              <form action="{{ url_for('materias.eliminar_materia', materia_id=m.id) }}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-sm btn-danger"
+                        onclick="return confirm('¿Seguro que deseas eliminar esta materia?');">
+                  Eliminar
+                </button>
+              </form>
+            </td>            
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr><td colspan="5" class="text-center text-muted">No hay materias registradas</td></tr>
+        {% endif %}
+      </tbody>      
+    </table>
+  </div>
+</div>
+
+<!-- Panel: Grupos -->
+<div class="admin-panel is-hidden" data-tab-panel="grupos" data-tab-group="admin">
+  <div class="admin-toolbar">
+    <div class="input-group" style="width: 320px;">
+      <input type="search" placeholder="Buscar grupos..." class="admin-search" data-table="tablaGrupos">
+    </div>
+  </div>
+  <div class="table-wrapper">
+    <table class="table" id="tablaGrupos">
+      <thead><tr><th>Grupo</th><th>Materia</th><th>Profesor</th><th>Acciones</th></tr></thead>
+      <tbody>
+        {% if grupos %}
+          {% for g in grupos %}
+          <tr>
+            <td class="font-semibold">{{ g.nombre }}</td>
+            <td>{{ g.materia_nombre or 'Sin materia' }}</td>
+            <td>{{ g.profesor_nombre or 'Sin asignar' }}</td>
+            <td>
+              <!-- Botón Editar -->
+              <a href="{{ url_for('grupos.editar_grupo', grupo_id=g.id) }}" class="btn btn-sm btn-warning">Editar</a>
+              <!-- Botón Eliminar -->
+              <form action="{{ url_for('grupos.eliminar_grupo', grupo_id=g.id) }}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-sm btn-danger"
+                        onclick="return confirm('¿Seguro que deseas eliminar este grupo?');">
+                  Eliminar
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr><td colspan="4" class="text-center text-muted">No hay grupos registrados</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Panel: Cohortes -->
+<div class="admin-panel is-hidden" data-tab-panel="cohortes" data-tab-group="admin">
+  <div class="admin-toolbar">
+    <div class="input-group" style="width: 320px;">
+      <input type="search" placeholder="Buscar cohortes..." class="admin-search" data-table="tablaCohortes">
+    </div>
+  </div>
+  <div class="table-wrapper">
+    <table class="table" id="tablaCohortes">
+      <thead><tr><th>Cohorte</th><th>Fecha inicio</th><th>Fecha fin</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody>
+        {% if cohortes %}
+          {% for p in cohortes %}
+          <tr>
+            <td class="font-semibold">{{ p.nombre }}</td>
+            <td>{{ p.fecha_inicio }}</td>
+            <td>{{ p.fecha_fin }}</td>
+            <td><span class="badge badge-{{ 'success' if p.activo else 'info' }} badge-dot">{{ 'Activo' if p.activo else 'Inactivo' }}</span></td>
+            <td>
+              <!-- Botón Editar -->
+              <a href="{{ url_for('configuracion.editar_cohorte', cohorte_id=p.id) }}" class="btn btn-sm btn-warning">Editar</a>
+              <!-- Botón Eliminar -->
+              <form action="{{ url_for('configuracion.eliminar_cohorte', cohorte_id=p.id) }}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-sm btn-danger"
+                        onclick="return confirm('¿Seguro que deseas eliminar esta cohorte?');">
+                  Eliminar
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr><td colspan="5" class="text-center text-muted">No hay cohortes académicas registradas</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Panel: Asignaciones -->
+<div class="admin-panel is-hidden" data-tab-panel="asignaciones" data-tab-group="admin" id="asignaciones">
+
+  <div class="alert alert-primary mb-4">
+    Las materias de cada estudiante y de cada profesor ahora se gestionan desde
+    <a href="{{ url_for('cursos.listar_cursos') }}">Cursos</a> (paquete de materias del curso).
+  </div>
+
+  <!-- Estudiante <-> Grupo -->
+  <div class="panel">
+    <div class="panel-header"><h3 class="panel-title">Estudiantes por grupo</h3></div>
+    <div class="panel-body">
+      <form method="POST" action="{{ url_for('configuracion.asignar_estudiante_grupo') }}" class="asignacion-form">
+        <select name="estudiante_id" class="form-control" required>
+          <option value="">Seleccionar estudiante...</option>
+          {% for e in estudiantes %}
+          <option value="{{ e.id }}">{{ e.nombre }}</option>
+          {% endfor %}
+        </select>
+        <select name="grupo_id" class="form-control" required>
+          <option value="">Seleccionar grupo...</option>
+          {% for g in grupos_todos %}
+          <option value="{{ g.id }}">{{ g.nombre }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary">Inscribir</button>
+      </form>
+
+      <div class="table-wrapper mt-3">
+        <table class="table">
+          <thead><tr><th>Estudiante</th><th>Grupo</th><th style="width:1%;"></th></tr></thead>
+          <tbody>
+            {% if asignaciones_estudiante_grupo %}
+              {% for a in asignaciones_estudiante_grupo %}
+              <tr>
+                <td>{{ a.estudiante_nombre }}</td>
+                <td>{{ a.grupo_nombre }}</td>
+                <td>
+                  <form method="POST" action="{{ url_for('configuracion.quitar_estudiante_grupo', asignacion_id=a.id) }}">
+                    <button type="submit" class="btn btn-ghost btn-icon btn-sm" title="Quitar">✕</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <tr><td colspan="3" class="text-center text-muted">No hay estudiantes inscritos en grupos todavía</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  var tabs = document.querySelectorAll('[data-tabs="admin"] [data-tab]');
+  var panels = document.querySelectorAll('[data-tab-panel][data-tab-group="admin"]');
+  var btn = document.getElementById('adminCreateBtn');
+  var labels = { usuarios:'Crear Usuario', materias:'Crear Materia', grupos:'Crear Grupo', cohortes:'Crear Cohorte' };
+
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      tabs.forEach(function(t) { t.classList.remove('is-active'); });
+      tab.classList.add('is-active');
+      var target = tab.dataset.tab;
+      panels.forEach(function(p) { p.classList.toggle('is-hidden', p.dataset.tabPanel !== target); });
+      if (target === 'asignaciones' || target === 'matriculados') {
+        btn.style.display = 'none';
+      } else {
+        btn.style.display = '';
+        document.getElementById('createBtnLabel').textContent = labels[target] || 'Crear';
+        btn.href = tab.dataset.createUrl || '#';
+      }
+    });
+  });
+
+  document.querySelectorAll('.admin-search').forEach(function(input) {
+    input.addEventListener('input', function() {
+      var tableId = input.dataset.table;
+      var rows = document.querySelectorAll('#' + tableId + ' tbody tr');
+      var texto = input.value.toLowerCase().trim();
+      rows.forEach(function(row) {
+        row.style.display = (!texto || row.textContent.toLowerCase().indexOf(texto) !== -1) ? '' : 'none';
+      });
+    });
+  });
+
+  var rolChips = document.querySelectorAll('[data-filter="rol"] .chip');
+  rolChips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      rolChips.forEach(function(c) { c.classList.remove('is-active'); });
+      chip.classList.add('is-active');
+      var filtro = chip.dataset.filterValue;
+      document.querySelectorAll('#tablaUsuarios tbody tr').forEach(function(row) {
+        row.style.display = (filtro === 'todos' || row.dataset.rol === filtro) ? '' : 'none';
+      });
+    });
+  });
+})();
+</script>
+{% endblock %}

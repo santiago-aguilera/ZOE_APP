@@ -1,0 +1,183 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/valoraciones.css') }}">
+{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">{{ materia.nombre }}</h1>
+    <p class="page-subtitle">Libro de valoraciones</p>
+  </div>
+  <a href="{{ url_for('valoraciones.listar_materias') }}" class="btn">← Volver</a>
+</header>
+
+<div class="calif-umbral-bar">
+  <div class="calif-umbral-bar-info">
+    <span class="icon-badge">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2l3 7h7l-5.5 4.5L18.5 21 12 16.5 5.5 21l2-7.5L2 9h7z"/>
+      </svg>
+    </span>
+    <div>
+      <span class="label">Valoración mínima para aprobar</span>
+      <span class="value">{{ materia.valoracion_minima_aprobatoria }}</span>
+    </div>
+  </div>
+  <form method="POST" action="{{ url_for('valoraciones.actualizar_valoracion_minima', materia_id=materia.id) }}" class="calif-umbral-form">
+    <div class="form-group" style="margin:0;">
+      <label class="form-label">Nueva valoración mínima</label>
+      <select name="valoracion_minima_aprobatoria" class="form-control" required>
+        {% for v in escala %}
+        <option value="{{ v }}" {% if v == materia.valoracion_minima_aprobatoria %}selected{% endif %}>{{ v }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn">Guardar</button>
+  </form>
+</div>
+
+{% if suma_porcentajes != 100 and actividades %}
+<div class="calif-alerta">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+  </svg>
+  <p>Las actividades de esta materia suman <strong>{{ suma_porcentajes }}%</strong>, no 100%. El promedio ponderado se calcula bien sobre lo que ya cargaste, pero conviene ajustar los porcentajes para que el boletín represente el 100% de la nota.</p>
+</div>
+{% endif %}
+
+<article class="panel mb-4">
+  <header class="panel-header"><h3 class="panel-title">Agregar actividad valorativa</h3></header>
+  <div class="panel-body">
+    <form method="POST" action="{{ url_for('valoraciones.crear_actividad', materia_id=materia.id) }}" class="calif-add-form">
+      <input type="text" name="nombre" class="form-control" placeholder="Nombre (Ej: Examen parcial 1)" required>
+      <select name="tipo" class="form-control" required>
+        <option value="tarea">Tarea</option>
+        <option value="examen">Examen</option>
+        <option value="participacion">Participación</option>
+        <option value="proyecto">Proyecto</option>
+        <option value="otro" selected>Otro</option>
+      </select>
+      <input type="number" name="porcentaje" id="nuevoPorcentaje" class="form-control" placeholder="% peso" min="0" max="100" step="0.5" style="width:110px;" required>
+      <input type="date" name="fecha" class="form-control" style="width:160px;">
+      <button type="submit" class="btn btn-primary">+ Agregar</button>
+    </form>
+    <div class="calif-porcentaje-info">
+      <span>Asignado: <strong>{{ suma_porcentajes }}%</strong></span>
+      <span>Disponible: <strong id="disponible">{{ (100 - suma_porcentajes)|round(1) }}%</strong></span>
+    </div>
+  </div>
+</article>
+
+<article class="panel mb-4">
+  <header class="panel-header"><h3 class="panel-title">Matriz de notas</h3><p class="panel-subtitle">Editá las notas y guardá todo junto al final</p></header>
+  <div class="panel-body">
+    {% if actividades and estudiantes %}
+    <form method="POST" action="{{ url_for('valoraciones.guardar_notas', materia_id=materia.id) }}">
+      <div class="calif-matrix-wrapper">
+        <table class="calif-matrix">
+          <thead>
+            <tr>
+              <th>Estudiante</th>
+              {% for a in actividades %}
+              <th>
+                {{ a.nombre }}
+                <span class="actividad-peso">{{ a.porcentaje }}%</span>
+                <span class="actividad-acciones">
+                  <a href="{{ url_for('valoraciones.editar_actividad', actividad_id=a.id) }}" class="btn btn-ghost btn-icon btn-sm" title="Editar actividad">✎</a>
+                  <form method="POST" action="{{ url_for('valoraciones.eliminar_actividad', actividad_id=a.id) }}"
+                        style="display:inline;" onsubmit="return confirm('¿Eliminar la actividad {{ a.nombre }}? Se borran también las valoraciones cargadas ahí.');">
+                    <button type="submit" class="btn btn-ghost btn-icon btn-sm" title="Eliminar actividad">🗑</button>
+                  </form>
+                </span>
+              </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for e in estudiantes %}
+            <tr>
+              <td>{{ e.nombre }}</td>
+              {% for a in actividades %}
+              <td>
+                <select name="valor_{{ a.id }}_{{ e.id }}" class="form-control calif-nota-input">
+                  <option value="">—</option>
+                  {% for v in escala %}
+                  <option value="{{ v }}" {% if valores.get((a.id, e.id)) == v %}selected{% endif %}>{{ v }}</option>
+                  {% endfor %}
+                </select>
+              </td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="calif-matrix-footer">
+        <button type="submit" class="btn btn-primary">Guardar todas las valoraciones</button>
+      </div>
+    </form>
+    {% elif not actividades %}
+    <div class="empty-state"><p>Todavía no hay actividades valorativas cargadas. Agregá la primera arriba.</p></div>
+    {% else %}
+    <div class="empty-state"><p>Esta materia todavía no tiene estudiantes inscritos. Andá a Configuración → Asignaciones.</p></div>
+    {% endif %}
+  </div>
+</article>
+
+<article class="panel">
+  <header class="panel-header"><h3 class="panel-title">Boletín</h3><p class="panel-subtitle">Valoración final ponderada y estado de aprobación</p></header>
+  <div class="table-wrapper">
+    <table class="table">
+      <thead><tr><th>Estudiante</th><th>Actividades valoradas</th><th>Valoración final</th><th>Estado</th></tr></thead>
+      <tbody>
+        {% if boletin %}
+          {% for b in boletin %}
+          <tr>
+            <td class="font-semibold">{{ b.estudiante_nombre }}</td>
+            <td>{{ b.actividades_calificadas }}/{{ b.total_actividades }}</td>
+            <td>
+              {% if b.valoracion_final %}
+              <span class="calif-nota-pill {{ 'pass' if b.aprobado else 'fail' }}">{{ b.valoracion_final }}</span>
+              {% else %}
+              <span class="calif-nota-pill pending">—</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if not b.valoracion_final %}
+                <span class="badge badge-warning badge-dot calif-estado-badge">Sin valorar</span>
+              {% elif b.aprobado %}
+                <span class="badge badge-success badge-dot calif-estado-badge">{{ 'Aprobado' if b.completo else 'Aprobado (provisional)' }}</span>
+              {% else %}
+                <span class="badge badge-danger badge-dot calif-estado-badge">{{ 'Reprobado' if b.completo else 'En riesgo (provisional)' }}</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr><td colspan="4" class="text-center text-muted">No hay estudiantes inscritos en esta materia</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</article>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  var input = document.getElementById('nuevoPorcentaje');
+  var disponible = document.getElementById('disponible');
+  if (!input || !disponible) return;
+
+  var sumaActual = {{ suma_porcentajes|default(0) }};
+
+  input.addEventListener('input', function () {
+    var valor = parseFloat(input.value) || 0;
+    var proyectado = Math.round((sumaActual + valor) * 10) / 10;
+    var restante = Math.round((100 - proyectado) * 10) / 10;
+    disponible.textContent = restante + '%';
+    disponible.style.color = restante < 0 ? 'var(--danger-500)' : '';
+  });
+})();
+</script>
+{% endblock %}

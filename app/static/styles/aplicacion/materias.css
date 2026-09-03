@@ -1,0 +1,110 @@
+/* =============================================================================
+ * ZOE — Materias
+ * ----------------------------------------------------------------------
+ * Tarjetas de asignaturas con barra de progreso, meta info, acento de color.
+ * Estilo Linear Projects / Notion Database.
+ * ============================================================================= */
+
+/* ==========================================================================
+ *  Toolbar / Filtros
+ * ========================================================================== */
+.materias-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+ *  Grid de materias
+ * ========================================================================== */
+.materias-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-5);
+}
+
+/* ==========================================================================
+ *  Tarjeta de materia
+ * ========================================================================== */
+.materia-card {
+  position: relative;
+  overflow: hidden;
+  padding: 0 !important;
+}
+
+.materia-card-accent {
+  height: 4px;
+  width: 100%;
+}
+
+.materia-card .card-body {
+  padding: var(--space-5) var(--space-6) var(--space-6);
+}
+
+.materia-card-title {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  margin: 0;
+  line-height: var(--leading-tight);
+}
+
+/* Meta info */
+.materia-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.materia-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+.materia-meta-item svg {
+  color: var(--color-text-subtle);
+  flex-shrink: 0;
+}
+
+/* Progress bar */
+.materia-progress {
+  width: 100%;
+}
+
+.materia-progress-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.materia-progress-bar {
+  height: 6px;
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.materia-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transition: width var(--duration-slow) var(--ease-out);
+}
+
+/* ==========================================================================
+ *  Responsive
+ * ========================================================================== */
+@media (max-width: 768px) {
+  .materias-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .materias-grid {
+    grid-template-columns: 1fr;
+  }
+}

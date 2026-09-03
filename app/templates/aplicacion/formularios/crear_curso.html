@@ -1,0 +1,52 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('cursos.listar_cursos') }}">Cursos</a>
+  <span class="sep">/</span>
+  <span>{{ 'Editar' if curso else 'Crear' }}</span>
+</div>
+
+<div class="form-card">
+  <div class="form-card-header"><h2>{{ 'Editar Curso' if curso else 'Crear Curso' }}</h2></div>
+  <form method="POST" action="{{ url_for('cursos.editar_curso', curso_id=curso.id) if curso else url_for('cursos.form_crear_curso') }}">
+    <div class="form-card-body">
+      <div class="form-group">
+        <label class="form-label">Código <span class="required">*</span></label>
+        <input type="text" name="codigo" class="form-control" placeholder="Ej: 1005"
+               value="{{ curso.codigo if curso else '' }}" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nombre</label>
+        <input type="text" name="nombre" class="form-control" placeholder="Ej: 1005 (si se deja vacío, usa el código)"
+               value="{{ curso.nombre if curso else '' }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Grado <span class="required">*</span></label>
+        <select name="grado" class="form-control" required>
+          {% for g in grados %}
+          <option value="{{ g }}" {% if curso and curso.grado == g %}selected{% endif %}>{{ g }}°</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sección <span class="required">*</span></label>
+        <input type="number" name="seccion" class="form-control" min="1" max="9"
+               value="{{ curso.seccion if curso else '' }}" required>
+      </div>
+      {% if curso %}
+      <div class="form-group">
+        <label class="form-label">Estado</label>
+        <select name="activo" class="form-control">
+          <option value="1" {% if curso.activo %}selected{% endif %}>Activo</option>
+          <option value="0" {% if not curso.activo %}selected{% endif %}>Inactivo</option>
+        </select>
+      </div>
+      {% endif %}
+    </div>
+    <div class="form-card-footer">
+      <a href="{{ url_for('cursos.listar_cursos') }}" class="btn">Cancelar</a>
+      <button type="submit" class="btn btn-primary">{{ 'Guardar cambios' if curso else 'Crear curso' }}</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

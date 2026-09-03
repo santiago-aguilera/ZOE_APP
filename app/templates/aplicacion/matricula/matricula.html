@@ -1,0 +1,128 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/matricula.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Matrícula BI</h1>
+    <p class="page-subtitle">Estado de matrícula de los estudiantes en el proceso IB</p>
+  </div>
+</header>
+
+<div class="matricula-stats">
+  <div class="card matricula-stat-card is-total">
+    <div class="matricula-stat-value">{{ estadisticas.TOTAL }}</div>
+    <div class="matricula-stat-label">Total estudiantes</div>
+  </div>
+  {% for e in estados_matricula %}
+  <div class="card matricula-stat-card">
+    <div class="matricula-stat-value">{{ estadisticas.get(e, 0) }}</div>
+    <div class="matricula-stat-label">{{ etiquetas_estado[e] }}</div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="matricula-toolbar">
+  <form method="GET" class="input-group" style="width: 240px;">
+    <input type="search" name="q" placeholder="Buscar estudiante..." value="{{ filtro_texto }}">
+    <input type="hidden" name="cohorte_id" value="{{ filtro_cohorte or '' }}">
+    <input type="hidden" name="curso_id" value="{{ filtro_curso or '' }}">
+    <input type="hidden" name="estado_matricula" value="{{ filtro_estado or '' }}">
+  </form>
+  <form method="GET" class="input-group" style="width: 220px;">
+    <select name="cohorte_id" class="form-control" onchange="this.form.submit()">
+      <option value="">Todas las cohortes</option>
+      {% for c in cohortes %}
+      <option value="{{ c.id }}" {% if filtro_cohorte == c.id %}selected{% endif %}>{{ c.nombre }}</option>
+      {% endfor %}
+    </select>
+    <input type="hidden" name="curso_id" value="{{ filtro_curso or '' }}">
+    <input type="hidden" name="estado_matricula" value="{{ filtro_estado or '' }}">
+    <input type="hidden" name="q" value="{{ filtro_texto }}">
+  </form>
+  <form method="GET" class="input-group" style="width: 180px;">
+    <select name="curso_id" class="form-control" onchange="this.form.submit()">
+      <option value="">Todos los cursos</option>
+      {% for c in cursos %}
+      <option value="{{ c.id }}" {% if filtro_curso == c.id %}selected{% endif %}>{{ c.codigo }}</option>
+      {% endfor %}
+    </select>
+    <input type="hidden" name="cohorte_id" value="{{ filtro_cohorte or '' }}">
+    <input type="hidden" name="estado_matricula" value="{{ filtro_estado or '' }}">
+    <input type="hidden" name="q" value="{{ filtro_texto }}">
+  </form>
+  <form method="GET" class="input-group" style="width: 220px;">
+    <select name="estado_matricula" class="form-control" onchange="this.form.submit()">
+      <option value="">Todos los estados</option>
+      {% for e in estados_matricula %}
+      <option value="{{ e }}" {% if filtro_estado == e %}selected{% endif %}>{{ etiquetas_estado[e] }}</option>
+      {% endfor %}
+    </select>
+    <input type="hidden" name="cohorte_id" value="{{ filtro_cohorte or '' }}">
+    <input type="hidden" name="curso_id" value="{{ filtro_curso or '' }}">
+    <input type="hidden" name="q" value="{{ filtro_texto }}">
+  </form>
+</div>
+
+{% if estudiantes %}
+<div class="card">
+  <div class="table-wrapper">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Estudiante</th>
+          <th>Curso</th>
+          <th>Cohorte</th>
+          <th>Estado</th>
+          <th style="width: 1%;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in estudiantes %}
+        <tr>
+          <td class="font-semibold">{{ e.nombre }}</td>
+          <td>{{ e.curso_obj.codigo if e.curso_obj else '—' }}</td>
+          <td>{{ e.cohorte_obj.nombre if e.cohorte_obj else '—' }}</td>
+          <td>
+            <span class="badge {{ 'badge-success' if e.estado_matricula in ['MATRICULADO','ACTIVO'] else 'badge-danger' if e.estado_matricula in ['RETIRADO','CANCELADO'] else 'badge-warning' }}">
+              {{ etiquetas_estado.get(e.estado_matricula, 'No matriculado') }}
+            </span>
+          </td>
+          <td>
+            <div class="d-flex gap-2">
+              {% if rol == 'coordinador' %}
+              <button type="button" class="btn btn-sm btn-primary" onclick="document.getElementById('modal-{{ e.id }}').classList.add('is-open')">Cambiar estado</button>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% if rol == 'coordinador' %}
+        <tr id="modal-{{ e.id }}" class="modal-row" style="display:none;">
+          <td colspan="5">
+            <form method="POST" action="{{ url_for('matricula.cambiar_estado', usuario_id=e.id) }}" class="curso-inline-form">
+              <select name="estado_matricula" class="form-control" required>
+                {% for est in estados_matricula %}
+                <option value="{{ est }}" {% if e.estado_matricula == est %}selected{% endif %}>{{ etiquetas_estado[est] }}</option>
+                {% endfor %}
+              </select>
+              <input type="text" name="observacion" class="form-control" placeholder="Observación (opcional)">
+              <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
+            </form>
+          </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="empty-state">
+  <p>No hay estudiantes que coincidan con estos filtros.</p>
+</div>
+{% endif %}
+
+<style>.modal-row.is-open { display: table-row !important; }</style>
+{% endblock %}

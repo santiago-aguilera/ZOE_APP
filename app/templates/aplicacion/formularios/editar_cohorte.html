@@ -1,0 +1,54 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/formularios.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('configuracion.configuracion') }}">Administración</a>
+  <span class="sep">/</span>
+  <span>{{ 'Editar Cohorte' if cohorte else 'Crear Cohorte' }}</span>
+</div>
+<div class="form-page">
+  <div class="form-card">
+    <div class="form-card-header">
+      <h2>{{ 'Editar Cohorte Académica' if cohorte else 'Crear Cohorte Académica' }}</h2>
+    </div>
+    <form method="POST"
+          action="{{ url_for('configuracion.editar_cohorte', cohorte_id=cohorte.id) if cohorte else url_for('configuracion.form_crear_cohorte') }}">
+      <div class="form-card-body">
+        <div class="form-section">
+          <div class="form-section-title">Información de la cohorte</div>
+          <div class="form-group">
+            <label class="form-label">Nombre de la cohorte <span class="required">*</span></label>
+            <input type="text" name="nombre" class="form-control" placeholder="Ej: 25/26"
+                   value="{{ cohorte.nombre if cohorte else '' }}" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Fecha de inicio <span class="required">*</span></label>
+              <input type="date" name="fecha_inicio" class="form-control" required id="fechaInicio"
+                     value="{{ cohorte.fecha_inicio if cohorte else '' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Fecha de fin <span class="required">*</span></label>
+              <input type="date" name="fecha_fin" class="form-control" required id="fechaFin"
+                     value="{{ cohorte.fecha_fin if cohorte else '' }}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="display:flex; align-items:center; gap:8px;">
+              <input type="checkbox" name="activo" {% if cohorte and cohorte.activo %}checked{% endif %}>
+              Cohorte activa
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-card-footer">
+        <a href="{{ url_for('configuracion.configuracion') }}" class="btn">Cancelar</a>
+        <button type="submit" class="btn btn-primary">{{ 'Guardar cambios' if cohorte else 'Crear cohorte' }}</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

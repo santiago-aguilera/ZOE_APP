@@ -1,0 +1,215 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/cursos.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('cursos.listar_cursos') }}">Cursos</a>
+  <span class="sep">/</span>
+  <span>{{ curso.codigo }}</span>
+</div>
+
+<header class="page-header curso-detalle-header">
+  <div class="d-flex items-center gap-3">
+    <span class="curso-badge grado-{{ curso.grado }} lg">{{ curso.codigo }}</span>
+    <div>
+      <h1 class="page-title">{{ curso.nombre or curso.codigo }}</h1>
+      <p class="page-subtitle">{{ curso.grado }}° — Sección {{ curso.seccion }}
+        <span class="badge {{ 'badge-success' if curso.activo else 'badge-warning' }}" style="margin-left:8px;">{{ 'Activo' if curso.activo else 'Inactivo' }}</span>
+      </p>
+    </div>
+  </div>
+  {% if rol == 'coordinador' %}
+  <div class="d-flex gap-2">
+    <a href="{{ url_for('cursos.editar_curso', curso_id=curso.id) }}" class="btn">Editar</a>
+    <form method="POST" action="{{ url_for('cursos.toggle_activo', curso_id=curso.id) }}">
+      <button type="submit" class="btn">{{ 'Desactivar' if curso.activo else 'Activar' }}</button>
+    </form>
+  </div>
+  {% endif %}
+</header>
+
+<div class="admin-tabs" data-tabs="curso">
+  <button class="tab is-active" data-tab="info">Información general</button>
+  <button class="tab" data-tab="materias">Materias <span class="tab-count">{{ materias_curso|length }}</span></button>
+  <button class="tab" data-tab="profesores">Profesores <span class="tab-count">{{ profesores_curso|length }}</span></button>
+  <button class="tab" data-tab="estudiantes">Estudiantes <span class="tab-count">{{ estudiantes|length }}</span></button>
+  <button class="tab" data-tab="grupos">Grupos de estudio <span class="tab-count">{{ grupos_curso|length }}</span></button>
+</div>
+
+<!-- INFORMACIÓN GENERAL -->
+<div class="admin-panel" data-tab-panel="info" data-tab-group="curso">
+  <div class="curso-detalle-grid">
+    <div class="card"><div class="card-body">
+      <h2 class="curso-panel-title">Datos del curso</h2>
+      <div class="curso-list-item"><span class="text-muted">Código</span><strong>{{ curso.codigo }}</strong></div>
+      <div class="curso-list-item"><span class="text-muted">Nombre</span><strong>{{ curso.nombre or '—' }}</strong></div>
+      <div class="curso-list-item"><span class="text-muted">Grado</span><strong>{{ curso.grado }}°</strong></div>
+      <div class="curso-list-item"><span class="text-muted">Sección</span><strong>{{ curso.seccion }}</strong></div>
+      <div class="curso-list-item"><span class="text-muted">Estado</span><strong>{{ 'Activo' if curso.activo else 'Inactivo' }}</strong></div>
+    </div></div>
+    <div class="card"><div class="card-body">
+      <h2 class="curso-panel-title">Resumen</h2>
+      <div class="curso-stats">
+        <div class="curso-stat"><span class="curso-stat-value">{{ materias_curso|length }}</span><span class="curso-stat-label">Materias</span></div>
+        <div class="curso-stat"><span class="curso-stat-value">{{ profesores_curso|length }}</span><span class="curso-stat-label">Profesores</span></div>
+        <div class="curso-stat"><span class="curso-stat-value">{{ estudiantes|length }}</span><span class="curso-stat-label">Estudiantes</span></div>
+        <div class="curso-stat"><span class="curso-stat-value">{{ grupos_curso|length }}</span><span class="curso-stat-label">Grupos</span></div>
+      </div>
+      <p class="text-xs text-muted mt-3">Este curso es un catálogo fijo, independiente de la cohorte: se reutiliza cada año. Usá el filtro de cohorte en la pestaña Estudiantes para ver quién cursa hoy.</p>
+    </div></div>
+  </div>
+</div>
+
+<!-- MATERIAS (Asignación académica: MATERIA + PROFESOR + CURSO) -->
+<div class="admin-panel is-hidden" data-tab-panel="materias" data-tab-group="curso">
+  <div class="card"><div class="card-body">
+    <h2 class="curso-panel-title">Materias del curso</h2>
+    <p class="text-sm text-muted mb-3">Cada materia se asigna a este curso con su propio profesor (un profesor puede dictar la misma materia en otros cursos, con otro profesor).</p>
+    {% if materias_curso %}
+      {% for cm in materias_curso %}
+      <div class="curso-list-item">
+        <div>
+          <div class="font-semibold">{{ cm.materia_nombre }}</div>
+          <div class="text-xs text-muted">{{ cm.profesor_nombre or 'Sin profesor asignado' }}</div>
+        </div>
+        {% if rol == 'coordinador' %}
+        <div class="d-flex gap-2 items-center">
+          <form method="POST" action="{{ url_for('cursos.asignar_profesor', curso_id=curso.id, curso_materia_id=cm.curso_materia_id) }}" class="d-flex gap-2">
+            <select name="profesor_id" class="form-control" style="min-width: 160px;">
+              <option value="">Sin profesor</option>
+              {% for p in profesores %}
+              <option value="{{ p.id }}" {% if cm.profesor_id == p.id %}selected{% endif %}>{{ p.nombre }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-sm">Guardar</button>
+          </form>
+          <form method="POST" action="{{ url_for('cursos.quitar_materia', curso_id=curso.id, curso_materia_id=cm.curso_materia_id) }}"
+                onsubmit="return confirm('¿Quitar {{ cm.materia_nombre }} del curso?');">
+            <button type="submit" class="btn btn-sm btn-danger">Quitar</button>
+          </form>
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state"><p>Este curso todavía no tiene materias asignadas.</p></div>
+    {% endif %}
+
+    {% if rol == 'coordinador' %}
+    <form method="POST" action="{{ url_for('cursos.agregar_materia', curso_id=curso.id) }}" class="curso-inline-form">
+      <select name="materia_id" class="form-control" required>
+        <option value="">Agregar materia...</option>
+        {% for m in materias_disponibles %}
+        <option value="{{ m.id }}">{{ m.nombre }}</option>
+        {% endfor %}
+      </select>
+      <select name="profesor_id" class="form-control">
+        <option value="">Sin profesor todavía</option>
+        {% for p in profesores %}
+        <option value="{{ p.id }}">{{ p.nombre }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-primary btn-sm">Agregar</button>
+    </form>
+    {% endif %}
+  </div></div>
+</div>
+
+<!-- PROFESORES -->
+<div class="admin-panel is-hidden" data-tab-panel="profesores" data-tab-group="curso">
+  <div class="card"><div class="card-body">
+    <h2 class="curso-panel-title">Profesores que dictan en este curso</h2>
+    {% if profesores_curso %}
+      {% for p in profesores_curso %}
+      <div class="curso-list-item">
+        <div><div class="font-semibold">{{ p.nombre }}</div><div class="text-xs text-muted">{{ p.correo }}</div></div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state"><p>Todavía no hay profesores asignados a materias de este curso.</p></div>
+    {% endif %}
+  </div></div>
+</div>
+
+<!-- ESTUDIANTES -->
+<div class="admin-panel is-hidden" data-tab-panel="estudiantes" data-tab-group="curso">
+  <div class="card"><div class="card-body">
+    <div class="d-flex items-center justify-between mb-3">
+      <h2 class="curso-panel-title" style="margin:0;">Estudiantes del curso</h2>
+      <form method="GET" style="width:220px;">
+        <select name="cohorte_id" class="form-control" onchange="this.form.submit()">
+          <option value="">Todas las cohortes</option>
+          {% for c in cohortes %}
+          <option value="{{ c.id }}" {% if filtro_cohorte == c.id %}selected{% endif %}>{{ c.nombre }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+    {% if estudiantes %}
+      {% for e in estudiantes %}
+      <div class="curso-list-item">
+        <div>
+          <div class="font-semibold">{{ e.nombre }}</div>
+          <div class="text-xs text-muted">{{ e.correo }} · {{ e.cohorte_nombre or 'Sin cohorte' }} · {{ e.estado_matricula or 'NO_MATRICULADO' }}</div>
+        </div>
+        {% if rol == 'coordinador' %}
+        <form method="POST" action="{{ url_for('cursos.quitar_estudiante', curso_id=curso.id, estudiante_id=e.usuario_id) }}"
+              onsubmit="return confirm('¿Quitar a {{ e.nombre }} del curso?');">
+          <button type="submit" class="btn btn-sm btn-danger">Quitar</button>
+        </form>
+        {% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state"><p>Todavía no hay estudiantes asignados a este curso.</p></div>
+    {% endif %}
+
+    {% if rol == 'coordinador' %}
+    <form method="POST" action="{{ url_for('cursos.agregar_estudiante', curso_id=curso.id) }}" class="curso-inline-form">
+      <select name="estudiante_id" class="form-control" required>
+        <option value="">Asignar estudiante...</option>
+        {% for u in estudiantes_disponibles %}
+        <option value="{{ u.id }}">{{ u.nombre }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-primary btn-sm">Asignar</button>
+    </form>
+    {% endif %}
+  </div></div>
+</div>
+
+<!-- GRUPOS DE ESTUDIO -->
+<div class="admin-panel is-hidden" data-tab-panel="grupos" data-tab-group="curso">
+  <div class="card"><div class="card-body">
+    <h2 class="curso-panel-title">Grupos de estudio con integrantes de este curso</h2>
+    <p class="text-sm text-muted mb-3">Un grupo de estudio es independiente del curso: agrupa estudiantes para trabajo en equipo, un curso puede tener varios.</p>
+    {% if grupos_curso %}
+      {% for g in grupos_curso %}
+      <div class="curso-list-item">
+        <div><div class="font-semibold">{{ g.nombre }}</div><div class="text-xs text-muted">{{ g.total_estudiantes }} integrantes de este curso</div></div>
+        <a href="{{ url_for('grupos.editar_grupo', grupo_id=g.id) }}" class="btn btn-sm">Ver grupo</a>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state"><p>Ningún grupo de estudio tiene integrantes de este curso todavía.</p></div>
+    {% endif %}
+  </div></div>
+</div>
+
+<script>
+(function(){
+  var tabs = document.querySelectorAll('[data-tabs="curso"] [data-tab]');
+  var panels = document.querySelectorAll('[data-tab-panel][data-tab-group="curso"]');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){ t.classList.remove('is-active'); });
+      tab.classList.add('is-active');
+      var target = tab.dataset.tab;
+      panels.forEach(function(p){ p.classList.toggle('is-hidden', p.dataset.tabPanel !== target); });
+    });
+  });
+})();
+</script>
+{% endblock %}

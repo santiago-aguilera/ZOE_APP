@@ -1,0 +1,77 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/formularios.css') }}">
+
+{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">{{ tarea.titulo }}</h1>
+    <p class="page-subtitle">{{ tarea.materia_nombre or 'Sin materia' }} · Fecha límite: {{ tarea.fecha_limite }} · {{ roster|length }} estudiante(s) inscritos</p>
+  </div>
+  <a href="{{ url_for('tareas.listar_tareas') }}" class="btn">← Volver a Tareas</a>
+</header>
+
+<div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Estudiante</th>
+        <th>Estado</th>
+        <th>Archivo</th>
+        <th>Entregado</th>
+        <th style="width: 320px;">Calificación</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if roster %}
+        {% for r in roster %}
+        <tr>
+          <td class="font-semibold">{{ r.estudiante_nombre }}</td>
+          <td>
+            {% if r.entrega_estado == 'calificada' %}
+              <span class="badge badge-success badge-dot">Calificada</span>
+            {% elif r.entrega_estado == 'entregada' %}
+              <span class="badge badge-info badge-dot">Entregada</span>
+            {% else %}
+              <span class="badge badge-warning badge-dot">Sin entregar</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if r.entrega_id %}
+              <a href="{{ url_for('tareas.descargar_entrega', entrega_id=r.entrega_id) }}" class="btn btn-ghost btn-sm">
+                ⬇ {{ r.archivo_nombre_original or 'archivo' }}
+              </a>
+            {% else %}
+              <span class="text-muted text-sm">—</span>
+            {% endif %}
+          </td>
+          <td class="text-sm text-muted">{{ r.entregado_en or '—' }}</td>
+          <td>
+            {% if r.entrega_id %}
+            <form method="POST" action="{{ url_for('tareas.calificar_entrega', entrega_id=r.entrega_id) }}" class="calificar-form">
+              <input type="number" name="nota" class="form-control" placeholder="Nota" min="0" max="20" step="0.1"
+                     value="{{ r.nota if r.nota is not none else '' }}" style="width: 90px;">
+              <input type="text" name="comentario_profesor" class="form-control" placeholder="Comentario (opcional)"
+                     value="{{ r.comentario or '' }}">
+              <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
+            </form>
+            {% else %}
+              <span class="text-muted text-sm">Esperando entrega</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="5" class="text-center text-muted">
+            No hay estudiantes inscritos en esta materia todavía.
+            Andá a Configuración → Asignaciones para inscribirlos.
+          </td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+

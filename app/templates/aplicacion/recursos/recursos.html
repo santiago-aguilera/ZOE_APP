@@ -1,0 +1,138 @@
+{% extends 'aplicacion/layout_1.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/recursos.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Recursos Académicos</h1>
+    <p class="page-subtitle">Biblioteca de documentos, presentaciones y enlaces</p>
+  </div>
+  <div class="page-actions">
+    {% if rol in ['profesor', 'coordinador'] %}
+    {% if rol in ['profesor', 'coordinador'] %}<a href="{{ url_for('recursos.form_crear_recurso') }}" class="btn btn-primary">+ Subir recurso</a>{% endif %}
+    {% endif %}
+  </div>
+</header>
+
+<!-- Filtros -->
+<div class="recursos-toolbar">
+  <div class="filter-chips" data-filter="tipo">
+    <button class="chip is-active" data-filter-value="todos">Todos</button>
+    <button class="chip" data-filter-value="documento">Documentos</button>
+    <button class="chip" data-filter-value="presentacion">Presentaciones</button>
+    <button class="chip" data-filter-value="enlace">Enlaces</button>
+    <button class="chip" data-filter-value="video">Videos</button>
+  </div>
+  <div class="input-group" style="width: 260px;">
+    <input type="search" placeholder="Buscar recursos..." id="searchRecursos">
+  </div>
+  <form method="GET" class="input-group" style="width: 220px;">
+    <select name="curso_id" class="form-control" onchange="this.form.submit()">
+      <option value="">Todos los cursos</option>
+      {% for c in cursos %}
+      <option value="{{ c.id }}" {% if filtro_curso == c.id %}selected{% endif %}>{{ c.codigo }}</option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
+
+<!-- Grid de recursos -->
+<section class="recursos-grid" id="gridRecursos">
+  {% if recursos %}
+    {% for recurso in recursos %}
+    {% set colores = {
+      'documento': ('#EFF6FF', '#3B82F6'),
+      'presentacion': ('#FFFBEB', '#F59E0B'),
+      'enlace': ('#ECFDF5', '#10B981'),
+      'video': ('rgba(139,92,246,0.1)', '#7C3AED'),
+      'plantilla': ('#FEF2F2', '#EF4444')
+    } %}
+    {% set fondo, color = colores.get(recurso.tipo, ('#F3F4F6', '#6B7280')) %}
+    <article class="recurso-card card card-hover" data-tipo="{{ recurso.tipo }}">
+      <div class="recurso-card-icon" style="background: {{ fondo }}; color: {{ color }};">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>
+        </svg>
+      </div>
+      <div class="card-body-sm">
+        <h4 class="recurso-title">{{ recurso.titulo }}</h4>
+        <p class="text-xs text-muted mt-1">{{ recurso.materia_nombre or 'Sin materia' }}{% if recurso.curso_codigo %} · Curso {{ recurso.curso_codigo }}{% endif %} · {{ recurso.autor_nombre or 'Sistema' }}</p>
+        <div class="d-flex items-center justify-between mt-3">
+          <span class="badge" style="background: {{ fondo }}; color: {{ color }};">{{ recurso.tipo|capitalize if recurso.tipo else 'Recurso' }}</span>
+        </div>
+        <div class="recurso-actions mt-3">
+          <a href="{{ recurso.url_archivo }}" target="_blank" class="btn btn-ghost btn-sm">Abrir</a>
+          {% if rol == 'coordinador' or recurso.creado_por == usuario_id %}
+          <a href="{{ url_for('recursos.editar_recurso', recurso_id=recurso.id) }}" class="btn btn-ghost btn-icon btn-sm" title="Editar">✎</a>
+          <form method="POST" action="{{ url_for('recursos.eliminar_recurso', recurso_id=recurso.id) }}" style="display:inline;"
+                onsubmit="return confirm('¿Eliminar el recurso {{ recurso.titulo }}?');">
+            <button type="submit" class="btn btn-ghost btn-icon btn-sm" title="Eliminar">🗑</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state" style="grid-column: 1/-1;">
+      <p>No hay recursos subidos todavía.</p>
+      {% if rol in ['profesor', 'coordinador'] %}
+      {% if rol in ['profesor', 'coordinador'] %}<a href="{{ url_for('recursos.form_crear_recurso') }}" class="btn">Subir el primer recurso</a>{% endif %}
+      {% endif %}
+    </div>
+  {% endif %}
+</section>
+
+{% if total_paginas > 1 %}
+<div class="pager">
+  <span class="pager-info">Página {{ pagina }} de {{ total_paginas }} — {{ total_recursos }} recurso(s) en total</span>
+  <div class="pager-links">
+    <a class="{{ 'is-disabled' if pagina <= 1 }}" href="{{ url_for('recursos.listar_recursos', pagina=pagina-1, curso_id=filtro_curso) }}">‹ Anterior</a>
+    {% for p in range(1, total_paginas + 1) %}
+      {% if p == pagina %}
+      <span class="is-current">{{ p }}</span>
+      {% elif p == 1 or p == total_paginas or (p >= pagina - 1 and p <= pagina + 1) %}
+      <a href="{{ url_for('recursos.listar_recursos', pagina=p, curso_id=filtro_curso) }}">{{ p }}</a>
+      {% elif p == pagina - 2 or p == pagina + 2 %}
+      <span>…</span>
+      {% endif %}
+    {% endfor %}
+    <a class="{{ 'is-disabled' if pagina >= total_paginas }}" href="{{ url_for('recursos.listar_recursos', pagina=pagina+1, curso_id=filtro_curso) }}">Siguiente ›</a>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  var chips = document.querySelectorAll('[data-filter="tipo"] .chip');
+  var tarjetas = document.querySelectorAll('#gridRecursos .recurso-card');
+  var busqueda = document.getElementById('searchRecursos');
+
+  function aplicarFiltros() {
+    var chipActivo = document.querySelector('[data-filter="tipo"] .chip.is-active');
+    var filtro = chipActivo ? chipActivo.dataset.filterValue : 'todos';
+    var texto = busqueda ? busqueda.value.toLowerCase().trim() : '';
+    tarjetas.forEach(function(card) {
+      var matchTipo = (filtro === 'todos') || (card.dataset.tipo === filtro);
+      var matchBusqueda = !texto || card.textContent.toLowerCase().indexOf(texto) !== -1;
+      card.style.display = (matchTipo && matchBusqueda) ? '' : 'none';
+    });
+  }
+
+  chips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      chips.forEach(function(c) { c.classList.remove('is-active'); });
+      chip.classList.add('is-active');
+      aplicarFiltros();
+    });
+  });
+
+  if (busqueda) busqueda.addEventListener('input', aplicarFiltros);
+})();
+</script>
+{% endblock %}

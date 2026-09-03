@@ -1,0 +1,99 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/cursos.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Cursos</h1>
+    <p class="page-subtitle">Catálogo fijo — décimo (1001-1004) y once (1101-1104), reutilizable entre cohortes</p>
+  </div>
+  {% if rol == 'coordinador' %}
+  <a href="{{ url_for('cursos.form_crear_curso') }}" class="btn btn-primary">+ Nuevo curso</a>
+  {% endif %}
+</header>
+
+<div class="cursos-toolbar">
+  <div class="input-group" style="width: 260px;">
+    <input type="search" placeholder="Buscar curso..." id="searchCursos">
+  </div>
+  <form method="GET" class="input-group" style="width: 260px;">
+    <select name="cohorte_id" class="form-control" onchange="this.form.submit()">
+      <option value="">Todas las cohortes (contexto)</option>
+      {% for c in cohortes %}
+      <option value="{{ c.id }}" {% if filtro_cohorte == c.id %}selected{% endif %}>{{ c.nombre }}</option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
+
+{% if cursos %}
+<div class="card">
+  <div class="table-wrapper">
+  <table class="table" id="tablaCursos">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Grado</th>
+        <th>Estudiantes{% if filtro_cohorte %} <span class="text-xs text-muted">(en esta cohorte)</span>{% endif %}</th>
+        <th>Estado</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for curso in cursos %}
+      <tr data-curso="{{ curso.codigo }} {{ curso.nombre }}">
+        <td><span class="curso-badge grado-{{ curso.grado }}">{{ curso.codigo }}</span></td>
+        <td class="font-semibold">{{ curso.nombre or curso.codigo }}</td>
+        <td>{{ curso.grado }}° — Sección {{ curso.seccion }}</td>
+        <td>{{ curso.total_estudiantes|default(0) }}</td>
+        <td>
+          <span class="badge {{ 'badge-success' if curso.activo else 'badge-warning' }}">
+            {{ 'Activo' if curso.activo else 'Inactivo' }}
+          </span>
+        </td>
+        <td class="text-right">
+          <a href="{{ url_for('cursos.ver_curso', curso_id=curso.id) }}" class="btn btn-sm">Ver detalle</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% else %}
+<div class="empty-state">
+  <p>No hay cursos registrados todavía.</p>
+</div>
+{% endif %}
+
+{% if total_paginas > 1 %}
+<div class="pager">
+  <span class="pager-info">Página {{ pagina }} de {{ total_paginas }} — {{ total_cursos }} curso(s) en total</span>
+  <div class="pager-links">
+    <a class="{{ 'is-disabled' if pagina <= 1 }}" href="{{ url_for('cursos.listar_cursos', pagina=pagina-1, cohorte_id=filtro_cohorte) }}">‹ Anterior</a>
+    {% for p in range(1, total_paginas + 1) %}
+      {% if p == pagina %}
+      <span class="is-current">{{ p }}</span>
+      {% elif p == 1 or p == total_paginas or (p >= pagina - 1 and p <= pagina + 1) %}
+      <a href="{{ url_for('cursos.listar_cursos', pagina=p, cohorte_id=filtro_cohorte) }}">{{ p }}</a>
+      {% elif p == pagina - 2 or p == pagina + 2 %}
+      <span>…</span>
+      {% endif %}
+    {% endfor %}
+    <a class="{{ 'is-disabled' if pagina >= total_paginas }}" href="{{ url_for('cursos.listar_cursos', pagina=pagina+1, cohorte_id=filtro_cohorte) }}">Siguiente ›</a>
+  </div>
+</div>
+{% endif %}
+
+<script>
+document.getElementById('searchCursos').addEventListener('input', function(e) {
+  var q = e.target.value.toLowerCase();
+  document.querySelectorAll('#tablaCursos tbody tr').forEach(function(row) {
+    row.style.display = row.dataset.curso.toLowerCase().includes(q) ? '' : 'none';
+  });
+});
+</script>
+{% endblock %}
