@@ -633,9 +633,10 @@
 .hero .hero-buttons a,
 .hero .hero-buttons a:link,
 .hero .hero-buttons a:visited {
-
+    padding:8px;
+    margin:10px;
     color: #006837 !important;
-
+    border-radius: 5px;
     text-decoration: none !important;
 
     transition:
