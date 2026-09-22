@@ -289,21 +289,28 @@ class Materia:
     ACADÉMICA -> CURSO + PROFESOR.
     """
     
-    def __init__(self, id=None, nombre=None, descripcion=None, 
+    def __init__(self, id=None, nombre=None, descripcion=None, tipo='normal',
                  creado_en=None, valoracion_minima_aprobatoria='Básico'):
         self.id = id
         self.nombre = nombre
         self.descripcion = descripcion
+        # tipo: 'troncal' | 'normal' | 'especialidad'.
+        # Normal (Matemáticas, Inglés, Lengua y Literatura): obligatoria para
+        # todos, sin profundización a nivel de materia (eso se maneja con
+        # 'grupo'). Troncal (Aprendizaje y Servicio, Desarrollo de Lengua,
+        # HPP, Proyecto de Reflexión): obligatoria para todos, sin
+        # profundización. Especialidad: solo matriculados (POP).
+        self.tipo = tipo
         self.creado_en = creado_en
         self.valoracion_minima_aprobatoria = valoracion_minima_aprobatoria
     
     def guardar(self) -> int:
         """Crea una nueva materia en la BD (catálogo global, reutilizable)."""
         consulta = """
-            INSERT INTO materia (nombre, descripcion)
-            VALUES (%s, %s)
+            INSERT INTO materia (nombre, descripcion, tipo)
+            VALUES (%s, %s, %s)
         """
-        parametros = (self.nombre, self.descripcion)
+        parametros = (self.nombre, self.descripcion, self.tipo)
         self.id = db.ejecutar_insercion(consulta, parametros)
         return self.id
     
@@ -311,10 +318,10 @@ class Materia:
         """Actualiza la materia en la BD."""
         consulta = """
             UPDATE materia 
-            SET nombre=%s, descripcion=%s
+            SET nombre=%s, descripcion=%s, tipo=%s
             WHERE id=%s
         """
-        parametros = (self.nombre, self.descripcion, self.id)
+        parametros = (self.nombre, self.descripcion, self.tipo, self.id)
         filas_afectadas = db.ejecutar_actualizacion(consulta, parametros)
         return filas_afectadas > 0
     
@@ -490,12 +497,20 @@ class Materia:
         return db.ejecutar_consulta(consulta, (materia_id,))
     
     @classmethod
+    def obtener_todas_por_tipo(cls, tipo: str) -> List['Materia']:
+        """Materias de un tipo puntual: 'troncal', 'normal' o 'especialidad'."""
+        consulta = "SELECT * FROM materia WHERE tipo=%s ORDER BY nombre"
+        resultados = db.ejecutar_consulta(consulta, (tipo,))
+        return [cls._desde_diccionario(row) for row in resultados]
+
+    @classmethod
     def _desde_diccionario(cls, datos: Dict[str, Any]) -> 'Materia':
         """Crea una instancia de Materia desde un diccionario."""
         return cls(
             id=datos.get('id'),
             nombre=datos.get('nombre'),
             descripcion=datos.get('descripcion'),
+            tipo=datos.get('tipo', 'normal'),
             creado_en=datos.get('creado_en'),
             valoracion_minima_aprobatoria=datos.get('valoracion_minima_aprobatoria', 'Básico')
         )
@@ -505,11 +520,382 @@ class Materia:
         return {
             'id': self.id,
             'nombre': self.nombre,
-            'descripcion': self.descripcion
+            'descripcion': self.descripcion,
+            'tipo': self.tipo
         }
     
     def __repr__(self):
-        return f"<Materia {self.nombre}>"
+        return f"<Materia {self.nombre} ({self.tipo})>"
+
+
+# ---------------------------------------------------------------------------
+# Descriptor
+# Cada materia individual (troncal o normal) tiene su propio descriptor,
+# definido por cohorte/año escolar. Se puede copiar de una cohorte anterior
+# y editar. Sirve de base para el Informe Final (ver InformeFinal más abajo):
+# "Alcanzó" se prellena comparando la evidencia subida por el estudiante
+# contra lo que pide este descriptor.
+# ---------------------------------------------------------------------------
+class Descriptor:
+    """Modelo de Descriptor - Representa la tabla 'descriptor'."""
+
+    def __init__(self, id=None, materia_id=None, cohorte_id=None, texto=None,
+                 requisitos=None, evidencia_esperada=None,
+                 copiado_de_descriptor_id=None, activo=True,
+                 creado_por=None, creado_en=None):
+        self.id = id
+        self.materia_id = materia_id
+        self.cohorte_id = cohorte_id
+        self.texto = texto
+        self.requisitos = requisitos
+        self.evidencia_esperada = evidencia_esperada
+        self.copiado_de_descriptor_id = copiado_de_descriptor_id
+        self.activo = activo
+        self.creado_por = creado_por
+        self.creado_en = creado_en
+
+    def guardar(self) -> int:
+        """Crea el descriptor de una materia para una cohorte puntual."""
+        consulta = """
+            INSERT INTO descriptor
+                (materia_id, cohorte_id, texto, requisitos, evidencia_esperada,
+                 copiado_de_descriptor_id, activo, creado_por)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        parametros = (self.materia_id, self.cohorte_id, self.texto, self.requisitos,
+                      self.evidencia_esperada, self.copiado_de_descriptor_id,
+                      self.activo, self.creado_por)
+        self.id = db.ejecutar_insercion(consulta, parametros)
+        return self.id
+
+    def actualizar(self) -> bool:
+        """Edita el texto/requisitos/evidencia esperada del descriptor."""
+        consulta = """
+            UPDATE descriptor
+            SET texto=%s, requisitos=%s, evidencia_esperada=%s, activo=%s
+            WHERE id=%s
+        """
+        parametros = (self.texto, self.requisitos, self.evidencia_esperada,
+                      self.activo, self.id)
+        filas_afectadas = db.ejecutar_actualizacion(consulta, parametros)
+        return filas_afectadas > 0
+
+    def eliminar(self) -> bool:
+        consulta = "DELETE FROM descriptor WHERE id=%s"
+        filas_afectadas = db.ejecutar_actualizacion(consulta, (self.id,))
+        return filas_afectadas > 0
+
+    @classmethod
+    def obtener_por_id(cls, id: int) -> Optional['Descriptor']:
+        consulta = "SELECT * FROM descriptor WHERE id=%s"
+        resultados = db.ejecutar_consulta(consulta, (id,))
+        return cls._desde_diccionario(resultados[0]) if resultados else None
+
+    @classmethod
+    def obtener_por_materia_cohorte(cls, materia_id: int, cohorte_id: int) -> Optional['Descriptor']:
+        """El descriptor vigente de una materia para una cohorte puntual."""
+        consulta = "SELECT * FROM descriptor WHERE materia_id=%s AND cohorte_id=%s"
+        resultados = db.ejecutar_consulta(consulta, (materia_id, cohorte_id))
+        return cls._desde_diccionario(resultados[0]) if resultados else None
+
+    @classmethod
+    def obtener_por_cohorte(cls, cohorte_id: int, tipo_materia: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Todos los descriptores de una cohorte, con el nombre/tipo de su
+        materia. Filtra opcionalmente por tipo ('troncal'/'normal')."""
+        condicion = "AND m.tipo = %s" if tipo_materia else ""
+        parametros = (cohorte_id, tipo_materia) if tipo_materia else (cohorte_id,)
+        consulta = f"""
+            SELECT d.*, m.nombre as materia_nombre, m.tipo as materia_tipo
+            FROM descriptor d
+            JOIN materia m ON d.materia_id = m.id
+            WHERE d.cohorte_id = %s {condicion}
+            ORDER BY m.tipo, m.nombre
+        """
+        return db.ejecutar_consulta(consulta, parametros)
+
+    @classmethod
+    def copiar_de_cohorte(cls, cohorte_origen_id: int, cohorte_destino_id: int, creado_por: int) -> int:
+        """Copia todos los descriptores de una cohorte a otra (para no
+        redefinirlos desde cero cada año); cada copia queda editable y
+        referencia de dónde vino."""
+        consulta = "SELECT * FROM descriptor WHERE cohorte_id=%s"
+        origen = db.ejecutar_consulta(consulta, (cohorte_origen_id,))
+        copiados = 0
+        for row in origen:
+            nuevo = cls(
+                materia_id=row['materia_id'],
+                cohorte_id=cohorte_destino_id,
+                texto=row['texto'],
+                requisitos=row['requisitos'],
+                evidencia_esperada=row['evidencia_esperada'],
+                copiado_de_descriptor_id=row['id'],
+                creado_por=creado_por
+            )
+            nuevo.guardar()
+            copiados += 1
+        return copiados
+
+    @classmethod
+    def _desde_diccionario(cls, datos: Dict[str, Any]) -> 'Descriptor':
+        return cls(
+            id=datos.get('id'),
+            materia_id=datos.get('materia_id'),
+            cohorte_id=datos.get('cohorte_id'),
+            texto=datos.get('texto'),
+            requisitos=datos.get('requisitos'),
+            evidencia_esperada=datos.get('evidencia_esperada'),
+            copiado_de_descriptor_id=datos.get('copiado_de_descriptor_id'),
+            activo=datos.get('activo', True),
+            creado_por=datos.get('creado_por'),
+            creado_en=datos.get('creado_en')
+        )
+
+    def a_diccionario(self) -> Dict[str, Any]:
+        return {
+            'id': self.id,
+            'materia_id': self.materia_id,
+            'cohorte_id': self.cohorte_id,
+            'texto': self.texto,
+            'requisitos': self.requisitos,
+            'evidencia_esperada': self.evidencia_esperada
+        }
+
+    def __repr__(self):
+        return f"<Descriptor materia={self.materia_id} cohorte={self.cohorte_id}>"
+
+
+# ---------------------------------------------------------------------------
+# Nota Prevista
+# Solo para materias normales. La da el profesor UNA vez, al cierre de
+# décimo / inicio de once. Es la nota más importante para la selección de
+# matriculados: ignora las calificaciones periódicas anteriores.
+# ---------------------------------------------------------------------------
+class NotaPrevista:
+    """Modelo de Nota Prevista - Representa la tabla 'nota_prevista'."""
+
+    def __init__(self, id=None, usuario_id=None, materia_id=None, profesor_id=None,
+                 valor=None, fecha_registro=None):
+        self.id = id
+        self.usuario_id = usuario_id
+        self.materia_id = materia_id
+        self.profesor_id = profesor_id
+        self.valor = valor  # escala 1.0 a 7.0
+        self.fecha_registro = fecha_registro
+
+    def guardar_o_actualizar(self) -> int:
+        """Registra la nota prevista de un estudiante en una materia normal;
+        si ya existía, la reemplaza (solo debe haber una por estudiante+materia)."""
+        consulta = """
+            INSERT INTO nota_prevista (usuario_id, materia_id, profesor_id, valor)
+            VALUES (%s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE valor = VALUES(valor), profesor_id = VALUES(profesor_id),
+                                     fecha_registro = CURRENT_TIMESTAMP
+        """
+        self.id = db.ejecutar_insercion(consulta, (self.usuario_id, self.materia_id,
+                                                     self.profesor_id, self.valor))
+        return self.id
+
+    @classmethod
+    def obtener_por_estudiante(cls, usuario_id: int) -> List[Dict[str, Any]]:
+        """Notas previstas de un estudiante en todas sus materias normales."""
+        consulta = """
+            SELECT np.*, m.nombre as materia_nombre
+            FROM nota_prevista np
+            JOIN materia m ON np.materia_id = m.id
+            WHERE np.usuario_id = %s
+            ORDER BY m.nombre
+        """
+        return db.ejecutar_consulta(consulta, (usuario_id,))
+
+    @classmethod
+    def promedio_por_estudiante(cls, usuario_id: int) -> Optional[float]:
+        """Promedio de las notas previstas del estudiante (1-7); None si
+        todavía no tiene ninguna registrada."""
+        consulta = "SELECT AVG(valor) as promedio FROM nota_prevista WHERE usuario_id=%s"
+        resultados = db.ejecutar_consulta(consulta, (usuario_id,))
+        if resultados and resultados[0]['promedio'] is not None:
+            return round(float(resultados[0]['promedio']), 1)
+        return None
+
+    @classmethod
+    def _desde_diccionario(cls, datos: Dict[str, Any]) -> 'NotaPrevista':
+        return cls(
+            id=datos.get('id'),
+            usuario_id=datos.get('usuario_id'),
+            materia_id=datos.get('materia_id'),
+            profesor_id=datos.get('profesor_id'),
+            valor=datos.get('valor'),
+            fecha_registro=datos.get('fecha_registro')
+        )
+
+    def __repr__(self):
+        return f"<NotaPrevista estudiante={self.usuario_id} materia={self.materia_id} valor={self.valor}>"
+
+
+# ---------------------------------------------------------------------------
+# Informe Final
+# Réplica digital del informe que hoy diligencian los profesores a mano al
+# cierre de año 1 (décimo): una fila por materia troncal/componente troncal,
+# con Descriptor, Alcanzó y Recomendación. "Alcanzó" se prellena comparando
+# la evidencia subida por el estudiante contra el descriptor; el profesor
+# ajusta y siempre escribe la Recomendación a mano.
+# ---------------------------------------------------------------------------
+class InformeFinal:
+    """Modelo de Informe Final - Representa la tabla 'informe_final'."""
+
+    def __init__(self, id=None, usuario_id=None, cohorte_id=None,
+                 generado_en=None, generado_por=None):
+        self.id = id
+        self.usuario_id = usuario_id
+        self.cohorte_id = cohorte_id
+        self.generado_en = generado_en
+        self.generado_por = generado_por
+
+    @classmethod
+    def generar_para_estudiante(cls, usuario_id: int, cohorte_id: int,
+                                 generado_por: Optional[int] = None) -> int:
+        """Genera (o regenera) el informe final de un estudiante: una fila
+        de detalle por cada descriptor vigente de la cohorte, con 'Alcanzó'
+        prellenado según la evidencia que el estudiante ya subió."""
+        consulta_existente = "SELECT id FROM informe_final WHERE usuario_id=%s AND cohorte_id=%s"
+        existente = db.ejecutar_consulta(consulta_existente, (usuario_id, cohorte_id))
+        if existente:
+            informe_id = existente[0]['id']
+        else:
+            consulta = """
+                INSERT INTO informe_final (usuario_id, cohorte_id, generado_por)
+                VALUES (%s, %s, %s)
+            """
+            informe_id = db.ejecutar_insercion(consulta, (usuario_id, cohorte_id, generado_por))
+
+        descriptores = Descriptor.obtener_por_cohorte(cohorte_id)
+        for descriptor in descriptores:
+            alcanzo_prellenado = InformeFinal._evidencia_satisface_descriptor(
+                usuario_id, descriptor['materia_id']
+            )
+            consulta_detalle = """
+                INSERT INTO informe_final_detalle
+                    (informe_final_id, descriptor_id, alcanzo_prellenado, alcanzo)
+                VALUES (%s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                    alcanzo_prellenado = VALUES(alcanzo_prellenado)
+            """
+            db.ejecutar_insercion(consulta_detalle,
+                                   (informe_id, descriptor['id'], alcanzo_prellenado, alcanzo_prellenado))
+        return informe_id
+
+    @staticmethod
+    def _evidencia_satisface_descriptor(usuario_id: int, materia_id: int) -> bool:
+        """Heurística de prellenado: el estudiante 'Alcanzó' si tiene al
+        menos una entrega (portafolio/simulacro/prueba) marcada como
+        entregada o calificada en una tarea de esa materia, en su propio
+        curso (nunca de otro curso, vía curso_materia_id)."""
+        consulta = """
+            SELECT COUNT(*) as total
+            FROM entrega e
+            JOIN tarea t ON e.tarea_id = t.id
+            JOIN curso_materia cm ON t.curso_materia_id = cm.id
+            JOIN usuario u ON u.id = e.estudiante_id AND u.curso_id = cm.curso_id
+            WHERE e.estudiante_id = %s AND cm.materia_id = %s
+              AND e.estado IN ('entregada', 'calificada')
+        """
+        resultados = db.ejecutar_consulta(consulta, (usuario_id, materia_id))
+        return bool(resultados and resultados[0]['total'] > 0)
+
+    @classmethod
+    def obtener_por_estudiante_cohorte(cls, usuario_id: int, cohorte_id: int) -> Optional[Dict[str, Any]]:
+        """El informe de un estudiante para una cohorte, con todas sus filas
+        de detalle (descriptor + materia + alcanzó + recomendación)."""
+        consulta_cabecera = "SELECT * FROM informe_final WHERE usuario_id=%s AND cohorte_id=%s"
+        cabecera = db.ejecutar_consulta(consulta_cabecera, (usuario_id, cohorte_id))
+        if not cabecera:
+            return None
+        informe = cabecera[0]
+
+        consulta_detalle = """
+            SELECT ifd.*, d.texto as descriptor_texto, d.requisitos,
+                   m.id as materia_id, m.nombre as materia_nombre, m.tipo as materia_tipo
+            FROM informe_final_detalle ifd
+            JOIN descriptor d ON ifd.descriptor_id = d.id
+            JOIN materia m ON d.materia_id = m.id
+            WHERE ifd.informe_final_id = %s
+            ORDER BY m.tipo, m.nombre
+        """
+        informe['detalle'] = db.ejecutar_consulta(consulta_detalle, (informe['id'],))
+        return informe
+
+    @classmethod
+    def actualizar_detalle(cls, detalle_id: int, alcanzo: Optional[bool],
+                            recomendacion: Optional[str], actualizado_por: int) -> bool:
+        """El profesor ajusta 'Alcanzó' (prellenado por el sistema) y
+        siempre escribe la Recomendación a mano."""
+        consulta = """
+            UPDATE informe_final_detalle
+            SET alcanzo=%s, recomendacion=%s, actualizado_por=%s, actualizado_en=CURRENT_TIMESTAMP
+            WHERE id=%s
+        """
+        filas_afectadas = db.ejecutar_actualizacion(
+            consulta, (alcanzo, recomendacion, actualizado_por, detalle_id)
+        )
+        return filas_afectadas > 0
+
+    def __repr__(self):
+        return f"<InformeFinal estudiante={self.usuario_id} cohorte={self.cohorte_id}>"
+
+
+# ---------------------------------------------------------------------------
+# Selección de matriculados
+# Deja registro de por qué un estudiante entró (o no) al POP: informe final +
+# nota prevista + una métrica futura (placeholder hasta que se defina).
+# ---------------------------------------------------------------------------
+class SeleccionMatriculado:
+    """Modelo de Selección de Matriculados - Representa 'seleccion_matriculado'."""
+
+    def __init__(self, id=None, usuario_id=None, cohorte_id=None, informe_final_id=None,
+                 metrica_valor=None, seleccionado=False, fecha_decision=None):
+        self.id = id
+        self.usuario_id = usuario_id
+        self.cohorte_id = cohorte_id
+        self.informe_final_id = informe_final_id
+        self.metrica_valor = metrica_valor
+        self.seleccionado = seleccionado
+        self.fecha_decision = fecha_decision
+
+    def guardar_o_actualizar(self) -> int:
+        consulta = """
+            INSERT INTO seleccion_matriculado
+                (usuario_id, cohorte_id, informe_final_id, metrica_valor, seleccionado)
+            VALUES (%s, %s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE
+                informe_final_id = VALUES(informe_final_id),
+                metrica_valor = VALUES(metrica_valor),
+                seleccionado = VALUES(seleccionado),
+                fecha_decision = CURRENT_TIMESTAMP
+        """
+        self.id = db.ejecutar_insercion(consulta, (
+            self.usuario_id, self.cohorte_id, self.informe_final_id,
+            self.metrica_valor, self.seleccionado
+        ))
+        return self.id
+
+    @classmethod
+    def obtener_por_cohorte(cls, cohorte_id: int) -> List[Dict[str, Any]]:
+        """Estado de selección de todos los estudiantes de una cohorte, con
+        su nota prevista promedio para dar contexto en la pantalla de decisión."""
+        consulta = """
+            SELECT sm.*, u.nombre as estudiante_nombre
+            FROM seleccion_matriculado sm
+            JOIN usuario u ON sm.usuario_id = u.id
+            WHERE sm.cohorte_id = %s
+            ORDER BY u.nombre
+        """
+        filas = db.ejecutar_consulta(consulta, (cohorte_id,))
+        for fila in filas:
+            fila['nota_prevista_promedio'] = NotaPrevista.promedio_por_estudiante(fila['usuario_id'])
+        return filas
+
+    def __repr__(self):
+        return f"<SeleccionMatriculado estudiante={self.usuario_id} seleccionado={self.seleccionado}>"
 
 
 class Tarea:
@@ -1175,6 +1561,27 @@ class Curso:
         consulta = "UPDATE usuario SET curso_id=NULL WHERE id=%s"
         db.ejecutar_actualizacion(consulta, (estudiante_id,))
         return True
+
+    @classmethod
+    def promover_estudiantes_cohorte(cls, cohorte_id: int) -> int:
+        """Promueve a los estudiantes de una cohorte de décimo (grado=10) a
+        once (grado=11), conservando la sección (1001->1101, 1002->1102...).
+
+        Como 'curso' es un catálogo global (no pertenece a la cohorte, ver
+        docstring de la clase), NO se crea ni se renombra ningún curso: solo
+        se actualiza usuario.curso_id de los estudiantes de esa cohorte que
+        están en un curso de grado 10. Esto reemplaza la idea anterior de
+        "crear un curso 1101 nuevo cada cohorte", que generaba duplicidad.
+        Devuelve el número de estudiantes promovidos.
+        """
+        consulta = """
+            UPDATE usuario u
+            JOIN curso c_actual ON u.curso_id = c_actual.id AND c_actual.grado = 10
+            JOIN curso c_destino ON c_destino.grado = 11 AND c_destino.seccion = c_actual.seccion
+            SET u.curso_id = c_destino.id
+            WHERE u.cohorte_id = %s AND u.rol = 'estudiante'
+        """
+        return db.ejecutar_actualizacion(consulta, (cohorte_id,))
 
     @classmethod
     def obtener_estudiantes(cls, curso_id: int, cohorte_id: Optional[int] = None) -> List[Dict[str, Any]]:

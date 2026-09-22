@@ -4,6 +4,15 @@
 {% endblock %}
 
 {% block content %}
+{% from 'aplicacion/macros/subtabs.html' import subtabs %}
+{% if rol in ('profesor', 'coordinador') %}
+{{ subtabs([
+  {'label': 'Cursos', 'url': url_for('cursos.listar_cursos'), 'active': active_page == 'cursos'},
+  {'label': 'Especialidades', 'url': url_for('especialidades.listar_especialidades'), 'active': active_page == 'especialidades'},
+  {'label': 'Grupos de trabajo', 'url': url_for('grupos.listar_grupos'), 'active': active_page == 'grupos'},
+  {'label': 'Archivo de Cohortes', 'url': url_for('archivo.listar_archivo'), 'active': active_page == 'archivo'},
+]) }}
+{% endif %}
 <header class="page-header">
   <div>
     <h1 class="page-title">Especialidades</h1>

@@ -3,6 +3,16 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/valoraciones.css') }}">
 {% endblock %}
 {% block content %}
+{% from 'aplicacion/macros/subtabs.html' import subtabs %}
+{% if rol == 'estudiante' %}
+{{ subtabs([
+  {'label': 'Materias', 'url': url_for('materias.listar_materias'), 'active': active_page == 'materias'},
+  {'label': 'Recursos', 'url': url_for('recursos.listar_recursos'), 'active': active_page == 'recursos'},
+  {'label': 'Mis Valoraciones', 'url': url_for('valoraciones.mis_notas'), 'active': active_page == 'valoraciones'},
+  {'label': 'Mi Progreso', 'url': url_for('reportes.reportes'), 'active': active_page == 'reportes'},
+  {'label': 'Grupos', 'url': url_for('grupos.listar_grupos'), 'active': active_page == 'grupos'},
+]) }}
+{% endif %}
 <header class="page-header">
   <div>
     <h1 class="page-title">Mis Valoraciones</h1>

@@ -1,0 +1,118 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/matricula.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('matricula.inicio') }}">Matrícula BI</a>
+  <span class="sep">/</span>
+  <span>Informe final — {{ estudiante.nombre }}</span>
+</div>
+
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Informe final — {{ estudiante.nombre }}</h1>
+    <p class="page-subtitle">
+      Nota prevista promedio (materias normales):
+      <strong>{{ nota_prevista_promedio if nota_prevista_promedio is not none else 'Sin registrar' }}</strong>
+    </p>
+  </div>
+  {% if rol in ('coordinador', 'profesor') %}
+  <form method="POST" action="{{ url_for('matricula.generar_informe_final', usuario_id=estudiante.id, cohorte_id=cohorte_id) }}">
+    <button type="submit" class="btn btn-primary">{{ 'Regenerar informe' if informe else 'Generar informe' }}</button>
+  </form>
+  {% endif %}
+</header>
+
+<div class="card">
+  <div class="card-body">
+    <h2 class="curso-panel-title">Nota prevista (materias normales)</h2>
+    <p class="text-sm text-muted mb-3">
+      La da el profesor una sola vez, al cierre de décimo / inicio de once. Es la nota
+      decisiva para la selección de matriculados — no se toman en cuenta las notas periódicas.
+    </p>
+    <div class="table-wrapper">
+      <table class="table">
+        <thead><tr><th>Materia</th><th>Nota prevista (1-7)</th>{% if rol in ('coordinador', 'profesor') %}<th style="width:1%;"></th>{% endif %}</tr></thead>
+        <tbody>
+          {% for m in materias_normales %}
+          <tr>
+            <td class="font-semibold">{{ m.nombre }}</td>
+            {% set nota = notas_previstas.get(m.id) %}
+            {% if rol in ('coordinador', 'profesor') %}
+            <td colspan="2">
+              <form method="POST" action="{{ url_for('matricula.guardar_nota_prevista', usuario_id=estudiante.id) }}" class="curso-inline-form">
+                <input type="hidden" name="materia_id" value="{{ m.id }}">
+                <input type="number" name="valor" class="form-control" min="1" max="7" step="0.1"
+                       style="max-width:100px;" value="{{ nota.valor if nota else '' }}" required>
+                <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
+              </form>
+            </td>
+            {% else %}
+            <td>{{ nota.valor if nota else 'Sin registrar' }}</td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% if informe %}
+<div class="card">
+  <div class="table-wrapper">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Componente</th>
+          <th>Descriptor</th>
+          <th>Alcanzó</th>
+          <th>Recomendación</th>
+          {% if rol in ('coordinador', 'profesor') %}<th style="width:1%;"></th>{% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in informe.detalle %}
+        <tr>
+          <td class="font-semibold">{{ fila.materia_nombre }}
+            <div class="text-xs text-muted">{{ 'Troncal' if fila.materia_tipo == 'troncal' else 'Normal' }}</div>
+          </td>
+          <td class="text-sm">{{ fila.descriptor_texto }}
+            {% if fila.requisitos %}<div class="text-xs text-muted">{{ fila.requisitos }}</div>{% endif %}
+          </td>
+          {% if rol in ('coordinador', 'profesor') %}
+          <td colspan="2">
+            <form method="POST" action="{{ url_for('matricula.guardar_detalle_informe', detalle_id=fila.id) }}" class="curso-inline-form">
+              <label class="d-flex gap-2" style="align-items:center;">
+                <input type="checkbox" name="alcanzo" {{ 'checked' if fila.alcanzo }}>
+                <span class="text-xs text-muted">
+                  Prellenado del sistema: {{ 'Alcanzó' if fila.alcanzo_prellenado else 'No alcanzó' }}
+                </span>
+              </label>
+              <input type="text" name="recomendacion" class="form-control" placeholder="Recomendación"
+                     value="{{ fila.recomendacion or '' }}">
+              <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
+            </form>
+          </td>
+          {% else %}
+          <td>
+            <span class="badge {{ 'badge-success' if fila.alcanzo else 'badge-warning' }}">
+              {{ 'Alcanzó' if fila.alcanzo else 'No alcanzó' }}
+            </span>
+          </td>
+          <td class="text-sm">{{ fila.recomendacion or '—' }}</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="empty-state">
+  <p>Este estudiante todavía no tiene un informe final generado para esta cohorte.</p>
+</div>
+{% endif %}
+{% endblock %}

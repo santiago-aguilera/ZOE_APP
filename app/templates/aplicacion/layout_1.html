@@ -42,14 +42,13 @@
             </div>
 
             <nav class="sidebar-nav" aria-label="Secciones">
-                {# ===== Todos los roles ===== #}
+                {# ===== Principal: todos los roles ===== #}
                 <div class="nav-section">
                     <div class="nav-section-title">Principal</div>
                     <a href="{{ url_for('dashboard.dashboard') }}"
                         class="nav-item {% if active_page == 'dashboard' %}is-active{% endif %}">
                         <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M3 12 12 3l9 9" />
                                 <path d="M5 10v10h14V10" />
                             </svg>
@@ -60,8 +59,7 @@
                     <a href="{{ url_for('cronograma.listar_cronograma') }}"
                         class="nav-item {% if active_page == 'cronograma' %}is-active{% endif %}">
                         <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="4" width="18" height="18" rx="2" />
                                 <line x1="16" y1="2" x2="16" y2="6" />
                                 <line x1="8" y1="2" x2="8" y2="6" />
@@ -75,27 +73,29 @@
                     <a href="{{ url_for('tareas.listar_tareas') }}"
                         class="nav-item {% if active_page == 'tareas' %}is-active{% endif %}">
                         <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="4" y="4" width="16" height="16" rx="2" />
                                 <path d="m9 12 2 2 4-4" />
                             </svg>
                         </span>
-                        <span class="nav-label">Entregas</span>{% if tareas_badge and tareas_badge > 0 %}<span
-                            class="nav-badge">{{ tareas_badge }}</span>{% endif %}
+                        <span class="nav-label">Entregas</span>{% if tareas_badge and tareas_badge > 0 %}<span class="nav-badge">{{ tareas_badge }}</span>{% endif %}
                     </a>
                     {% endif %}
                 </div>
 
-                {# ===== Académico: todos los roles ===== #}
+                {# ===== Académico =====
+                     Asignaturas: para estudiante es un HUB con pestañas internas
+                     (Materias | Recursos | Mis Valoraciones | Mi Progreso | Grupos).
+                     Para profesor/coordinador es directo a Materias; Recursos,
+                     Seguimiento y Organización quedan como ítems propios porque
+                     se usan/gestionan a diario, distinto al estudiante. #}
                 <div class="nav-section">
                     <div class="nav-section-title">Académico</div>
                     {% if modulo_visible('materias') %}
                     <a href="{{ url_for('materias.listar_materias') }}"
-                        class="nav-item {% if active_page == 'materias' %}is-active{% endif %}">
+                        class="nav-item {% if active_page in ('materias', 'recursos', 'valoraciones', 'reportes', 'grupos') and rol == 'estudiante' %}is-active{% elif active_page == 'materias' %}is-active{% endif %}">
                         <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                                 <path d="M14 2v6h6" />
                                 <path d="M16 13H8" />
@@ -106,199 +106,100 @@
                         <span class="nav-label">Asignaturas</span>
                     </a>
                     {% endif %}
+
+                    {% if rol in ('profesor', 'coordinador') %}
                     {% if modulo_visible('recursos') %}
                     <a href="{{ url_for('recursos.listar_recursos') }}"
                         class="nav-item {% if active_page == 'recursos' %}is-active{% endif %}">
                         <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                             </svg>
                         </span>
                         <span class="nav-label">Recursos de Aprendizaje</span>
                     </a>
                     {% endif %}
-                    {% if modulo_visible('comunicados') %}
-                    <a href="{{ url_for('comunicados.listar_comunicados') }}"
-                        class="nav-item {% if active_page == 'informacion' %}is-active{% endif %}">
+
+                    {% if modulo_visible('valoraciones') or modulo_visible('reportes') %}
+                    <a href="{{ url_for('valoraciones.listar_materias') if modulo_visible('valoraciones') else url_for('reportes.reportes') }}"
+                        class="nav-item {% if active_page in ('valoraciones', 'reportes') %}is-active{% endif %}">
                         <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="9" />
-                                <line x1="12" y1="16" x2="12" y2="12" />
-                                <line x1="12" y1="8" x2="12" y2="8.01" />
-                            </svg>
-                        </span>
-                        <span class="nav-label">Tablón de Anuncios</span>
-                    </a>
-                    {% endif %}
-                    {% if modulo_visible('reportes') %}
-                    <a href="{{ url_for('reportes.reportes') }}"
-                        class="nav-item {% if active_page == 'reportes' %}is-active{% endif %}">
-                        <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="4" y1="20" x2="4" y2="10" />
-                                <line x1="10" y1="20" x2="10" y2="4" />
-                                <line x1="16" y1="20" x2="16" y2="14" />
-                                <line x1="22" y1="20" x2="2" y2="20" />
-                            </svg>
-                        </span>
-                        <span class="nav-label">Análisis de Progreso</span>
-                    </a>
-                    {% endif %}
-                    {% if modulo_visible('valoraciones') %}
-                    {% if rol == 'estudiante' %}
-                    <a href="{{ url_for('valoraciones.mis_notas') }}"
-                        class="nav-item {% if active_page == 'valoraciones' %}is-active{% endif %}">
-                        <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M9 11l3 3L22 4" />
                                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
                             </svg>
                         </span>
-                        <span class="nav-label">Mis Valoraciones</span>
-                    </a>
-                    {% elif rol in ['profesor', 'coordinador'] %}
-                    <a href="{{ url_for('valoraciones.listar_materias') }}"
-                        class="nav-item {% if active_page == 'valoraciones' %}is-active{% endif %}">
-                        <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 11l3 3L22 4" />
-                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-                            </svg>
-                        </span>
-                        <span class="nav-label">Valoraciones</span>
+                        <span class="nav-label">Seguimiento</span>
                     </a>
                     {% endif %}
-                    {% endif %}
-                    {% if modulo_visible('archivo') %}
-                    <a href="{{ url_for('archivo.listar_archivo') }}"
-                        class="nav-item {% if active_page == 'archivo' %}is-active{% endif %}">
+
+                    {% if modulo_visible('cursos') or modulo_visible('especialidades') or modulo_visible('grupos') or modulo_visible('archivo') %}
+                    <a href="{{ url_for('cursos.listar_cursos') if modulo_visible('cursos') else url_for('especialidades.listar_especialidades') }}"
+                        class="nav-item {% if active_page in ('cursos', 'especialidades', 'grupos', 'archivo') %}is-active{% endif %}">
                         <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                            </svg>
-                        </span>
-                        <span class="nav-label">Archivo de Cohortes</span>
-                    </a>
-                    {% endif %}
-                    {# ===== Solo profesor y coordinador ===== #}
-                    {% if rol in ['profesor', 'coordinador'] %}
-                    {% if modulo_visible('cursos') %}
-                    <a href="{{ url_for('cursos.listar_cursos') }}"
-                        class="nav-item {% if active_page == 'cursos' %}is-active{% endif %}">
-                        <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M22 10 12 5 2 10l10 5 10-5Z" />
                                 <path d="M6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5" />
                             </svg>
                         </span>
-                        <span class="nav-label">Cursos</span>
-                    </a>
-                    {% endif %}
-                    {% if modulo_visible('especialidades') %}
-                    <a href="{{ url_for('especialidades.listar_especialidades') }}"
-                        class="nav-item {% if active_page == 'especialidades' %}is-active{% endif %}">
-                        <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
-                            </svg>
-                        </span>
-                        <span class="nav-label">Especialidades</span>
-                    </a>
-                    {% endif %}
-                    {% if modulo_visible('grupos') %}
-                    <a href="{{ url_for('grupos.listar_grupos') }}"
-                        class="nav-item {% if active_page == 'grupos' %}is-active{% endif %}">
-                        <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="9" cy="8" r="3" />
-                                <path d="M3 20a6 6 0 0 1 12 0" />
-                                <circle cx="17" cy="9" r="2.5" />
-                                <path d="M15 20a4 4 0 0 1 6.5-3" />
-                            </svg>
-                        </span>
-                        <span class="nav-label">Grupos de trabajo</span>
+                        <span class="nav-label">Organización</span>
                     </a>
                     {% endif %}
                     {% endif %}
                 </div>
 
-                {# ===== Comunicación: todos los roles ===== #}
-                {% if modulo_visible('mensajeria') %}
+                {# ===== Comunicación: Anuncios + Mensajería fusionados en un solo ítem ===== #}
+                {% if modulo_visible('comunicados') or modulo_visible('mensajeria') %}
                 <div class="nav-section">
                     <div class="nav-section-title">Comunicación</div>
-                    <a href="{{ url_for('mensajeria.listar_mensajes') }}"
-                        class="nav-item {% if active_page == 'mensajeria' %}is-active{% endif %}">
+                    <a href="{{ url_for('comunicados.listar_comunicados') if modulo_visible('comunicados') else url_for('mensajeria.listar_mensajes') }}"
+                        class="nav-item {% if active_page in ('informacion', 'mensajeria') %}is-active{% endif %}">
                         <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                             </svg>
                         </span>
-                        <span class="nav-label">Mensajería</span>
+                        <span class="nav-label">Comunicación</span>{% if mensajes_badge and mensajes_badge > 0 %}<span class="nav-badge">{{ mensajes_badge }}</span>{% endif %}
                     </a>
                 </div>
                 {% endif %}
 
-                {# ===== Solo coordinador ===== #}
+                {# ===== Administración: solo coordinador, colapsada por defecto ===== #}
                 {% if rol == 'coordinador' %}
                 <div class="nav-section">
-                    <div class="nav-section-title">Administración</div>
-                    <a href="{{ url_for('usuarios.listar_usuarios') }}"
-                        class="nav-item {% if active_page == 'usuarios' %}is-active{% endif %}">
-                        <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="8" r="4" />
-                                <path d="M4 21a8 8 0 0 1 16 0" />
-                            </svg>
-                        </span>
-                        <span class="nav-label">Usuarios</span>
-                    </a>
-                    <a href="{{ url_for('matricula.inicio') }}"
-                        class="nav-item {% if active_page == 'matricula' %}is-active{% endif %}">
-                        <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 11l3 3L22 4" />
-                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-                            </svg>
-                        </span>
-                        <span class="nav-label">Matrícula BI</span>
-                    </a>
-                    <a href="{{ url_for('configuracion.configuracion') }}"
-                        class="nav-item {% if active_page == 'configuracion' %}is-active{% endif %}">
-                        <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="3" />
-                                <path
-                                    d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1A2 2 0 1 1 4.4 17l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1A2 2 0 1 1 7 4.4l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1A2 2 0 1 1 19.6 7l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />
-                            </svg>
-                        </span>
-                        <span class="nav-label">Configuración</span>
-                    </a>
-                    <a href="{{ url_for('parametrizacion.inicio') }}"
-                        class="nav-item {% if active_page == 'parametrizacion' %}is-active{% endif %}">
-                        <span class="nav-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="3" width="7" height="7" rx="1" />
-                                <rect x="14" y="3" width="7" height="7" rx="1" />
-                                <rect x="3" y="14" width="7" height="7" rx="1" />
-                                <rect x="14" y="14" width="7" height="7" rx="1" />
-                            </svg>
-                        </span>
-                        <span class="nav-label">Parametrización</span>
-                    </a>
+                    <details class="nav-collapsible" {% if active_page in ('usuarios', 'matricula', 'configuracion', 'parametrizacion') %}open{% endif %}>
+                        <summary class="nav-section-title nav-section-title--toggle">Administración</summary>
+                        <a href="{{ url_for('usuarios.listar_usuarios') }}"
+                            class="nav-item {% if active_page == 'usuarios' %}is-active{% endif %}">
+                            <span class="nav-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="8" r="4" />
+                                    <path d="M4 21a8 8 0 0 1 16 0" />
+                                </svg>
+                            </span>
+                            <span class="nav-label">Usuarios</span>
+                        </a>
+                        <a href="{{ url_for('matricula.inicio') }}"
+                            class="nav-item {% if active_page == 'matricula' %}is-active{% endif %}">
+                            <span class="nav-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 11l3 3L22 4" />
+                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                                </svg>
+                            </span>
+                            <span class="nav-label">Matrícula BI</span>
+                        </a>
+                        <a href="{{ url_for('configuracion.configuracion') }}"
+                            class="nav-item {% if active_page in ('configuracion', 'parametrizacion') %}is-active{% endif %}">
+                            <span class="nav-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3" />
+                                    <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1A2 2 0 1 1 4.4 17l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1A2 2 0 1 1 7 4.4l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1A2 2 0 1 1 19.6 7l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />
+                                </svg>
+                            </span>
+                            <span class="nav-label">Configuración</span>
+                        </a>
+                    </details>
                 </div>
                 {% endif %}
             </nav>

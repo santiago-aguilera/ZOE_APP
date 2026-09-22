@@ -7,7 +7,7 @@ La Matrícula BI tiene su propio módulo dedicado (ver blueprint 'matricula').
 from flask import render_template, request, redirect, url_for, flash
 
 from app.blueprints import configuracion_bp
-from app.models import Usuario, Materia, Grupo, Cohorte
+from app.models import Usuario, Materia, Grupo, Cohorte, Curso
 from app.decorators import roles_permitidos, accion_requerida
 
 
@@ -101,6 +101,23 @@ def eliminar_cohorte(cohorte_id):
     cohorte.eliminar()
     flash('Cohorte eliminada.', 'success')
     return redirect(url_for('configuracion.configuracion') + '#cohortes' )
+
+
+@configuracion_bp.route('/cohortes/<int:cohorte_id>/promover', methods=['POST'])
+@roles_permitidos('coordinador')
+def promover_cohorte(cohorte_id):
+    """Al cierre de año 1: pasa a los estudiantes de esta cohorte del curso
+    de décimo al de once correspondiente (misma sección). No crea ni
+    renombra cursos -- 'curso' es un catálogo global reutilizado por todas
+    las cohortes (ver Curso.promover_estudiantes_cohorte)."""
+    cohorte = Cohorte.obtener_por_id(cohorte_id)
+    if not cohorte:
+        flash('Cohorte no encontrada.', 'error')
+        return redirect(url_for('configuracion.configuracion') + '#cohortes')
+
+    promovidos = Curso.promover_estudiantes_cohorte(cohorte_id)
+    flash(f'{promovidos} estudiantes de "{cohorte.nombre}" fueron promovidos de décimo a once.', 'success')
+    return redirect(url_for('configuracion.configuracion') + '#cohortes')
 
 
 # ---------------------------------------------------------------

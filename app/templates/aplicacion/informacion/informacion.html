@@ -4,6 +4,11 @@
 {% endblock %}
 
 {% block content %}
+{% from 'aplicacion/macros/subtabs.html' import subtabs %}
+{{ subtabs([
+  {'label': 'Anuncios', 'url': url_for('comunicados.listar_comunicados'), 'active': active_page == 'informacion'},
+  {'label': 'Mensajes', 'url': url_for('mensajeria.listar_mensajes'), 'active': active_page == 'mensajeria'},
+]) }}
 <div class="informacion-container">
   <div class="d-flex items-center justify-between mb-4">
     <div>

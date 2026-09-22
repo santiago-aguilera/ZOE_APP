@@ -4,6 +4,11 @@
 {% endblock %}
 
 {% block content %}
+{% from 'aplicacion/macros/subtabs.html' import subtabs %}
+{{ subtabs([
+  {'label': 'Administracion', 'url': url_for('configuracion.configuracion'), 'active': active_page == 'configuracion'},
+  {'label': 'Parametrizacion', 'url': url_for('parametrizacion.inicio'), 'active': active_page == 'parametrizacion'},
+]) }}
 <header class="page-header">
   <div>
     <h1 class="page-title">Parametrización</h1>

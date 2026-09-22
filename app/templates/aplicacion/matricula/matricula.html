@@ -64,6 +64,9 @@
     <input type="hidden" name="curso_id" value="{{ filtro_curso or '' }}">
     <input type="hidden" name="q" value="{{ filtro_texto }}">
   </form>
+  {% if rol == 'coordinador' and filtro_cohorte %}
+  <a href="{{ url_for('matricula.ver_seleccion', cohorte_id=filtro_cohorte) }}" class="btn">Selección de matriculados</a>
+  {% endif %}
 </div>
 
 {% if estudiantes %}
@@ -94,6 +97,9 @@
             <div class="d-flex gap-2">
               {% if rol == 'coordinador' %}
               <button type="button" class="btn btn-sm btn-primary" onclick="document.getElementById('modal-{{ e.id }}').classList.add('is-open')">Cambiar estado</button>
+              {% endif %}
+              {% if e.cohorte_obj %}
+              <a href="{{ url_for('matricula.ver_informe_final', usuario_id=e.id, cohorte_id=e.cohorte_obj.id) }}" class="btn btn-sm">Informe final</a>
               {% endif %}
             </div>
           </td>

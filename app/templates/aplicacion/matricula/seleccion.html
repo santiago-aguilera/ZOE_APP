@@ -1,0 +1,67 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/matricula.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('matricula.inicio') }}">Matrícula BI</a>
+  <span class="sep">/</span>
+  <span>Selección de matriculados</span>
+</div>
+
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Selección de matriculados</h1>
+    <p class="page-subtitle">
+      Insumos: informe final generado por materia, nota prevista de las materias normales
+      y (a futuro) una métrica adicional. La decisión final la toma el coordinador.
+    </p>
+  </div>
+</header>
+
+<div class="card">
+  <div class="table-wrapper">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Estudiante</th>
+          <th>Nota prevista promedio</th>
+          <th>Informe final</th>
+          <th>¿Seleccionado?</th>
+          <th style="width:1%;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% set decisiones = seleccion|selectattr('usuario_id')|list %}
+        {% set decididos = seleccion|map(attribute='usuario_id')|list %}
+        {% for e in estudiantes %}
+        {% set decision = seleccion|selectattr('usuario_id', 'equalto', e.id)|first %}
+        <tr>
+          <td class="font-semibold">{{ e.nombre }}</td>
+          <td>{{ decision.nota_prevista_promedio if decision and decision.nota_prevista_promedio is not none else 'Sin registrar' }}</td>
+          <td>
+            <a href="{{ url_for('matricula.ver_informe_final', usuario_id=e.id, cohorte_id=cohorte_id) }}" class="btn btn-sm">Ver informe</a>
+          </td>
+          <td>
+            <span class="badge {{ 'badge-success' if decision and decision.seleccionado else 'badge-warning' }}">
+              {{ 'Sí' if decision and decision.seleccionado else 'No' }}
+            </span>
+          </td>
+          <td>
+            <form method="POST" action="{{ url_for('matricula.decidir_seleccion', cohorte_id=cohorte_id) }}" class="curso-inline-form">
+              <input type="hidden" name="usuario_id" value="{{ e.id }}">
+              <label class="d-flex gap-2" style="align-items:center;">
+                <input type="checkbox" name="seleccionado" {{ 'checked' if decision and decision.seleccionado }}>
+                Seleccionar
+              </label>
+              <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

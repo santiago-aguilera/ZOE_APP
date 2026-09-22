@@ -26,6 +26,14 @@
             <label class="form-label">Descripción</label>
             <textarea name="descripcion" class="form-control" rows="3" placeholder="Descripción breve de la materia...">{{ materia.descripcion if materia else '' }}</textarea>
           </div>
+          <div class="form-group">
+            <label class="form-label">Tipo <span class="required">*</span></label>
+            <select name="tipo" class="form-control" required>
+              <option value="normal" {{ 'selected' if (materia and materia.tipo == 'normal') or not materia }}>Normal (Matemáticas, Inglés, Lengua y Literatura — todos, sin profundización)</option>
+              <option value="troncal" {{ 'selected' if materia and materia.tipo == 'troncal' }}>Troncal (Aprendizaje y Servicio, Desarrollo de Lengua, HPP, Proyecto de Reflexión — todos, sin profundización)</option>
+              <option value="especialidad" {{ 'selected' if materia and materia.tipo == 'especialidad' }}>Especialidad (solo matriculados, parte del POP)</option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="form-card-footer">

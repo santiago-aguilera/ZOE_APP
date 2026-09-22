@@ -1,0 +1,16 @@
+{# Barra de pestañas para páginas "hub" que fusionan varias secciones
+   relacionadas bajo un solo ítem del menú lateral (ver layout_1.html).
+   Uso:
+   {% from 'aplicacion/macros/subtabs.html' import subtabs %}
+   {{ subtabs([
+        {'label': 'Cursos', 'url': url_for('cursos.listar_cursos'), 'active': active_page == 'cursos'},
+        {'label': 'Especialidades', 'url': url_for('especialidades.listar_especialidades'), 'active': active_page == 'especialidades'},
+   ]) }}
+#}
+{% macro subtabs(items) %}
+<div class="tabs subtabs-nav" role="tablist">
+  {% for item in items %}
+  <a href="{{ item.url }}" class="tab {{ 'is-active' if item.active }}" role="tab">{{ item.label }}</a>
+  {% endfor %}
+</div>
+{% endmacro %}

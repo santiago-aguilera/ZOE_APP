@@ -12,13 +12,60 @@
 
 <header class="page-header">
   <div>
-    <h1 class="page-title">{{ materia.nombre }}</h1>
+    <h1 class="page-title">{{ materia.nombre }}
+      <span class="badge">{{ {'normal': 'Normal', 'troncal': 'Troncal', 'especialidad': 'Especialidad'}.get(materia.tipo, materia.tipo) }}</span>
+    </h1>
     <p class="page-subtitle">{{ materia.descripcion or 'Sin descripción' }}</p>
   </div>
   {% if rol == 'coordinador' %}
   <a href="{{ url_for('materias.editar_materia', materia_id=materia.id) }}" class="btn">Editar</a>
   {% endif %}
 </header>
+
+{% if materia.tipo in ('normal', 'troncal') %}
+<div class="card">
+  <div class="card-body">
+    <h2 class="curso-panel-title">Descriptor</h2>
+    <p class="text-sm text-muted mb-3">
+      Cada materia normal o troncal tiene su propio descriptor por cohorte/año.
+      La evidencia que suba el estudiante se compara contra este descriptor para
+      prellenar "Alcanzó" en el Informe Final.
+    </p>
+
+    {% if cohortes %}
+    <form method="GET" action="{{ url_for('materias.ver_materia', materia_id=materia.id) }}" class="mb-3">
+      <label class="form-label">Cohorte</label>
+      <select name="cohorte_id" class="form-control" onchange="this.form.submit()" style="max-width:280px;">
+        {% for c in cohortes %}
+        <option value="{{ c.id }}" {{ 'selected' if c.id == cohorte_id }}>{{ c.nombre }}</option>
+        {% endfor %}
+      </select>
+    </form>
+    {% endif %}
+
+    {% if rol in ('coordinador', 'profesor') and cohorte_id %}
+    <form method="POST" action="{{ url_for('materias.guardar_descriptor', materia_id=materia.id) }}">
+      <input type="hidden" name="cohorte_id" value="{{ cohorte_id }}">
+      <div class="form-group">
+        <label class="form-label">Descriptor</label>
+        <textarea name="texto" class="form-control" rows="3" required placeholder="Ej: Analiza y reflexiona sobre su identidad cultural...">{{ descriptor.texto if descriptor else '' }}</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Requisitos (horas, entregables esperados)</label>
+        <textarea name="requisitos" class="form-control" rows="2">{{ descriptor.requisitos if descriptor else '' }}</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Evidencia esperada</label>
+        <input type="text" name="evidencia_esperada" class="form-control"
+               placeholder="Ej: portafolio, escrito final, simulacro"
+               value="{{ descriptor.evidencia_esperada if descriptor else '' }}">
+      </div>
+      <button type="submit" class="btn btn-primary">{{ 'Actualizar descriptor' if descriptor else 'Crear descriptor' }}</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
 
 <div class="card">
   <div class="card-body">

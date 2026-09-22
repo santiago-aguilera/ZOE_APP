@@ -531,3 +531,135 @@ INSERT INTO configuracion_sistema (clave, valor, tipo, descripcion) VALUES
 ('programa', 'Bachillerato Internacional (IB)', 'texto', 'Nombre del programa académico'),
 ('cohorte_activa_id', '1', 'numero', 'ID de la cohorte que se muestra por defecto en los filtros'),
 ('permitir_autoregistro', '0', 'booleano', 'Si los estudiantes pueden crear su propia cuenta sin invitación');
+-- =============================================================================
+-- MIGRACIÓN: Tipos de materia (troncal/normal/especialidad), Descriptores,
+-- Nota Prevista, Informe Final y Selección de matriculados.
+-- No borra nada existente. `curso` sigue siendo un catálogo global: la
+-- promoción décimo->once (ver Curso.promover_estudiantes_cohorte en
+-- models.py) solo actualiza usuario.curso_id, no crea ni renombra cursos.
+-- =============================================================================
+
+USE zoe;
+
+-- Tipificar materia: troncal | normal | especialidad
+ALTER TABLE materia
+    ADD COLUMN tipo ENUM('troncal','normal','especialidad') NOT NULL DEFAULT 'normal' AFTER nombre;
+
+-- Seed de los tipos ya conocidos sobre las materias existentes
+UPDATE materia SET tipo = 'normal' WHERE nombre IN ('Matemáticas', 'Inglés');
+UPDATE materia SET tipo = 'especialidad' WHERE nombre = 'Programacion y Diseño de Software';
+
+-- Materias que faltan en el catálogo (normales y troncales del programa)
+INSERT INTO materia (nombre, descripcion, tipo) VALUES
+('Lengua y Literatura', 'Materia normal, obligatoria para todos los estudiantes', 'normal'),
+('Aprendizaje y Servicio', 'Materia troncal, obligatoria para todos, sin profundización', 'troncal'),
+('Desarrollo de Lengua', 'Materia troncal, obligatoria para todos, sin profundización', 'troncal'),
+('Habilidades Personales y Profesionales (HPP)', 'Materia troncal, obligatoria para todos, sin profundización', 'troncal'),
+('Proyecto de Reflexión', 'Materia troncal, obligatoria para todos; parte del POP junto con la especialidad', 'troncal');
+
+-- Descriptores: uno por materia individual (troncal o normal), versionado
+-- por cohorte/año. Copiables de una cohorte a otra (Descriptor.copiar_de_cohorte), editables.
+CREATE TABLE descriptor (
+    id                      INT AUTO_INCREMENT PRIMARY KEY,
+    materia_id              INT NOT NULL,
+    cohorte_id              INT NOT NULL,
+    texto                   TEXT NOT NULL,
+    requisitos              TEXT DEFAULT NULL,
+    evidencia_esperada      VARCHAR(255) DEFAULT NULL,
+    copiado_de_descriptor_id INT DEFAULT NULL,
+    activo                  TINYINT(1) NOT NULL DEFAULT 1,
+    creado_por              INT NOT NULL,
+    creado_en               DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_descriptor_materia_cohorte (materia_id, cohorte_id),
+    KEY materia_id (materia_id),
+    KEY cohorte_id (cohorte_id),
+    FOREIGN KEY (materia_id) REFERENCES materia(id) ON DELETE CASCADE,
+    FOREIGN KEY (cohorte_id) REFERENCES cohorte(id) ON DELETE CASCADE,
+    FOREIGN KEY (copiado_de_descriptor_id) REFERENCES descriptor(id) ON DELETE SET NULL,
+    FOREIGN KEY (creado_por) REFERENCES usuario(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Nota Prevista: solo materias normales, una vez por estudiante+materia,
+-- dada por el profesor al cierre de décimo / inicio de once. Es la nota
+-- decisiva para la selección de matriculados (ignora notas periódicas).
+CREATE TABLE nota_prevista (
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id      INT NOT NULL,
+    materia_id      INT NOT NULL,
+    profesor_id     INT NOT NULL,
+    valor           DECIMAL(2,1) NOT NULL,
+    fecha_registro  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_nota_prevista_estudiante_materia (usuario_id, materia_id),
+    KEY usuario_id (usuario_id),
+    KEY materia_id (materia_id),
+    KEY profesor_id (profesor_id),
+    FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE,
+    FOREIGN KEY (materia_id) REFERENCES materia(id) ON DELETE CASCADE,
+    FOREIGN KEY (profesor_id) REFERENCES usuario(id) ON DELETE RESTRICT,
+    CONSTRAINT chk_nota_prevista_rango CHECK (valor >= 1.0 AND valor <= 7.0)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Informe Final: cabecera por estudiante + cohorte
+CREATE TABLE informe_final (
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id      INT NOT NULL,
+    cohorte_id      INT NOT NULL,
+    generado_en     DATETIME DEFAULT CURRENT_TIMESTAMP,
+    generado_por    INT DEFAULT NULL,
+    UNIQUE KEY uq_informe_estudiante_cohorte (usuario_id, cohorte_id),
+    KEY usuario_id (usuario_id),
+    KEY cohorte_id (cohorte_id),
+    FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE,
+    FOREIGN KEY (cohorte_id) REFERENCES cohorte(id) ON DELETE CASCADE,
+    FOREIGN KEY (generado_por) REFERENCES usuario(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Informe Final: detalle por materia/descriptor. "Alcanzó" se prellena
+-- comparando evidencia subida (entrega) vs. el descriptor; el profesor lo
+-- ajusta y siempre escribe la Recomendación (nunca se calcula sola).
+CREATE TABLE informe_final_detalle (
+    id                  INT AUTO_INCREMENT PRIMARY KEY,
+    informe_final_id    INT NOT NULL,
+    descriptor_id       INT NOT NULL,
+    alcanzo_prellenado  TINYINT(1) DEFAULT NULL,
+    alcanzo             TINYINT(1) DEFAULT NULL,
+    recomendacion       TEXT DEFAULT NULL,
+    actualizado_por     INT DEFAULT NULL,
+    actualizado_en      DATETIME DEFAULT NULL,
+    UNIQUE KEY uq_informe_detalle (informe_final_id, descriptor_id),
+    KEY descriptor_id (descriptor_id),
+    FOREIGN KEY (informe_final_id) REFERENCES informe_final(id) ON DELETE CASCADE,
+    FOREIGN KEY (descriptor_id) REFERENCES descriptor(id) ON DELETE CASCADE,
+    FOREIGN KEY (actualizado_por) REFERENCES usuario(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Selección de matriculados: registro de por qué un estudiante fue (o no)
+-- seleccionado hacia el POP -- informe + nota prevista + métrica futura
+-- (columna placeholder hasta que se defina).
+CREATE TABLE seleccion_matriculado (
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id      INT NOT NULL,
+    cohorte_id      INT NOT NULL,
+    informe_final_id INT DEFAULT NULL,
+    metrica_valor   DECIMAL(6,2) DEFAULT NULL,
+    seleccionado    TINYINT(1) NOT NULL DEFAULT 0,
+    fecha_decision  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_seleccion_estudiante_cohorte (usuario_id, cohorte_id),
+    KEY usuario_id (usuario_id),
+    KEY cohorte_id (cohorte_id),
+    FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE,
+    FOREIGN KEY (cohorte_id) REFERENCES cohorte(id) ON DELETE CASCADE,
+    FOREIGN KEY (informe_final_id) REFERENCES informe_final(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Módulos nuevos, apagables desde Parametrización
+INSERT INTO modulo_sistema (clave, nombre, descripcion, activo) VALUES
+('descriptores', 'Descriptores', 'Descriptores por materia y cohorte, base del Informe Final', 1),
+('informe_final', 'Informe Final', 'Informe final por estudiante (Alcanzó/Recomendación)', 1),
+('nota_prevista', 'Nota Prevista', 'Nota decisiva (1-7) de materias normales para la selección de matriculados', 1);
+
+INSERT INTO rol_permiso (rol, modulo_clave, accion, permitido) VALUES
+('profesor', 'descriptores', 'ver', 1), ('profesor', 'descriptores', 'crear', 1), ('profesor', 'descriptores', 'editar', 1),
+('profesor', 'informe_final', 'ver', 1), ('profesor', 'informe_final', 'editar', 1),
+('profesor', 'nota_prevista', 'ver', 1), ('profesor', 'nota_prevista', 'crear', 1),
+('estudiante', 'informe_final', 'ver', 1), ('estudiante', 'nota_prevista', 'ver', 1);
