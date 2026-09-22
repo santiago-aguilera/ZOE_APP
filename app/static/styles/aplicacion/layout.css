@@ -157,29 +157,6 @@
 }
 .app-shell.is-collapsed .nav-section-title { opacity: 0; height: 4px; padding: 0; }
 
-.nav-collapsible summary { list-style: none; cursor: pointer; user-select: none; }
-.nav-collapsible summary::-webkit-details-marker { display: none; }
-.nav-section-title--toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.nav-section-title--toggle::after {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-right: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor;
-  transform: rotate(-45deg);
-  transition: transform var(--duration-fast, .15s) ease;
-  margin-right: var(--space-2);
-}
-.nav-collapsible[open] .nav-section-title--toggle::after { transform: rotate(45deg); }
-
-.subtabs-nav {
-  margin-bottom: var(--space-5, 20px);
-}
-
 .nav-item {
   position: relative;
   display: flex;

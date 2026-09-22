@@ -99,7 +99,7 @@ def create_app(config_name="development"):
     @app.route("/")
     def inicio():
         from flask import render_template
-        return render_template("pagina/index.html", page_title="Inicio", active_page="index")
+        return render_template("aplicacion/auth/login.html", page_title="Inicio", active_page="index")
     
     # Rutas públicas de información
     @app.route("/ques")

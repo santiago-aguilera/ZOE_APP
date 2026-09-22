@@ -28,14 +28,14 @@
   /* Marca — Verde ZOE Institucional (Colegio Técnico Distrital)           */
   /* ---------------------------------------------------------------------- */
   --brand-50:  #E8F5EE;  /* Verde Menta Suave (Fondos seleccionados / soft) */
-  --brand-100: #CCEBDC;
+  --brand-100: #1a985b;
   --brand-200: #9CD7BA;
-  --brand-300: #6BC297;
+  --brand-300: #d7e6de;
   --brand-400: #3AA374;
-  --brand-500: #006837;  /* Verde Institucional Primario */
-  --brand-600: #00562E;  /* Tono interactivo principal */
-  --brand-700: #004D26;  /* Hover primario y banners */
-  --brand-800: #003B1D;
+  --brand-500: #684000;  /* Verde Institucional Primario */
+  --brand-600: #c98f09;  /* Tono interactivo principal */
+  --brand-700: #9e9e00;  /* Hover primario y banners */
+  --brand-800: #00363b;
   --brand-900: #002813;
 
   /* ---------------------------------------------------------------------- */
@@ -44,7 +44,7 @@
   --success-50:  #ECFDF5;
   --success-500: #10B981;
   --success-600: #059669;
-  --success-700: #047857;
+  --success-700: #0feeaf;
 
   --warning-50:  #FFFBEB;
   --warning-500: #F59E0B;
