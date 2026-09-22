@@ -1,8 +1,13 @@
+/* =============================================================================
+ * ZOE — Estilos para Vista de Login / Autenticación
+ * Colegio Técnico Distrital Julio Flórez
+ * ============================================================================= */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 * {
   box-sizing: border-box;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
 body, html {
@@ -21,14 +26,14 @@ body, html {
 }
 
 /* ==========================================================================
-   PANEL IZQUIERDO (VERDE CENTRADO Y BALANCEADO)
+   PANEL IZQUIERDO (GRADIENTE PÚRPURA / AZUL - BRANDING)
    ========================================================================== */
 .login-brand {
   flex: 0 0 50%;
   max-width: 50%;
   height: 100vh;
-  background-color: #7549db;
-  padding: 60px 80px;
+  background: linear-gradient(145deg, #3f1f4d 0%, #86499d 60%, #0679b5 100%);
+  padding: 50px 70px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -38,7 +43,7 @@ body, html {
   color: #ffffff;
 }
 
-/* MARCA DE AGUA IB */
+/* Marca de Agua IB */
 .ib-watermark {
   position: absolute;
   top: -40px;
@@ -46,7 +51,7 @@ body, html {
   width: 380px;
   height: 380px;
   pointer-events: none;
-  opacity: 0.18;
+  opacity: 0.15;
   mix-blend-mode: screen;
 }
 
@@ -57,7 +62,9 @@ body, html {
   filter: invert(1) brightness(2);
 }
 
-/* LOGO ZOE */
+/* ==========================================================================
+   SOPORTE DEL LOGO Y LOGO ZOE (GRANDE Y VISIBLE)
+   ========================================================================== */
 .brand-row {
   display: inline-block;
   z-index: 2;
@@ -67,39 +74,44 @@ body, html {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 26px;
+  padding: 12px 28px;
   background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .brand-logo {
-  height: 38px;
+  height: 48px; /* Tamaño del logo aumentado para que destaque */
   width: auto;
+  max-width: 180px;
   object-fit: contain;
+  display: block;
 }
 
-/* CENTRADO VERTICAL DEL TEXTO */
+/* ==========================================================================
+   TEXTOS DEL PANEL IZQUIERDO (BLANCOS Y DE ALTO CONTRASTE)
+   ========================================================================== */
 .brand-content {
   z-index: 2;
-  max-width: 520px;
-  margin: auto 0; /* Centra el bloque verticalmente entre header y footer */
+  max-width: 540px;
+  margin: auto 0;
 }
 
 .brand-content h1 {
-  font-size: 2.6rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  line-height: 1.18;
-  margin: 0 0 20px 0;
-  color: #ffffff;
+  line-height: 1.2;
+  margin: 0 0 18px 0;
+  color: #ffffff !important; /* Fuerza blanco puro */
   letter-spacing: -0.02em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .brand-description {
   font-size: 1.05rem;
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(255, 255, 255, 0.95) !important; /* Blanco legible */
   line-height: 1.6;
-  margin-bottom: 36px;
+  margin-bottom: 32px;
 }
 
 .feature-list {
@@ -108,7 +120,7 @@ body, html {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
 .feature-list li {
@@ -117,19 +129,19 @@ body, html {
   gap: 14px;
   font-size: 0.98rem;
   font-weight: 500;
-  color: #ffffff;
+  color: #ffffff !important;
 }
 
 .feature-icon {
-  width: 26px;
-  height: 26px;
-  min-width: 26px;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
   background-color: #ffffff;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #034f36;
+  color: #86499d; /* Ícono en color púrpura de marca */
 }
 
 .feature-icon svg {
@@ -139,13 +151,13 @@ body, html {
 
 .login-brand-footer {
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75) !important;
   margin: 0;
   z-index: 2;
 }
 
 /* ==========================================================================
-   PANEL DERECHO (FORMULARIO Y TARJETA AMPLIADA)
+   PANEL DERECHO (FORMULARIO CON FONDO DOODLES)
    ========================================================================== */
 .login-form-wrap {
   flex: 0 0 50%;
@@ -177,16 +189,18 @@ body, html {
   filter: invert(1) grayscale(1) brightness(0.9) opacity(1);
 }
 
-/* TARJETA MAS AMPLIA Y ROBUSTA */
+/* ==========================================================================
+   TARJETA DEL FORMULARIO (EQUILIBRADA Y CENTRADA)
+   ========================================================================== */
 .login-card {
   width: 100%;
   max-width: 440px;
   background: #ffffff;
   border-radius: 24px;
-  padding: 40px 36px;
+  padding: 38px 34px;
   box-shadow: 
-    0 0 35px 6px rgba(3, 79, 54, 0.16),
-    0 20px 30px -10px rgba(15, 23, 42, 0.08);
+    0 10px 35px 0 rgba(134, 73, 157, 0.15),
+    0 15px 25px -5px rgba(15, 23, 42, 0.08);
   border: 1px solid #e2e8f0;
   text-align: center;
   position: relative;
@@ -196,7 +210,7 @@ body, html {
 .login-icon {
   width: 52px;
   height: 52px;
-  background-color: #fef3c7;
+  background-color: #efedf5;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
@@ -218,7 +232,7 @@ body, html {
 .login-heading .form-sub {
   font-size: 0.88rem;
   color: #64748b;
-  margin: 0 0 26px 0;
+  margin: 0 0 24px 0;
 }
 
 .login-form {
@@ -253,18 +267,20 @@ body, html {
 
 .input-group input {
   width: 100%;
-  padding: 12px 14px 12px 42px;
+  height: 44px;
+  padding: 0 14px 0 42px;
   border: 1px solid #cbd5e1;
   border-radius: 10px;
   font-size: 0.9rem;
   color: #0f172a;
   background-color: #ffffff;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .input-group input:focus {
-  border-color: #034f36;
+  border-color: #86499d;
+  box-shadow: 0 0 0 3px rgba(134, 73, 157, 0.15);
 }
 
 .form-options {
@@ -283,16 +299,26 @@ body, html {
   cursor: pointer;
 }
 
+.form-check input[type="checkbox"] {
+  accent-color: #86499d;
+}
+
 .form-options a {
-  color: #0f172a;
+  color: #0679b5;
   font-weight: 700;
   text-decoration: none;
 }
 
+.form-options a:hover {
+  color: #86499d;
+  text-decoration: underline;
+}
+
+/* Botón de Inicio de Sesión Púrpura */
 .btn-login {
   width: 100%;
-  padding: 13px;
-  background-color: #2d3748;
+  height: 46px;
+  background-color: #86499d;
   color: #ffffff;
   border: none;
   border-radius: 10px;
@@ -303,18 +329,24 @@ body, html {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: background-color 0.2s ease;
+  box-shadow: 0 4px 12px rgba(134, 73, 157, 0.25);
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .btn-login:hover {
-  background-color: #1a202c;
+  background-color: #6f3b84;
+  transform: translateY(-1px);
+}
+
+.btn-login:active {
+  transform: translateY(0);
 }
 
 .back-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-top: 22px;
+  margin-top: 20px;
   font-size: 0.82rem;
   font-weight: 600;
   color: #334155;
@@ -322,11 +354,11 @@ body, html {
 }
 
 .back-link:hover {
-  color: #0f172a;
+  color: #86499d;
 }
 
 /* ==========================================================================
-   RESPONSIVE
+   RESPONSIVE (MÓVILES Y TABLETS)
    ========================================================================== */
 @media (max-width: 1100px) {
   .login-brand {
@@ -338,8 +370,14 @@ body, html {
 }
 
 @media (max-width: 850px) {
+  body, html {
+    overflow-y: auto;
+  }
+
   .login-shell {
     flex-direction: column;
+    height: auto;
+    min-height: 100vh;
   }
 
   .login-brand {
@@ -349,6 +387,7 @@ body, html {
   .login-form-wrap {
     flex: 0 0 100%;
     max-width: 100%;
+    height: auto;
     min-height: 100vh;
     padding: 24px 16px;
   }

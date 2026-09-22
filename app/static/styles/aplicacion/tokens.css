@@ -1,16 +1,14 @@
 /* =============================================================================
- * ZOE — Sistema de diseño global
+ * ZOE — Sistema de diseño global (Actualizado con Paleta Educativa Elegante)
  * ----------------------------------------------------------------------
- * Fuente única de verdad para colores, tipografía, espaciados, radios y
- * sombras. Inspirado en Notion, Linear, Stripe Dashboard y GitHub.
- * Cualquier ajuste visual debe iniciar aquí.
+ * Fuente única de verdad para colores, tipografía, espaciados y responsividad.
  * ============================================================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
   /* ---------------------------------------------------------------------- */
-  /* Paleta neutra (slate / ink) — superficies y texto                      */
+  /* Paleta Neutra (Slate) — Fondos limpios y lectura sin fatiga            */
   /* ---------------------------------------------------------------------- */
   --ink-50:  #F8FAFC;
   --ink-100: #F1F5F9;
@@ -25,26 +23,31 @@
   --ink-950: #020617;
 
   /* ---------------------------------------------------------------------- */
-  /* Marca — Verde ZOE Institucional (Colegio Técnico Distrital)           */
+  /* Marca — Púrpura Educativo Base (Extraída de tu imagen)                 */
   /* ---------------------------------------------------------------------- */
-  --brand-50:  #E8F5EE;  /* Verde Menta Suave (Fondos seleccionados / soft) */
-  --brand-100: #1a985b;
-  --brand-200: #9CD7BA;
-  --brand-300: #d7e6de;
-  --brand-400: #3AA374;
-  --brand-500: #684000;  /* Verde Institucional Primario */
-  --brand-600: #c98f09;  /* Tono interactivo principal */
-  --brand-700: #9e9e00;  /* Hover primario y banners */
-  --brand-800: #00363b;
-  --brand-900: #002813;
+  --brand-50:  #EFEDF5;  /* Soft lavender background */
+  --brand-100: #CEA4D2;  /* Pastel accent */
+  --brand-200: #AC6EB8;  /* Light purple */
+  --brand-300: #A582B7;  /* Muted purple */
+  --brand-500: #86499D;  /* Púrpura Principal de Identidad */
+  --brand-600: #6F3B84;  /* Hover primario */
+  --brand-700: #572D6A;  /* Degradados y banners */
+  --brand-800: #3F1F4D;
+  --brand-900: #291233;
 
   /* ---------------------------------------------------------------------- */
-  /* Semánticos                                                             */
+  /* Acento Secundario — Azul Océano (Extraído) y Dorado de Elegancia        */
+  /* ---------------------------------------------------------------------- */
+  --accent-blue-500: #0679B5; /* Azul Océano (Métricas / Enlaces) */
+  --accent-blue-600: #045F90;
+  --accent-gold-500: #D97706; /* Detalle elegante en tarjetas/insignias */
+
+  /* ---------------------------------------------------------------------- */
+  /* Semánticos (Feedback / Estados)                                       */
   /* ---------------------------------------------------------------------- */
   --success-50:  #ECFDF5;
   --success-500: #10B981;
   --success-600: #059669;
-  --success-700: #0feeaf;
 
   --warning-50:  #FFFBEB;
   --warning-500: #F59E0B;
@@ -54,16 +57,15 @@
   --danger-500: #EF4444;
   --danger-600: #DC2626;
 
-  --info-50:  #EFF6FF;
-  --info-500: #3B82F6;
-  --info-600: #2563EB;
+  --info-50:  #E0F2FE;
+  --info-500: #0679B5;
 
   /* ---------------------------------------------------------------------- */
-  /* Mapeo semántico (usar estos en componentes, no las escalas directas)    */
+  /* Mapeo Semántico (Usar estas variables en componentes)                  */
   /* ---------------------------------------------------------------------- */
   --color-bg:           var(--ink-50);
   --color-surface:      #FFFFFF;
-  --color-surface-alt:  var(--ink-100);
+  --color-surface-alt:  var(--brand-50);
   --color-surface-sunk: var(--ink-100);
 
   --color-text:         var(--ink-900);
@@ -72,36 +74,30 @@
   --color-text-inverse: #FFFFFF;
 
   --color-border:        var(--ink-200);
-  --color-border-strong: var(--ink-300);
+  --color-border-strong: var(--brand-100);
   --color-divider:       var(--ink-100);
 
-  --color-primary:        var(--brand-600);
-  --color-primary-hover:  var(--brand-700);
+  --color-primary:        var(--brand-500);
+  --color-primary-hover:  var(--brand-600);
   --color-primary-soft:   var(--brand-50);
   --color-primary-text:   #FFFFFF;
+
+  --color-accent:         var(--accent-blue-500);
 
   /* ---------------------------------------------------------------------- */
   /* Tipografía                                                             */
   /* ---------------------------------------------------------------------- */
-  --font-sans: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont,
-               'Helvetica Neue', Arial, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular,
-               Menlo, Consolas, monospace;
+  --font-sans: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
-  --text-xs:   0.75rem;   /* 12 */
-  --text-sm:   0.875rem;  /* 14 */
-  --text-base: 0.9375rem; /* 15 — base de la app */
-  --text-md:   1rem;      /* 16 */
-  --text-lg:   1.125rem;  /* 18 */
-  --text-xl:   1.25rem;   /* 20 */
-  --text-2xl:  1.5rem;    /* 24 */
-  --text-3xl:  1.875rem;  /* 30 */
-  --text-4xl:  2.25rem;   /* 36 */
-
-  --leading-tight: 1.2;
-  --leading-snug:  1.35;
-  --leading-base:  1.55;
-  --leading-loose: 1.7;
+  --text-xs:   0.75rem;   /* 12px */
+  --text-sm:   0.875rem;  /* 14px */
+  --text-base: 0.9375rem; /* 15px */
+  --text-md:   1rem;      /* 16px */
+  --text-lg:   1.125rem;  /* 18px */
+  --text-xl:   1.25rem;   /* 20px */
+  --text-2xl:  1.5rem;    /* 24px */
+  --text-3xl:  1.875rem;  /* 30px */
 
   --weight-regular:  400;
   --weight-medium:   500;
@@ -109,7 +105,7 @@
   --weight-bold:     700;
 
   /* ---------------------------------------------------------------------- */
-  /* Espaciado (escala 4px)                                                 */
+  /* Espaciado                                                              */
   /* ---------------------------------------------------------------------- */
   --space-1:  0.25rem;
   --space-2:  0.5rem;
@@ -117,81 +113,98 @@
   --space-4:  1rem;
   --space-5:  1.25rem;
   --space-6:  1.5rem;
-  --space-7:  1.75rem;
   --space-8:  2rem;
   --space-10: 2.5rem;
   --space-12: 3rem;
-  --space-16: 4rem;
 
   /* ---------------------------------------------------------------------- */
-  /* Radios                                                                 */
+  /* Radios y Sombras Elegantes                                             */
   /* ---------------------------------------------------------------------- */
   --radius-sm:   6px;
   --radius-md:   10px;
   --radius-lg:   14px;
   --radius-xl:   20px;
-  --radius-2xl:  28px;
   --radius-pill: 999px;
 
-  /* ---------------------------------------------------------------------- */
-  /* Sombras (discretas, tipo Linear / GitHub)                              */
-  /* ---------------------------------------------------------------------- */
-  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
-  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
-  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
-  --shadow-lg: 0 12px 24px -8px rgba(15, 23, 42, 0.12), 0 4px 8px -4px rgba(15, 23, 42, 0.06);
-  --shadow-xl: 0 24px 48px -12px rgba(15, 23, 42, 0.18);
+  --shadow-xs: 0 1px 2px rgba(134, 73, 157, 0.04);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 12px -2px rgba(134, 73, 157, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 24px -8px rgba(134, 73, 157, 0.12);
 
   /* ---------------------------------------------------------------------- */
-  /* Layout                                                                 */
+  /* Layout Responsivo                                                     */
   /* ---------------------------------------------------------------------- */
-  --sidebar-width:           260px;
-  --sidebar-width-collapsed: 72px;
-  --topbar-height:           64px;
-  --navbar-height:           68px;
-  --content-max-width:       1280px;
-  --content-padding:         var(--space-8);
-
-  /* ---------------------------------------------------------------------- */
-  /* Transiciones                                                           */
-  /* ---------------------------------------------------------------------- */
-  --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --duration-fast:   120ms;
-  --duration-base:   180ms;
-  --duration-slow:   280ms;
-
-  /* ---------------------------------------------------------------------- */
-  /* Z-index                                                                */
-  /* ---------------------------------------------------------------------- */
-  --z-base:    1;
-  --z-sticky:  100;
-  --z-overlay: 800;
-  --z-modal:   900;
-  --z-toast:   1000;
+  --sidebar-width: 260px;
+  --topbar-height:  64px;
+  --content-padding: var(--space-8);
 }
 
 /* ---------------------------------------------------------------------- */
-/* Modo oscuro — preparado para activación futura                         */
+/* Modo Oscuro Adaptado                                                  */
 /* ---------------------------------------------------------------------- */
 [data-theme="dark"] {
   --color-bg:           var(--ink-950);
   --color-surface:      var(--ink-900);
-  --color-surface-alt:  var(--ink-800);
-  --color-surface-sunk: #0B1120;
+  --color-surface-alt:  #181021;
+  --color-surface-sunk: #0B0710;
 
   --color-text:         var(--ink-50);
   --color-text-muted:   var(--ink-400);
   --color-text-subtle:  var(--ink-500);
 
   --color-border:        var(--ink-800);
-  --color-border-strong: var(--ink-700);
+  --color-border-strong: var(--brand-800);
   --color-divider:       var(--ink-800);
 
-  --color-primary-soft: rgba(0, 104, 55, 0.2);
+  --color-primary-soft: rgba(134, 73, 157, 0.25);
+}
 
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.45);
-  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.55);
-  --shadow-lg: 0 12px 24px -8px rgba(0, 0, 0, 0.6);
+/* =============================================================================
+ * AJUSTES DE ESTILOS RESPONSIVOS PARA VISTAS (LOGIN & DASHBOARD)
+ * ============================================================================= */
+
+/* Banner Principal del Dashboard */
+.dashboard-banner {
+  background: linear-gradient(135deg, var(--brand-700) 0%, var(--brand-500) 50%, var(--accent-blue-500) 100%);
+  color: var(--color-text-inverse);
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+/* Hero del Login */
+.login-hero-side {
+  flex: 1;
+  background: linear-gradient(160deg, var(--brand-800) 0%, var(--brand-500) 70%, var(--accent-blue-600) 100%);
+  color: var(--color-text-inverse);
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Layout Responsivo */
+.dashboard-grid-stats {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+@media (min-width: 640px) {
+  .dashboard-grid-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .dashboard-grid-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --content-padding: var(--space-4);
+  }
 }
