@@ -1,10 +1,9 @@
 """
 Rutas del blueprint de Cursos.
 
-Un curso (1001-1004 décimo, 1101-1104 once) es un catálogo GLOBAL e
-INDEPENDIENTE de las cohortes: se reutiliza cohorte tras cohorte. La
-cohorte es solo un filtro de contexto (qué estudiantes de esa cohorte
-están hoy en este curso), nunca una dependencia estructural.
+Un curso PERTENECE a una cohorte (1001-100N de décimo, creados junto con
+la cohorte). La vista principal muestra una card por cohorte; al abrir
+una card se ven y editan los cursos de esa cohorte puntual.
 """
 
 from flask import render_template, request, redirect, url_for, session, flash
@@ -17,41 +16,32 @@ from app.decorators import login_required, roles_permitidos, modulo_requerido, a
 @cursos_bp.route('/')
 @modulo_requerido('cursos')
 def listar_cursos():
-    """Lista todos los cursos del catálogo. La cohorte es solo un filtro
-    para el conteo de estudiantes, no una propiedad del curso."""
-    cohorte_id = request.args.get('cohorte_id', type=int)
-    cursos_iter = Curso.obtener_todos(cohorte_id=cohorte_id)
-    cohortes = Cohorte.obtener_todos()
-
-    # normalizar a lista y paginar
-    try:
-        cursos_list = list(cursos_iter)
-    except Exception:
-        cursos_list = [c for c in cursos_iter]
-
-    import math
-    pagina = int(request.args.get('pagina', 1))
-    por_pagina = 10
-    total_cursos = len(cursos_list)
-    total_paginas = max(1, math.ceil(total_cursos / por_pagina))
-    if pagina < 1:
-        pagina = 1
-    if pagina > total_paginas:
-        pagina = total_paginas
-    inicio = (pagina - 1) * por_pagina
-    fin = inicio + por_pagina
-    cursos_page = cursos_list[inicio:fin]
-
+    """Card por cohorte (con conteo de décimos/onces/estudiantes). Abrir
+    una card lleva a ver_cursos_cohorte con los cursos de esa cohorte."""
     return render_template(
         'aplicacion/cursos/cursos.html',
         page_title='Cursos',
         active_page='cursos',
-        cursos=cursos_page,
-        cohortes=cohortes,
-        filtro_cohorte=cohorte_id,
-        pagina=pagina,
-        total_paginas=total_paginas,
-        total_cursos=total_cursos
+        cohortes=Cohorte.obtener_con_resumen()
+    )
+
+
+@cursos_bp.route('/cohorte/<int:cohorte_id>')
+@modulo_requerido('cursos')
+def ver_cursos_cohorte(cohorte_id):
+    """Cursos (décimo y/o once) de una cohorte puntual, para verlos e
+    irlos modificando."""
+    cohorte = Cohorte.obtener_por_id(cohorte_id)
+    if not cohorte:
+        flash('Cohorte no encontrada.', 'error')
+        return redirect(url_for('cursos.listar_cursos'))
+
+    return render_template(
+        'aplicacion/cursos/cursos_cohorte.html',
+        page_title=f'Cursos — {cohorte.nombre}',
+        active_page='cursos',
+        cohorte=cohorte,
+        cursos=Curso.obtener_todos(cohorte_id=cohorte_id)
     )
 
 
@@ -59,24 +49,28 @@ def listar_cursos():
 @roles_permitidos('coordinador')
 @accion_requerida('cursos', 'crear')
 def form_crear_curso():
-    """Alta manual de un curso (los 8 oficiales ya vienen precargados;
-    esto permite agregar secciones nuevas si la institución las necesita)."""
+    """Agrega una sección extra a una cohorte ya existente (el alta normal
+    de los cursos de décimo ocurre en bloque al crear la cohorte)."""
     if request.method == 'POST':
+        cohorte_id = request.form.get('cohorte_id', type=int)
         curso = Curso(
             codigo=request.form.get('codigo'),
             nombre=request.form.get('nombre') or request.form.get('codigo'),
             grado=request.form.get('grado', type=int),
-            seccion=request.form.get('seccion', type=int)
+            seccion=request.form.get('seccion', type=int),
+            cohorte_id=cohorte_id
         )
         curso.guardar()
         flash('Curso creado exitosamente.', 'success')
-        return redirect(url_for('cursos.listar_cursos'))
+        return redirect(url_for('cursos.ver_cursos_cohorte', cohorte_id=cohorte_id))
 
     return render_template(
         'aplicacion/formularios/crear_curso.html',
         page_title='Crear Curso',
         active_page='cursos',
-        grados=GRADOS_CURSO
+        grados=GRADOS_CURSO,
+        cohortes=Cohorte.obtener_todos(),
+        cohorte_id=request.args.get('cohorte_id', type=int)
     )
 
 
@@ -139,7 +133,7 @@ def eliminar_curso(curso_id):
             entidad_nombre=curso.nombre or curso.codigo,
             entidad_id=curso_id,
             dependencias=dependencias,
-            volver_url=request.referrer or url_for('cursos.listar_cursos')
+            volver_url=request.referrer or url_for('cursos.ver_cursos_cohorte', cohorte_id=curso.cohorte_id)
         )
 
     try:
@@ -147,7 +141,7 @@ def eliminar_curso(curso_id):
         flash('Curso eliminado.', 'success')
     except Exception:
         flash('No se puede eliminar: el curso todavía tiene estudiantes o materias asignadas. Desactivalo en su lugar.', 'error')
-    return redirect(url_for('cursos.listar_cursos'))
+    return redirect(url_for('cursos.ver_cursos_cohorte', cohorte_id=curso.cohorte_id))
 
 
 @cursos_bp.route('/<int:curso_id>')

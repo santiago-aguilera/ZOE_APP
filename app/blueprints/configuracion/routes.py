@@ -37,13 +37,14 @@ def configuracion():
 @roles_permitidos('coordinador')
 def form_crear_cohorte():
     if request.method == 'POST':
+        cantidad_decimos = request.form.get('cantidad_decimos', type=int) or 4
         cohorte = Cohorte(
             nombre=request.form.get('nombre'),
             fecha_inicio=request.form.get('fecha_inicio'),
             fecha_fin=request.form.get('fecha_fin')
         )
-        cohorte.guardar()
-        flash('Cohorte académica creada exitosamente.', 'success')
+        cohorte.guardar(cantidad_decimos=cantidad_decimos)
+        flash(f'Cohorte creada con {cantidad_decimos} cursos de décimo (1001-{1000 + cantidad_decimos}).', 'success')
         return redirect(url_for('configuracion.configuracion'))
 
     return render_template(
@@ -106,17 +107,21 @@ def eliminar_cohorte(cohorte_id):
 @configuracion_bp.route('/cohortes/<int:cohorte_id>/promover', methods=['POST'])
 @roles_permitidos('coordinador')
 def promover_cohorte(cohorte_id):
-    """Al cierre de año 1: pasa a los estudiantes de esta cohorte del curso
-    de décimo al de once correspondiente (misma sección). No crea ni
-    renombra cursos -- 'curso' es un catálogo global reutilizado por todas
-    las cohortes (ver Curso.promover_estudiantes_cohorte)."""
+    """Al cierre de año 1: transforma los cursos de décimo de esta cohorte
+    en cursos de once (1001->1101...), EN EL MISMO curso -- la cohorte y
+    sus cursos son la misma aula pasando de año. No mueve estudiantes
+    (siguen en el mismo curso_id) ni crea cursos nuevos (ver
+    Curso.promover_cohorte)."""
     cohorte = Cohorte.obtener_por_id(cohorte_id)
     if not cohorte:
         flash('Cohorte no encontrada.', 'error')
         return redirect(url_for('configuracion.configuracion') + '#cohortes')
 
-    promovidos = Curso.promover_estudiantes_cohorte(cohorte_id)
-    flash(f'{promovidos} estudiantes de "{cohorte.nombre}" fueron promovidos de décimo a once.', 'success')
+    promovidos = Curso.promover_cohorte(cohorte_id)
+    if promovidos == 0:
+        flash(f'"{cohorte.nombre}" no tiene cursos de décimo para promover (¿ya se promovió antes?).', 'error')
+    else:
+        flash(f'{promovidos} cursos de "{cohorte.nombre}" pasaron de décimo a once.', 'success')
     return redirect(url_for('configuracion.configuracion') + '#cohortes')
 
 

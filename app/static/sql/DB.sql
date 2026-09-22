@@ -663,3 +663,49 @@ INSERT INTO rol_permiso (rol, modulo_clave, accion, permitido) VALUES
 ('profesor', 'informe_final', 'ver', 1), ('profesor', 'informe_final', 'editar', 1),
 ('profesor', 'nota_prevista', 'ver', 1), ('profesor', 'nota_prevista', 'crear', 1),
 ('estudiante', 'informe_final', 'ver', 1), ('estudiante', 'nota_prevista', 'ver', 1);
+
+-- =============================================================================
+-- MIGRACIÓN 2: curso ahora pertenece a la cohorte (revierte el diseño
+-- "catálogo global" anterior). La cohorte YA ES el salón de décimo: al
+-- crearla se generan sus cursos de décimo (1001..100N según la cantidad
+-- pedida), y esos MISMOS cursos se promueven a once al pasar de año
+-- (Curso.promover_cohorte transforma 1001->1101 en el mismo registro).
+-- Un profesor puede dictar en cursos de cualquier cohorte; un estudiante
+-- nunca repite su propia cohorte -- si no pasa el año, se usa "Repite año"
+-- (Usuario.repetir_anio) para pasarlo a la cohorte siguiente.
+--
+-- OJO datos existentes: esto asigna cohorte_id=1 a los 8 cursos ya creados
+-- (1001-1004/1101-1104), asumiendo que en tu BD solo existe la cohorte "25/26"
+-- (id=1) por ahora, tal como está en este mismo DB.sql. Si en tu base real ya
+-- tenés MÁS de una cohorte usando esos cursos globales, avisame antes de
+-- correr esto -- hay que repartir esos cursos entre las cohortes reales a
+-- mano, no se puede automatizar sin saber cuáles estudiantes son de cuál.
+-- =============================================================================
+
+USE zoe;
+
+ALTER TABLE curso DROP INDEX uq_curso_codigo;
+ALTER TABLE curso ADD COLUMN cohorte_id INT NOT NULL DEFAULT 1 AFTER id;
+ALTER TABLE curso ADD CONSTRAINT fk_curso_cohorte FOREIGN KEY (cohorte_id) REFERENCES cohorte(id) ON DELETE CASCADE;
+ALTER TABLE curso ADD UNIQUE KEY uq_curso_cohorte_codigo (cohorte_id, codigo);
+ALTER TABLE curso ALTER COLUMN cohorte_id DROP DEFAULT;
+
+-- Registro de repitencia: deja constancia de cuándo y por qué un
+-- estudiante pasó de una cohorte a la siguiente (repitió el año).
+CREATE TABLE estudiante_repitencia (
+    id                  INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id          INT NOT NULL,
+    cohorte_origen_id   INT NOT NULL,
+    cohorte_destino_id  INT NOT NULL,
+    registrado_por      INT NOT NULL,
+    fecha               DATETIME DEFAULT CURRENT_TIMESTAMP,
+    KEY usuario_id (usuario_id),
+    FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE,
+    FOREIGN KEY (cohorte_origen_id) REFERENCES cohorte(id) ON DELETE RESTRICT,
+    FOREIGN KEY (cohorte_destino_id) REFERENCES cohorte(id) ON DELETE RESTRICT,
+    FOREIGN KEY (registrado_por) REFERENCES usuario(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Permiso para el nuevo botón "Repite año" en Matrícula BI
+INSERT INTO rol_permiso (rol, modulo_clave, accion, permitido) VALUES
+('coordinador', 'matricula', 'repetir_anio', 1);

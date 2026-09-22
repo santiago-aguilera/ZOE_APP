@@ -1,0 +1,74 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/cursos.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-breadcrumb">
+  <a href="{{ url_for('cursos.listar_cursos') }}">Cursos</a>
+  <span class="sep">/</span>
+  <span>{{ cohorte.nombre }}</span>
+</div>
+
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Cursos de {{ cohorte.nombre }}</h1>
+    <p class="page-subtitle">{{ cohorte.fecha_inicio }} — {{ cohorte.fecha_fin }}</p>
+  </div>
+  {% if rol == 'coordinador' %}
+  <div class="d-flex gap-2">
+    <a href="{{ url_for('cursos.form_crear_curso', cohorte_id=cohorte.id) }}" class="btn">+ Agregar sección</a>
+    <form action="{{ url_for('configuracion.promover_cohorte', cohorte_id=cohorte.id) }}" method="post">
+      <button type="submit" class="btn btn-primary"
+              onclick="return confirm('¿Promover los cursos de décimo de esta cohorte a once? (1001→1101, etc.)');">
+        Promover a once
+      </button>
+    </form>
+  </div>
+  {% endif %}
+</header>
+
+{% if cursos %}
+<div class="card">
+  <div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Grado</th>
+        <th>Estudiantes</th>
+        <th>Estado</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for curso in cursos %}
+      <tr>
+        <td><span class="curso-badge grado-{{ curso.grado }}">{{ curso.codigo }}</span></td>
+        <td class="font-semibold">{{ curso.nombre or curso.codigo }}</td>
+        <td>{{ curso.grado }}° — Sección {{ curso.seccion }}</td>
+        <td>{{ curso.total_estudiantes|default(0) }}</td>
+        <td>
+          <span class="badge {{ 'badge-success' if curso.activo else 'badge-warning' }}">
+            {{ 'Activo' if curso.activo else 'Inactivo' }}
+          </span>
+        </td>
+        <td class="text-right">
+          <a href="{{ url_for('cursos.ver_curso', curso_id=curso.id) }}" class="btn btn-sm">Ver detalle</a>
+          {% if rol == 'coordinador' %}
+          <a href="{{ url_for('cursos.editar_curso', curso_id=curso.id) }}" class="btn btn-sm btn-warning">Editar</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% else %}
+<div class="empty-state">
+  <p>Esta cohorte todavía no tiene cursos.</p>
+</div>
+{% endif %}
+{% endblock %}

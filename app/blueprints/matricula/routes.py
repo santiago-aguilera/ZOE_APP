@@ -76,6 +76,20 @@ def cambiar_estado(usuario_id):
     return redirect(request.referrer or url_for('matricula.inicio'))
 
 
+@matricula_bp.route('/<int:usuario_id>/repite-anio', methods=['POST'])
+@roles_permitidos('coordinador')
+def repite_anio(usuario_id):
+    """El estudiante no pasó el año: lo mueve de su cohorte actual a la
+    misma sección de décimo de la cohorte siguiente, y deja registro en
+    estudiante_repitencia (Usuario.repetir_anio)."""
+    try:
+        resultado = Usuario.repetir_anio(usuario_id, session.get('usuario_id'))
+        flash(f"Estudiante pasado a la cohorte \"{resultado['cohorte_destino']}\", curso {resultado['curso_destino']}.", 'success')
+    except ValueError as e:
+        flash(str(e), 'error')
+    return redirect(request.referrer or url_for('matricula.inicio'))
+
+
 # ---------------------------------------------------------------
 # Nota Prevista: solo materias normales, la da el profesor una vez al
 # cierre de décimo / inicio de once. Es la nota decisiva para la selección.

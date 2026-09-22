@@ -107,3 +107,38 @@
     align-items: flex-start;
   }
 }
+
+/* Cards por cohorte (sección Cursos) */
+.cohorte-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-4, 16px);
+}
+.cohorte-card {
+  display: block;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg, 12px);
+  padding: var(--space-4, 16px);
+  background: var(--color-surface, #fff);
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow .15s ease, transform .15s ease;
+}
+.cohorte-card:hover {
+  box-shadow: var(--shadow-md, 0 4px 12px rgba(0,0,0,.08));
+  transform: translateY(-1px);
+}
+.cohorte-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2, 8px);
+}
+.cohorte-card-header h3 { margin: 0; font-size: var(--text-base, 1rem); }
+.cohorte-card-stats {
+  display: flex;
+  gap: var(--space-3, 12px);
+  margin-top: var(--space-3, 12px);
+  font-size: var(--text-sm, .875rem);
+  color: var(--color-text-muted);
+}

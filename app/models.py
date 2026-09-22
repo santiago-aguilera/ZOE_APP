@@ -278,6 +278,53 @@ class Usuario:
         filas_afectadas = db.ejecutar_actualizacion(consulta, (self.id,))
         return filas_afectadas > 0
 
+    @classmethod
+    def repetir_anio(cls, estudiante_id: int, registrado_por: int) -> Dict[str, Any]:
+        """Pasa a un estudiante repitente de su cohorte actual a la MISMA
+        sección de décimo de la cohorte siguiente (la de fecha_inicio más
+        cercana y posterior a la suya). Deja registro en
+        'estudiante_repitencia'. Un estudiante nunca repite su propia
+        cohorte -- siempre avanza a la cohorte siguiente, distinto de una
+        promoción normal (que se hace con Curso.promover_cohorte)."""
+        estudiante = cls.obtener_por_id(estudiante_id)
+        if not estudiante or not estudiante.curso_id or not estudiante.cohorte_id:
+            raise ValueError('El estudiante no tiene cohorte y curso asignados todavía.')
+
+        curso_actual = db.ejecutar_consulta("SELECT * FROM curso WHERE id=%s", (estudiante.curso_id,))
+        if not curso_actual or curso_actual[0]['grado'] != 10:
+            raise ValueError('Solo se puede marcar "Repite año" mientras el estudiante está en décimo.')
+        seccion_actual = curso_actual[0]['seccion']
+
+        consulta_siguiente = """
+            SELECT co2.* FROM cohorte co1
+            JOIN cohorte co2 ON co2.fecha_inicio > co1.fecha_inicio
+            WHERE co1.id = %s
+            ORDER BY co2.fecha_inicio ASC LIMIT 1
+        """
+        siguiente = db.ejecutar_consulta(consulta_siguiente, (estudiante.cohorte_id,))
+        if not siguiente:
+            raise ValueError('No existe todavía una cohorte más nueva para pasar al estudiante. Creala primero.')
+        cohorte_destino = siguiente[0]
+
+        curso_destino = db.ejecutar_consulta(
+            "SELECT * FROM curso WHERE cohorte_id=%s AND grado=10 AND seccion=%s",
+            (cohorte_destino['id'], seccion_actual)
+        )
+        if not curso_destino:
+            raise ValueError(f'La cohorte "{cohorte_destino["nombre"]}" no tiene un curso de décimo con esa sección.')
+        curso_destino = curso_destino[0]
+
+        db.ejecutar_actualizacion(
+            "UPDATE usuario SET cohorte_id=%s, curso_id=%s WHERE id=%s",
+            (cohorte_destino['id'], curso_destino['id'], estudiante_id)
+        )
+        db.ejecutar_insercion(
+            """INSERT INTO estudiante_repitencia (usuario_id, cohorte_origen_id, cohorte_destino_id, registrado_por)
+               VALUES (%s, %s, %s, %s)""",
+            (estudiante_id, estudiante.cohorte_id, cohorte_destino['id'], registrado_por)
+        )
+        return {'cohorte_destino': cohorte_destino['nombre'], 'curso_destino': curso_destino['nombre']}
+
 
 class Materia:
     """Modelo de Materia - Representa la tabla 'materia'.
@@ -1371,11 +1418,15 @@ class Cohorte:
         self.fecha_fin = fecha_fin
         self.activo = activo
     
-    def guardar(self) -> int:
-        """Crea una nueva cohorte en la BD y le genera automáticamente sus
-        4 especialidades. Los cursos NO se generan aquí: son un catálogo
-        global fijo (1001-1004/1101-1104) independiente de la cohorte,
-        creado una sola vez (ver Curso.crear_catalogo_por_defecto)."""
+    def guardar(self, cantidad_decimos: int = 4) -> int:
+        """Crea una nueva cohorte y le genera automáticamente:
+        - sus 4 especialidades (Especialidad.crear_paquete_por_defecto)
+        - sus cursos de décimo: 1001, 1002... hasta 'cantidad_decimos'
+          (Curso.crear_decimos_para_cohorte). Esta es la ÚNICA vez que se
+          crean cursos para esta cohorte: al pasar de año, estos mismos
+          cursos se PROMUEVEN a once (ver Curso.promover_cohorte), nunca
+          se vuelven a crear. El curso ahora pertenece a la cohorte -- ya
+          no es un catálogo global reutilizado entre cohortes."""
         consulta = """
             INSERT INTO cohorte (nombre, fecha_inicio, fecha_fin, activo)
             VALUES (%s, %s, %s, %s)
@@ -1384,6 +1435,7 @@ class Cohorte:
         self.id = db.ejecutar_insercion(consulta, parametros)
         if self.id:
             Especialidad.crear_paquete_por_defecto(self.id)
+            Curso.crear_decimos_para_cohorte(self.id, cantidad_decimos)
         return self.id
     
     @classmethod
@@ -1392,6 +1444,23 @@ class Cohorte:
         consulta = "SELECT * FROM cohorte"
         resultados = db.ejecutar_consulta(consulta)
         return [cls._desde_diccionario(row) for row in resultados]
+
+    @classmethod
+    def obtener_con_resumen(cls) -> List[Dict[str, Any]]:
+        """Cohortes con conteo de cursos/estudiantes, para las cards de la
+        sección Cursos (dentro de Organización)."""
+        consulta = """
+            SELECT co.*,
+                   COUNT(DISTINCT CASE WHEN c.grado = 10 THEN c.id END) as total_decimos,
+                   COUNT(DISTINCT CASE WHEN c.grado = 11 THEN c.id END) as total_onces,
+                   COUNT(DISTINCT u.id) as total_estudiantes
+            FROM cohorte co
+            LEFT JOIN curso c ON c.cohorte_id = co.id
+            LEFT JOIN usuario u ON u.cohorte_id = co.id AND u.rol = 'estudiante'
+            GROUP BY co.id
+            ORDER BY co.fecha_inicio DESC
+        """
+        return db.ejecutar_consulta(consulta)
 
     @classmethod
     def obtener_por_id(cls, id: int) -> Optional['Cohorte']:
@@ -1448,32 +1517,38 @@ SECCIONES_CURSO = (1, 2, 3, 4)
 class Curso:
     """Modelo de Curso - Representa la tabla 'curso'.
 
-    Un curso (1001-1004 décimo, 1101-1104 once) es un catálogo FIJO e
-    INDEPENDIENTE de las cohortes: el mismo curso "1001" se reutiliza cohorte
-    tras cohorte, no se vuelve a crear cada vez. La cohorte es solo un filtro
-    de contexto para ver qué estudiantes de qué cohorte están en un curso
-    puntual en un momento dado (usuario.curso_id + usuario.cohorte_id).
-    No reemplaza a 'grupo': grupo sigue existiendo para equipos de trabajo,
-    independiente del curso.
+    Un curso PERTENECE a una cohorte (cohorte_id): al crear la cohorte se
+    generan sus cursos de décimo (1001, 1002... según la cantidad pedida),
+    y esos MISMOS cursos son los que se promueven a once al pasar de año
+    (Curso.promover_cohorte) -- nunca se crean cursos nuevos para el
+    "once" de una cohorte. Un profesor puede dictar en cursos de
+    cualquier cohorte; un estudiante nunca repite su propia cohorte (ver
+    Usuario.repetir_anio para el caso de que no pase el año).
+    No reemplaza a 'grupo': grupo sigue existiendo para equipos de
+    trabajo, independiente del curso.
     """
 
     def __init__(self, id=None, codigo=None, nombre=None, grado=None, seccion=None,
-                 activo=True, creado_en=None):
+                 cohorte_id=None, activo=True, creado_en=None):
         self.id = id
         self.codigo = codigo
         self.nombre = nombre
         self.grado = grado
         self.seccion = seccion
+        self.cohorte_id = cohorte_id
         self.activo = activo
         self.creado_en = creado_en
 
     def guardar(self) -> int:
-        """Crea un nuevo curso en la BD (catálogo global, sin cohorte)."""
+        """Crea un curso suelto dentro de una cohorte (uso excepcional:
+        agregar una sección nueva a una cohorte ya creada). El alta normal
+        de cursos ocurre en bloque vía Curso.crear_decimos_para_cohorte,
+        disparado por Cohorte.guardar()."""
         consulta = """
-            INSERT INTO curso (codigo, nombre, grado, seccion, activo)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO curso (codigo, nombre, grado, seccion, cohorte_id, activo)
+            VALUES (%s, %s, %s, %s, %s, %s)
         """
-        parametros = (self.codigo, self.nombre, self.grado, self.seccion, self.activo)
+        parametros = (self.codigo, self.nombre, self.grado, self.seccion, self.cohorte_id, self.activo)
         self.id = db.ejecutar_insercion(consulta, parametros)
         return self.id
 
@@ -1493,17 +1568,22 @@ class Curso:
         return filas_afectadas > 0
 
     @classmethod
-    def crear_catalogo_por_defecto(cls) -> None:
-        """Genera una única vez el catálogo fijo de 8 cursos: 1001-1004
-        (décimo) y 1101-1104 (once). No falla si ya existían. A diferencia
-        del diseño anterior, esto NO se dispara por cada cohorte: los cursos
-        son globales y se reutilizan cohorte tras cohorte."""
-        consulta = "INSERT IGNORE INTO curso (codigo, nombre, grado, seccion) VALUES (%s, %s, %s, %s)"
-        for grado in GRADOS_CURSO:
-            base = 1000 if grado == 10 else 1100
-            for seccion in SECCIONES_CURSO:
-                codigo = base + seccion
-                db.ejecutar_insercion(consulta, (codigo, str(codigo), grado, seccion))
+    def crear_decimos_para_cohorte(cls, cohorte_id: int, cantidad: int) -> List[int]:
+        """Crea los cursos de décimo de una cohorte NUEVA: 1001, 1002...
+        hasta 'cantidad'. Se dispara una sola vez, desde Cohorte.guardar().
+        Estos mismos cursos son los que luego se promueven a once
+        (Curso.promover_cohorte) -- nunca se vuelven a crear."""
+        ids = []
+        consulta = """
+            INSERT INTO curso (codigo, nombre, grado, seccion, cohorte_id)
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        for seccion in range(1, cantidad + 1):
+            codigo = 1000 + seccion
+            nuevo_id = db.ejecutar_insercion(consulta, (codigo, str(codigo), 10, seccion, cohorte_id))
+            ids.append(nuevo_id)
+        return ids
+
 
     @classmethod
     def obtener_por_id(cls, id: int) -> Optional['Curso']:
@@ -1514,17 +1594,17 @@ class Curso:
 
     @classmethod
     def obtener_todos(cls, cohorte_id: Optional[int] = None) -> List['Curso']:
-        """Obtiene todos los cursos del catálogo. `cohorte_id` es solo un
-        FILTRO de contexto: si se pasa, el conteo de estudiantes se limita a
-        esa cohorte (el curso en sí no pertenece a ninguna)."""
-        condicion = "AND u.cohorte_id = %s" if cohorte_id else ""
+        """Cursos de una cohorte puntual (o de todas si no se pasa
+        cohorte_id -- por ejemplo para búsquedas globales)."""
+        condicion = "WHERE c.cohorte_id = %s" if cohorte_id else ""
         parametros = (cohorte_id,) if cohorte_id else ()
         consulta = f"""
             SELECT c.*, COUNT(DISTINCT u.id) as total_estudiantes
             FROM curso c
-            LEFT JOIN usuario u ON u.curso_id = c.id AND u.rol = 'estudiante' {condicion}
+            LEFT JOIN usuario u ON u.curso_id = c.id AND u.rol = 'estudiante'
+            {condicion}
             GROUP BY c.id
-            ORDER BY c.grado, c.seccion
+            ORDER BY c.cohorte_id, c.grado, c.seccion
         """
         resultados = db.ejecutar_consulta(consulta, parametros)
         cursos = []
@@ -1563,23 +1643,19 @@ class Curso:
         return True
 
     @classmethod
-    def promover_estudiantes_cohorte(cls, cohorte_id: int) -> int:
-        """Promueve a los estudiantes de una cohorte de décimo (grado=10) a
-        once (grado=11), conservando la sección (1001->1101, 1002->1102...).
-
-        Como 'curso' es un catálogo global (no pertenece a la cohorte, ver
-        docstring de la clase), NO se crea ni se renombra ningún curso: solo
-        se actualiza usuario.curso_id de los estudiantes de esa cohorte que
-        están en un curso de grado 10. Esto reemplaza la idea anterior de
-        "crear un curso 1101 nuevo cada cohorte", que generaba duplicidad.
-        Devuelve el número de estudiantes promovidos.
-        """
+    def promover_cohorte(cls, cohorte_id: int) -> int:
+        """Promueve los cursos de décimo de esta cohorte a once
+        (1001->1101, 1002->1102...), EN EL MISMO curso: la cohorte y sus
+        cursos son la misma aula que pasa de año, así que no se crea ni se
+        toca ningún otro curso, y usuario.curso_id no cambia para nadie
+        (siguen en el mismo curso_id, que ahora es de grado 11).
+        Devuelve cuántos cursos se promovieron."""
         consulta = """
-            UPDATE usuario u
-            JOIN curso c_actual ON u.curso_id = c_actual.id AND c_actual.grado = 10
-            JOIN curso c_destino ON c_destino.grado = 11 AND c_destino.seccion = c_actual.seccion
-            SET u.curso_id = c_destino.id
-            WHERE u.cohorte_id = %s AND u.rol = 'estudiante'
+            UPDATE curso
+            SET nombre = CAST(codigo + 100 AS CHAR),
+                grado = 11,
+                codigo = codigo + 100
+            WHERE cohorte_id = %s AND grado = 10
         """
         return db.ejecutar_actualizacion(consulta, (cohorte_id,))
 
@@ -1678,6 +1754,7 @@ class Curso:
             nombre=datos.get('nombre'),
             grado=datos.get('grado'),
             seccion=datos.get('seccion'),
+            cohorte_id=datos.get('cohorte_id'),
             activo=datos.get('activo', True),
             creado_en=datos.get('creado_en')
         )
@@ -1690,6 +1767,7 @@ class Curso:
             'nombre': self.nombre,
             'grado': self.grado,
             'seccion': self.seccion,
+            'cohorte_id': self.cohorte_id,
             'activo': self.activo
         }
 

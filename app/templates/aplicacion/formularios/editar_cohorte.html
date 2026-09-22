@@ -42,6 +42,17 @@
               Cohorte activa
             </label>
           </div>
+          {% if not cohorte %}
+          <div class="form-group">
+            <label class="form-label">¿Cuántos décimos son? <span class="required">*</span></label>
+            <input type="number" name="cantidad_decimos" class="form-control" min="1" max="9" value="4" required>
+            <p class="text-xs text-muted mt-1">
+              Se crean automáticamente esa cantidad de cursos de décimo (1001, 1002...).
+              Esta misma cohorte es la que se promueve a once al pasar de año — no se
+              vuelven a crear cursos, se transforman estos mismos.
+            </p>
+          </div>
+          {% endif %}
         </div>
       </div>
       <div class="form-card-footer">

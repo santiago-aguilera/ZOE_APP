@@ -101,6 +101,14 @@
               {% if e.cohorte_obj %}
               <a href="{{ url_for('matricula.ver_informe_final', usuario_id=e.id, cohorte_id=e.cohorte_obj.id) }}" class="btn btn-sm">Informe final</a>
               {% endif %}
+              {% if rol == 'coordinador' %}
+              <form method="POST" action="{{ url_for('matricula.repite_anio', usuario_id=e.id) }}" style="display:inline;">
+                <button type="submit" class="btn btn-sm btn-warning"
+                        onclick="return confirm('¿{{ e.nombre }} repite el año? Se moverá a la cohorte siguiente, misma sección de décimo.');">
+                  Repite año
+                </button>
+              </form>
+              {% endif %}
             </div>
           </td>
         </tr>
