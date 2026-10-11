@@ -17,7 +17,7 @@ load_dotenv(RUTA_PROYECTO / ".env")
 
 class ConexionBaseDatos:
     """
-    Clase Singleton para manejar la conexión a MySQL/MariaDB.
+    Clase Singleton para manejar la conexión a MySQL.
     Garantiza una única instancia de conexión activa en toda la aplicación.
     """
     _instancia = None
@@ -27,13 +27,13 @@ class ConexionBaseDatos:
             cls._instancia = super().__new__(cls)
             cls._instancia._conexion = None
             
-            # Configuración extraída directamente de tu phpMyAdmin
+            # Configuración extraída 
             cls._instancia._config = {
                 'host': os.environ.get("DB_HOST", "127.0.0.1"),
                 'port': int(os.environ.get("DB_PORT", "3306")),
                 'user': os.environ.get("DB_USER", "root"),
                 'password': os.environ.get("DB_PASSWORD", ""),
-                'database': os.environ.get("DB_NAME", "zoe"),  # Base de datos 'zoe' de la imagen
+                'database': os.environ.get("DB_NAME", "zoe"),  # Base de datos 'zoe' 
                 'charset': 'utf8mb4',
                 'collation': 'utf8mb4_unicode_ci',
             }

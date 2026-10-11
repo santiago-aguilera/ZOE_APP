@@ -11,14 +11,12 @@ from app.config_db import config, db
 from app.blueprints import (
     auth_bp, dashboard_bp, tareas_bp, materias_bp, grupos_bp, cursos_bp, especialidades_bp,
     comunicados_bp, recursos_bp, cronograma_bp, mensajeria_bp,
-    reportes_bp, configuracion_bp, usuarios_bp, valoraciones_bp, archivo_bp, parametrizacion_bp, matricula_bp
+    reportes_bp, configuracion_bp, usuarios_bp, valoraciones_bp, archivo_bp, parametrizacion_bp, matricula_bp, exportaciones_bp
 )
 
 # Carpeta donde se guardan los archivos de las entregas de tareas
-UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                              'app', 'static', 'uploads', 'entregas')
-ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx',
-                       'png', 'jpg', 'jpeg', 'zip', 'txt'}
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),'app', 'static', 'uploads', 'entregas')
+ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx','png', 'jpg', 'jpeg', 'zip', 'txt'}
 MAX_CONTENT_LENGTH = 20 * 1024 * 1024  # 20 MB máximo por archivo
 
 
@@ -94,6 +92,7 @@ def create_app(config_name="development"):
     app.register_blueprint(archivo_bp, url_prefix='/archivo')
     app.register_blueprint(parametrizacion_bp, url_prefix='/parametrizacion')
     app.register_blueprint(matricula_bp, url_prefix='/matricula')
+    app.register_blueprint(exportaciones_bp, url_prefix='/exportaciones')
     
     # Ruta pública de inicio
     @app.route("/")

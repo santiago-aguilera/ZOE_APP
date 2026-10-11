@@ -24,6 +24,7 @@ valoraciones_bp = Blueprint('valoraciones', __name__)
 parametrizacion_bp = Blueprint('parametrizacion', __name__)
 matricula_bp = Blueprint('matricula', __name__)
 archivo_bp = Blueprint('archivo', __name__)
+exportaciones_bp = Blueprint('exportaciones', __name__)
 
 # Importar rutas de cada blueprint para registrar los endpoints
 from app.blueprints.auth import routes as auth_routes
@@ -44,6 +45,7 @@ from app.blueprints.valoraciones import routes as valoraciones_routes
 from app.blueprints.parametrizacion import routes as parametrizacion_routes
 from app.blueprints.matricula import routes as matricula_routes
 from app.blueprints.archivo import routes as archivo_routes
+from app.blueprints.exportaciones import routes as exportaciones_routes
 
 # Lista de todos los blueprints para registro
 blueprints = [
@@ -65,4 +67,5 @@ blueprints = [
     (parametrizacion_bp, '/parametrizacion'),
     (matricula_bp, '/matricula'),
     (archivo_bp, '/archivo'),
+    (exportaciones_bp, '/exportaciones'),
 ]

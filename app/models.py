@@ -10,7 +10,7 @@ from typing import List, Dict, Optional, Any
 from app.decorators import modulo_requerido
 
 
-# Escala de valoración IB/MEN: cualitativa, no numérica. El orden importa:
+# Escala de valoración IB: cualitativa, no numérica. El orden importa:
 # se usa para calcular promedios ponderados y comparar contra el mínimo
 # de aprobación (Bajo < Básico < Alto < Superior).
 ESCALA_VALORATIVA = ('Bajo', 'Básico', 'Alto', 'Superior')

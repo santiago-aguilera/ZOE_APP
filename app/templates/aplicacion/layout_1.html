@@ -167,7 +167,7 @@
                 {# ===== Administración: solo coordinador, colapsada por defecto ===== #}
                 {% if rol == 'coordinador' %}
                 <div class="nav-section">
-                    <details class="nav-collapsible" {% if active_page in ('usuarios', 'matricula', 'configuracion', 'parametrizacion') %}open{% endif %}>
+                    <details class="nav-collapsible" {% if active_page in ('usuarios', 'matricula', 'configuracion', 'parametrizacion', 'exportaciones') %}open{% endif %}>
                         <summary class="nav-section-title nav-section-title--toggle">Administración</summary>
                         <a href="{{ url_for('usuarios.listar_usuarios') }}"
                             class="nav-item {% if active_page == 'usuarios' %}is-active{% endif %}">
@@ -198,6 +198,17 @@
                                 </svg>
                             </span>
                             <span class="nav-label">Configuración</span>
+                        </a>
+                        <a href="{{ url_for('exportaciones.inicio') }}"
+                            class="nav-item {% if active_page == 'exportaciones' %}is-active{% endif %}">
+                            <span class="nav-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="7 10 12 15 17 10" />
+                                    <line x1="12" y1="15" x2="12" y2="3" />
+                                </svg>
+                            </span>
+                            <span class="nav-label">Exportaciones</span>
                         </a>
                     </details>
                 </div>

@@ -1,0 +1,119 @@
+{% extends 'aplicacion/layout_1.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/exportaciones.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Exportaciones</h1>
+    <p class="page-subtitle">Informes institucionales en Excel o CSV, por cohorte, año, semestre o rango de fechas</p>
+  </div>
+</header>
+
+<div class="exp-layout">
+  <div class="card"><div class="card-body">
+    <form method="GET" action="{{ url_for('exportaciones.descargar') }}" id="formExportar">
+      <div class="exp-filtros">
+        <div class="form-group span-2">
+          <label class="form-label">Informe</label>
+          <select name="reporte" id="selReporte" class="form-control" required>
+            {% for clave, r in reportes.items() %}
+            <option value="{{ clave }}" data-filtros="{{ r.filtros|join(',') }}">{{ r.titulo }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group filtro-campo" data-filtro="cohorte">
+          <label class="form-label">Cohorte</label>
+          <select name="cohorte_id" class="form-control">
+            <option value="">Todas</option>
+            {% for c in cohortes %}<option value="{{ c.id }}">{{ c.nombre }}</option>{% endfor %}
+          </select>
+        </div>
+        <div class="form-group filtro-campo" data-filtro="curso">
+          <label class="form-label">Curso</label>
+          <select name="curso_id" class="form-control">
+            <option value="">Todos</option>
+            {% for c in cursos %}<option value="{{ c.id }}">{{ c.etiqueta }}</option>{% endfor %}
+          </select>
+        </div>
+        <div class="form-group filtro-campo" data-filtro="materia">
+          <label class="form-label">Materia</label>
+          <select name="materia_id" class="form-control">
+            <option value="">Todas</option>
+            {% for m in materias %}<option value="{{ m.id }}">{{ m.nombre }}</option>{% endfor %}
+          </select>
+        </div>
+        <div class="form-group filtro-campo" data-filtro="estado">
+          <label class="form-label">Matrícula BI</label>
+          <select name="estado" class="form-control">
+            <option value="">Todos los estados</option>
+            {% for clave, etiqueta in estados %}<option value="{{ clave }}">{{ etiqueta }}</option>{% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group filtro-campo" data-filtro="periodo">
+          <label class="form-label">Año</label>
+          <select name="anio" class="form-control">
+            <option value="">Sin filtro de año</option>
+            {% for a in anios %}<option value="{{ a }}">{{ a }}</option>{% endfor %}
+          </select>
+        </div>
+        <div class="form-group filtro-campo" data-filtro="periodo">
+          <label class="form-label">Semestre</label>
+          <select name="semestre" class="form-control">
+            <option value="">Año completo</option>
+            <option value="1">1.er semestre (ene–jun)</option>
+            <option value="2">2.º semestre (jul–dic)</option>
+          </select>
+        </div>
+        <div class="form-group filtro-campo" data-filtro="periodo">
+          <label class="form-label">Desde</label>
+          <input type="date" name="desde" class="form-control">
+        </div>
+        <div class="form-group filtro-campo" data-filtro="periodo">
+          <label class="form-label">Hasta</label>
+          <input type="date" name="hasta" class="form-control">
+        </div>
+      </div>
+      <p class="exp-nota">Si llenás «Desde/Hasta», se ignoran el año y el semestre. Los filtros en gris no aplican al informe elegido.</p>
+
+      <div class="exp-acciones">
+        <button type="submit" name="formato" value="xlsx" class="btn btn-primary">Descargar Excel</button>
+        <button type="submit" name="formato" value="csv" class="btn">Descargar CSV</button>
+      </div>
+      <p class="exp-nota">CSV: separador «;» y codificación UTF-8 (abre bien en Excel). Si el informe tiene varias hojas, el CSV llega como ZIP con un archivo por hoja.</p>
+    </form>
+  </div></div>
+
+  <div class="card"><div class="card-body">
+    <h2 class="curso-panel-title" style="font-size:var(--text-md);margin:0 0 var(--space-3);">Qué incluye cada informe</h2>
+    {% for clave, r in reportes.items() %}
+    <div class="exp-catalogo-item">
+      <h4>{{ r.titulo }}</h4>
+      <p>{{ r.descripcion }}</p>
+    </div>
+    {% endfor %}
+  </div></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  var sel = document.getElementById('selReporte');
+  var campos = document.querySelectorAll('.filtro-campo');
+  function actualizar() {
+    var usa = (sel.options[sel.selectedIndex].dataset.filtros || '').split(',');
+    campos.forEach(function (c) {
+      var aplica = usa.indexOf(c.dataset.filtro) !== -1;
+      c.classList.toggle('is-disabled', !aplica);
+      c.querySelectorAll('select,input').forEach(function (i) { i.disabled = !aplica; });
+    });
+  }
+  sel.addEventListener('change', actualizar);
+  actualizar();
+})();
+</script>
+{% endblock %}
