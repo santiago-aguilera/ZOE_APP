@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZOE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#86499D">
+    <title>ZOE · {{ page_title or "Dashboard" }}</title>
 
     <!-- Sistema de diseño (tokens) -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/tokens.css') }}">
@@ -14,6 +15,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/layout.css') }}">
 
     {% block extra_css %}{% endblock %}
+
+    <!-- Adaptación móvil (siempre al final para poder sobrescribir) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/aplicacion/mobile.css') }}">
 </head>
 
 <body>
@@ -167,7 +171,7 @@
                 {# ===== Administración: solo coordinador, colapsada por defecto ===== #}
                 {% if rol == 'coordinador' %}
                 <div class="nav-section">
-                    <details class="nav-collapsible" {% if active_page in ('usuarios', 'matricula', 'configuracion', 'parametrizacion', 'exportaciones') %}open{% endif %}>
+                    <details class="nav-collapsible" {% if active_page in ('usuarios', 'matricula', 'configuracion', 'parametrizacion') %}open{% endif %}>
                         <summary class="nav-section-title nav-section-title--toggle">Administración</summary>
                         <a href="{{ url_for('usuarios.listar_usuarios') }}"
                             class="nav-item {% if active_page == 'usuarios' %}is-active{% endif %}">
@@ -198,17 +202,6 @@
                                 </svg>
                             </span>
                             <span class="nav-label">Configuración</span>
-                        </a>
-                        <a href="{{ url_for('exportaciones.inicio') }}"
-                            class="nav-item {% if active_page == 'exportaciones' %}is-active{% endif %}">
-                            <span class="nav-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                    <polyline points="7 10 12 15 17 10" />
-                                    <line x1="12" y1="15" x2="12" y2="3" />
-                                </svg>
-                            </span>
-                            <span class="nav-label">Exportaciones</span>
                         </a>
                     </details>
                 </div>
@@ -241,10 +234,88 @@
         <div class="app-main">
 
             <header class="topbar">
+                <!-- Solo visible en móvil: abre el menú lateral -->
+                <button class="topbar-menu-btn" id="topbarMenuBtn" type="button" data-sidebar-toggle
+                    aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+
                 <div class="topbar-breadcrumb">
                     <a href="{{ url_for('dashboard.dashboard') }}">ZOE</a>
                     <span class="crumb-sep">/</span>
                     <span class="crumb-current">{{ page_title or "Inicio" }}</span>
+                </div>
+
+                <div class="topbar-search">
+                    <div class="input-group">
+                        <span class="input-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="7" />
+                                <line x1="21" y1="21" x2="16.5" y2="16.5" />
+                            </svg>
+                        </span>
+                        <input type="search" id="topbarSearchInput" autocomplete="off"
+                            placeholder="Buscar tareas, recursos, usuarios…">
+                    </div>
+                    <div id="topbarSearchResults" class="search-results-panel is-hidden"></div>
+                </div>
+
+                <div class="topbar-actions">
+                    <!-- Solo visible en móvil: despliega el buscador -->
+                    <button class="topbar-search-btn" id="topbarSearchBtn" type="button" aria-label="Buscar"
+                        aria-expanded="false">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="7" />
+                            <line x1="21" y1="21" x2="16.5" y2="16.5" />
+                        </svg>
+                    </button>
+                    <button class="topbar-icon-btn" type="button" aria-label="Notificaciones">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                            <path d="M10 21a2 2 0 0 0 4 0" />
+                        </svg>
+                        <span class="ind-dot"></span>
+                    </button>
+                    <button class="topbar-icon-btn" type="button" aria-label="Ayuda">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="9" />
+                            <path d="M9.5 9a2.5 2.5 0 1 1 4 2c-1 .8-1.5 1.4-1.5 2.5" />
+                            <line x1="12" y1="17" x2="12" y2="17.01" />
+                        </svg>
+                    </button>
+                    <div class="topbar-account">
+                        <button type="button" class="avatar avatar-sm" id="accountMenuBtn" title="{{ usuario }}">
+                            {{ (usuario[:1] or 'U')|upper }}
+                        </button>
+                        <div class="account-menu is-hidden" id="accountMenu">
+                            <div class="account-menu-header">
+                                <div class="avatar avatar-sm">{{ (usuario[:1] or 'U')|upper }}</div>
+                                <div>
+                                    <div class="user-name">{{ usuario or "Usuario" }}</div>
+                                    <div class="user-role">{{ correo or "" }}</div>
+                                </div>
+                            </div>
+                            <div class="account-menu-badge">
+                                <span class="badge badge-info">{{ rol|capitalize or "Invitado" }}</span>
+                            </div>
+                            <div class="account-menu-divider"></div>
+                            {% if rol == 'coordinador' %}
+                            <a href="{{ url_for('configuracion.configuracion') }}"
+                                class="account-menu-item">Configuración</a>
+                            {% endif %}
+                            <a href="{{ url_for('auth.logout') }}" class="account-menu-item account-menu-danger">Cerrar
+                                sesión</a>
+                        </div>
+                    </div>
                 </div>
             </header>
 
@@ -261,6 +332,7 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/ui.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/mobile.js') }}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 

@@ -1,0 +1,20 @@
+/* ZOE — Login en móvil */
+.mobile-brand { display: none; justify-content: center; margin-bottom: 14px; }
+.mobile-brand img { height: 44px; width: auto; }
+
+@media (max-width: 850px) {
+  html, body { height: auto; min-height: 100vh; min-height: 100dvh; width: 100%; }
+  .login-shell { width: 100%; height: auto; min-height: 100vh; min-height: 100dvh; }
+  .login-form-wrap {
+    height: auto; min-height: 100vh; min-height: 100dvh; padding: 20px 14px;
+    padding-top: calc(20px + env(safe-area-inset-top));
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  }
+  .login-card { padding: 28px 20px; border-radius: 20px; }
+  .mobile-brand { display: flex; }
+  .login-icon { display: none; }
+  .login-heading h2 { font-size: 1.35rem; }
+  .input-group input { font-size: 16px; height: 48px; }
+  .btn-login { height: 50px; }
+  .form-options { flex-wrap: wrap; gap: 10px; }
+}
